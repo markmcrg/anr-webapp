@@ -16,7 +16,7 @@ column_names = ["SOCN", "Organization Name", "Jurisdiction", "Status"]
 org_data_df = pd.DataFrame(org_data['rows'], columns=columns)
 org_data_df.columns = column_names
 st.markdown("<h1 style='text-align: center;'>List of Accredited Organizations for Term 2324</h1>", unsafe_allow_html=True)
-col1, col2 = st.columns([2, 8])
+col1, col2 = st.columns([1.5, 8.5])
 
 with col1:
     toggle_type = st.checkbox("Filter by type")
@@ -47,10 +47,10 @@ with col1:
         filtered_df = org_data_df
 with col2:
     filtered_df = filtered_df.style.hide(axis="index").set_table_styles([{
-    'selector': '.col2, .col3',  
-    'props': [
-        ('text-align', 'center')
-    ]
+        'selector': '.col2, .col3',  
+        'props': [
+            ('text-align', 'center')
+        ]
     }])
     st.markdown(f"<div style='max-width: fit-content; margin-inline: auto;'>{filtered_df.to_html(index=False)}</div>", unsafe_allow_html=True)
     st.markdown("<a href='#list-of-accredited-organizations-for-term-2324'>Back to top</a>", unsafe_allow_html=True)
