@@ -1,11 +1,14 @@
 import streamlit as st
 import pandas as pd
-from helpers import fetch_data
+from helpers import fetch_data, render_menu, page_router
 
 st.set_page_config(page_title="Accredited Organizations", page_icon="ℹ️", layout="wide")
 
 st.logo('logo.png')
+page_index = 1
+selected_item = render_menu(1, 'admin', 'false')
 
+page_router(selected_item, page_index)
 org_data = fetch_data('https://ap-southeast-1.data.tidbcloud.com/api/v1beta/app/dataapp-SxHAXFax/endpoint/accredited_orgs')
 
 org_data = org_data['data']
@@ -27,6 +30,7 @@ with col1:
     # Filtering based on user inputs
     if toggle_jurisdiction:
         selected_jurisdiction = st.radio("Select a jurisdiction", org_data_df['Jurisdiction'].unique())
+        org_data_df = org_data_df[org_data_df['Jurisdiction'] == selected_jurisdiction]
     else:
         selected_jurisdiction = None
 

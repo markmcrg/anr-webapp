@@ -28,8 +28,7 @@ if accre_type == "Accreditation":
         ["AD006", "General Plan of Activities with Budgetary Outlay", "Download", "View"],
         ["AD007", "Organization's Advocacy Plan", "Download", "View"],
         ["AD008", "Certificate of Clearance from PUP Student Council Commission on Audit (PUP SC COA)", "Download", "View"],
-        ["AD009", "Waiver of Responsibility", "Download", "View"],
-        ["AD010", "OSS Anti-Hazing Orientation Certificate of Registration", "Download", "View"],
+        ["AD009", "OSS Anti-Hazing Orientation Certificate of Registration", "Download", "View"],
     ]
     
     # Convert the data to a DataFrame
@@ -59,8 +58,7 @@ elif accre_type == "Revalidation":
         ["RD010", "Financial Statements", "Download", "View"],
         ["RD011", "Certificate of Clearance from PUP Student Council Commission on Audit (PUP SC COA)", "Download", "View"],
         ["RD012", "Turnover of Assets and Funds", "Download", "View"],
-        ["RD013", "Waiver of Responsibility", "Download", "View"],
-        ["RD014", "OSS Anti-Hazing Orientation Certificate of Registration", "Download", "View"],
+        ["RD013", "OSS Anti-Hazing Orientation Certificate of Registration", "Download", "View"],
     ]
     
     reval_reqs_df = pd.DataFrame(table_data, columns=columns)
