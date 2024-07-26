@@ -11,17 +11,29 @@ def fetch_data(url: str) -> dict:
     response = requests.get(url, auth=HTTPBasicAuth(PUBLIC_KEY, PRIVATE_KEY))
     return response.json()
 
-def user_data_helper(user_data: dict) -> tuple:
+def unpack_credentials(user_data: dict) -> dict:
     user_data_df = pd.DataFrame(user_data['rows'], columns=[col['col'] for col in user_data['columns']])
-    email = user_data_df['email'].tolist()
-    password = user_data_df['password'].tolist()
-    org_name = user_data_df['org_name'].tolist()
+    emails = user_data_df['email'].tolist()
+    passwords = user_data_df['password'].tolist()
+    org_names = user_data_df['org_name'].tolist()
     created_at = user_data_df['created_at'].tolist()
     last_login = user_data_df['last_login'].tolist()
-    username = user_data_df['username'].tolist()
-    role = user_data_df['role'].tolist()
+    usernames = user_data_df['username'].tolist()
+    roles = user_data_df['role'].tolist()
     
-    return email, password, org_name, created_at, last_login, role, username
+    credentials = {
+        'usernames': {}
+    }
+    for username, email, password, org_name in zip(usernames, emails, passwords, org_names):
+        credentials['usernames'][username] = {
+            'email': email,
+            'failed_login_attempts': 0,
+            'logged_in': False,
+            'name': org_name,
+            'password': password
+        }
+
+    return credentials
 
 
 # I can make a render menu helper function to render the menu for each page along with conditions on what to show depending on the user's role and login status

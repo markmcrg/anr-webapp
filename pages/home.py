@@ -1,3 +1,5 @@
 import streamlit as st
 
-# homepage
+def home():
+    st.write('homepage')
+    # add calendar
