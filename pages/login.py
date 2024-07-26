@@ -4,7 +4,7 @@ import streamlit_authenticator as stauth
 
 # Insert login here so that it doesn't render in other pages
 
-def login():
+def login(logout: bool = False):
     st.write('login page')
     
     user_data = fetch_data('https://ap-southeast-1.data.tidbcloud.com/api/v1beta/app/dataapp-SxHAXFax/endpoint/users')['data']
@@ -19,8 +19,8 @@ def login():
 
     authenticator.login()
     
-    if st.session_state['authentication_status']:
-        authenticator.logout()
+    if st.session_state['authentication_status'] and logout:
+        authenticator.logout(location='unrendered')
     elif st.session_state["authentication_status"] is False:
         st.error('Username/password is incorrect')
     elif st.session_state["authentication_status"] is None:
