@@ -4,14 +4,7 @@ from helpers import fetch_data, render_menu, page_router
 
 def accredited_orgs():
     st.logo('logo.png')
-    st.markdown(
-    """
-    <script>
-    document.title = 'Custom Page Title';
-    </script>
-    """,
-    unsafe_allow_html=True
-)
+    
     org_data = fetch_data('https://ap-southeast-1.data.tidbcloud.com/api/v1beta/app/dataapp-SxHAXFax/endpoint/accredited_orgs')
 
     org_data = org_data['data']

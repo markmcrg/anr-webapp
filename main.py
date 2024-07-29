@@ -13,10 +13,14 @@ st.logo('logo.png')
 
 if 'authentication_status' not in st.session_state:
     st.session_state['authentication_status'] = None
+if 'name' not in st.session_state:
+    st.session_state['name'] = None
     
 with st.sidebar:
     if st.session_state["authentication_status"] == None or st.session_state["authentication_status"] == False:
         menu_item = sac.menu([
+            sac.MenuItem('Guest Menu', disabled=True),
+            sac.MenuItem(type='divider'),
             sac.MenuItem('Home', icon='house-fill', ),
             sac.MenuItem('Accredited Organizations', icon='card-list'),
             sac.MenuItem('Application Requirements', icon='file-earmark-text-fill'),
@@ -28,6 +32,8 @@ with st.sidebar:
     
     if st.session_state["authentication_status"]:
         menu_item = sac.menu([
+            sac.MenuItem(st.session_state["name"], disabled=True),
+            sac.MenuItem(type='divider'),
             sac.MenuItem('Home', icon='house-fill', ),
             sac.MenuItem('Accredited Organizations', icon='card-list'),
             sac.MenuItem('Application Requirements', icon='file-earmark-text-fill'),
@@ -55,12 +61,11 @@ elif menu_item == 'Login':
 elif menu_item == 'Logout':
     pg.login(logout=True)
 
-
 # Sidebar Footer Login info
 
 if st.session_state["authentication_status"]:
-    st.sidebar.write(f'*{st.session_state["name"]}*')
     menu_item = 'Home'
 elif st.session_state["authentication_status"] is None or st.session_state["authentication_status"] == False:
-    st.sidebar.write("No login")
+    pass
 
+# Add initialism to user database for greeting

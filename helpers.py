@@ -56,3 +56,32 @@ def page_router(active_index, current_index):
             st.switch_page('pages/accredited_orgs.py')
         elif active_index == 0:
             st.switch_page('main.py')
+
+def register_user(abbreviation, email, org_name, password, role, username):
+    PUBLIC_KEY = st.secrets.tidb_keys.public_key
+    PRIVATE_KEY = st.secrets.tidb_keys.private_key
+    
+    url = 'https://ap-southeast-1.data.tidbcloud.com/api/v1beta/app/dataapp-SxHAXFax/endpoint/users'
+    
+    headers = {
+        'Content-Type': 'application/json',
+    }
+    
+    data = {
+        "abbreviation": abbreviation,
+        "email": email,
+        "org_name": org_name,
+        "password": password,
+        "role": role,
+        "username": username
+    }
+    
+    response = requests.post(url, headers=headers, json=data, auth=HTTPBasicAuth(PUBLIC_KEY, PRIVATE_KEY))
+    
+    return response.status_code
+
+def check_user(username):
+    pass
+
+def check_email(email):
+    pass
