@@ -1,7 +1,7 @@
 import streamlit as st
 import streamlit_antd_components as sac
 import re
-# from helpers import register_user
+from helpers import register_user, check_email, check_username
 
 def signup():
     st.write('signup page')
@@ -72,9 +72,14 @@ def signup():
                 elif not valid_email:
                     st.error('Email must end in @iskolarngbayan.pup.edu.ph')
                 else:
-                    # register_user(username, password, email, org_name, abbreviation)
-                    next_page()
-    
+                    # Check if username is unique
+                    if check_username(username):
+                        st.error('Username already exists')
+                    elif check_email(email):
+                        st.error('Email already exists')
+                    else:    
+                        next_page()
+
     # DPA Page
     if st.session_state.page == 2:       
         st.header('Data Privacy Act of 2012')
@@ -101,10 +106,10 @@ signup()
 
 # Add timeline - 1. Register, 2. DPA, 3. OTP, 4. Success
 # FORM VALIDATION:
-# 1. Check if password and confirm password match
-# 2. Check if DPA is checked
-# 3. Check if all fields are filled
-# 4. Check if email is valid (must end in @iskolarngbayan.pup.edu.ph)
-# 5. Check if password is strong (at least 8 characters long, with at least one uppercase letter, one lowercase letter, one number, and one special character)
-# 6. Check if username is unique
-# 7. Check if email is unique
+# 1. Check if password and confirm password match - done
+# 2. Check for DPA - done
+# 3. Check if all fields are filled - done
+# 4. Check if email is valid (must end in @iskolarngbayan.pup.edu.ph) - done
+# 5. Check if password is strong (at least 8 characters long, with at least one uppercase letter, one lowercase letter, one number, and one special character) - done
+# 6. Check if username is unique - done
+# 7. Check if email is unique - done

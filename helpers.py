@@ -80,8 +80,34 @@ def register_user(abbreviation, email, org_name, password, role, username):
     
     return response.status_code
 
-def check_user(username):
-    pass
+def check_username(username):
+    PUBLIC_KEY = st.secrets.tidb_keys.public_key
+    PRIVATE_KEY = st.secrets.tidb_keys.private_key
+    
+    url = f'https://ap-southeast-1.data.tidbcloud.com/api/v1beta/app/dataapp-SxHAXFax/endpoint/check_username?username={username}'
+    response = requests.get(url, auth=HTTPBasicAuth(PUBLIC_KEY, PRIVATE_KEY))
 
+    # Turn the response into a dictionary
+    response_dict = response.json()
+    response_dict['data']['rows']
+
+    if response_dict['data']['rows']:
+        return True
+    else:
+        return False
+    
 def check_email(email):
-    pass
+    PUBLIC_KEY = st.secrets.tidb_keys.public_key
+    PRIVATE_KEY = st.secrets.tidb_keys.private_key
+    
+    url = f'https://ap-southeast-1.data.tidbcloud.com/api/v1beta/app/dataapp-SxHAXFax/endpoint/check_email?email={email}'
+    response = requests.get(url, auth=HTTPBasicAuth(PUBLIC_KEY, PRIVATE_KEY))
+
+    # Turn the response into a dictionary
+    response_dict = response.json()
+    response_dict['data']['rows']
+
+    if response_dict['data']['rows']:
+        return True
+    else:
+        return False
