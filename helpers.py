@@ -3,6 +3,8 @@ import requests
 from requests.auth import HTTPBasicAuth
 import pandas as pd
 import streamlit_antd_components as sac
+import boto3
+import json
 
 # Function to fetch data from the TiDB Cloud API
 def fetch_data(url: str) -> dict:
@@ -111,3 +113,33 @@ def check_email(email):
         return True
     else:
         return False
+    
+def send_otp_email(email, otp, name):
+    client = boto3.client('ses', 
+                        region_name='ap-southeast-1',
+                        aws_access_key_id=st.secrets.aws_ses.access_key_id,
+                        aws_secret_access_key=st.secrets.aws_ses.secret_access_key) 
+
+    # Email details
+    source_email = 'noreply@sccosoa.com'  
+    recipient_email = email  
+    template_name = 'otp-template'
+    template_data = {
+        "name": name,
+        "otp": otp
+    }
+    template_data_json = json.dumps(template_data)
+
+    # Send the templated email
+    try:
+        response = client.send_templated_email(
+            Source=source_email,
+            Destination={
+                'ToAddresses': [recipient_email]
+            },
+            Template=template_name,
+            TemplateData=template_data_json
+        )
+        print('Email sent successfully:', response)
+    except Exception as e:
+        print('Error sending email:', e)

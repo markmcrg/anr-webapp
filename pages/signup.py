@@ -1,7 +1,7 @@
 import streamlit as st
 import streamlit_antd_components as sac
 import re
-from helpers import register_user, check_email, check_username
+# from helpers import register_user, check_email, check_username
 
 def signup():
     st.write('signup page')
@@ -79,7 +79,8 @@ def signup():
                         st.error('Email already exists')
                     else:    
                         next_page()
-
+    if st.button('regis'):
+        st.write('hi')
     # DPA Page
     if st.session_state.page == 2:       
         st.header('Data Privacy Act of 2012')
@@ -92,6 +93,7 @@ def signup():
     if st.session_state.page == 3:
         with st.container(border=True):
             st.write('Enter OTP')
+            
             otp = st.text_input('OTP')
             if st.button('Submit'):
                 if otp == st.session_state.otp:
@@ -113,3 +115,4 @@ signup()
 # 5. Check if password is strong (at least 8 characters long, with at least one uppercase letter, one lowercase letter, one number, and one special character) - done
 # 6. Check if username is unique - done
 # 7. Check if email is unique - done
+

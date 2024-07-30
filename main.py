@@ -9,7 +9,7 @@ from helpers import fetch_data, unpack_credentials
 # Entrypoint / page router for the app
 
 st.set_page_config(page_title="PUP SC COSOA AnR Portal", page_icon="🏫", layout="wide")
-st.logo('logo.png')
+st.logo('assets/logo.png')
 
 if 'authentication_status' not in st.session_state:
     st.session_state['authentication_status'] = None

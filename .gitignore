@@ -3,6 +3,9 @@ secrets.toml
 anr_webapp_venv
 *.pdf
 *.sql
+test.py
+aws_stuff/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
