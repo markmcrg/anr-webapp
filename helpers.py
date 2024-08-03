@@ -3,8 +3,9 @@ import requests
 from requests.auth import HTTPBasicAuth
 import pandas as pd
 import streamlit_antd_components as sac
-import boto3
+import mailtrap as mt
 import json
+
 
 # Function to fetch data from the TiDB Cloud API
 def fetch_data(url: str) -> dict:
@@ -115,31 +116,44 @@ def check_email(email):
         return False
     
 def send_otp_email(email, otp, name):
-    client = boto3.client('ses', 
-                        region_name='ap-southeast-1',
-                        aws_access_key_id=st.secrets.aws_ses.access_key_id,
-                        aws_secret_access_key=st.secrets.aws_ses.secret_access_key) 
-
-    # Email details
-    source_email = 'noreply@sccosoa.com'  
-    recipient_email = email  
-    template_name = 'otp-template'
-    template_data = {
-        "name": name,
-        "otp": otp
-    }
-    template_data_json = json.dumps(template_data)
-
-    # Send the templated email
+    mail = mt.MailFromTemplate(
+        sender=mt.Address(email='noreply@sccosoa.com', name='PUP SC COSOA'),
+        to=[mt.Address(email=email)],
+        template_uuid=st.secrets.mailtrap_creds.template_uuid,
+        template_variables={
+        'name': name,
+        'otp': otp
+        }
+    )
+    # create client and send
     try:
-        response = client.send_templated_email(
-            Source=source_email,
-            Destination={
-                'ToAddresses': [recipient_email]
-            },
-            Template=template_name,
-            TemplateData=template_data_json
-        )
-        print('Email sent successfully:', response)
-    except Exception as e:
-        print('Error sending email:', e)
+        client = mt.MailtrapClient(token=st.secrets.mailtrap_creds.token)
+        client.send(mail)
+        return True
+    except:
+        return False
+    
+def register_user(email, password, org_name, username, abbreviation):
+    PUBLIC_KEY = st.secrets.tidb_keys.public_key
+    PRIVATE_KEY = st.secrets.tidb_keys.private_key
+
+    url = 'https://ap-southeast-1.data.tidbcloud.com/api/v1beta/app/dataapp-SxHAXFax/endpoint/users'
+
+    headers = {
+        'Content-Type': 'application/json',
+    }
+
+    data = {
+        "abbreviation": abbreviation,
+        "email": email,
+        "entered_pass": password,
+        "org_name": org_name,
+        "username": username
+    }
+
+    response = requests.post(url, headers=headers, auth=HTTPBasicAuth(PUBLIC_KEY, PRIVATE_KEY), data=json.dumps(data))
+
+    if response.status_code == 200:
+        return True
+    else:
+        return False

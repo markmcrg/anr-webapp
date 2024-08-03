@@ -1,17 +1,30 @@
 import streamlit as st
 import streamlit_antd_components as sac
 import re
-# from helpers import register_user, check_email, check_username
+import random
+
+from helpers import send_otp_email
+from helpers import register_user, check_email, check_username, send_otp_email
 
 def signup():
-    st.write('signup page')
-    
     if 'page' not in st.session_state:
         st.session_state.page = 1    
-    if 'otp' not in st.session_state:
-        st.session_state.otp = None
+    if 'entered_otp' not in st.session_state:
+        st.session_state.entered_otp = None
     if 'otp_sent' not in st.session_state:
         st.session_state.otp_sent = False
+    if 'org_name' not in st.session_state:
+        st.session_state.org_name = None
+    if 'username' not in st.session_state:
+        st.session_state.username = None
+    if 'abbreviation' not in st.session_state:
+        st.session_state.abbreviation = None
+    if 'email' not in st.session_state:
+        st.session_state.email = None
+    if 'password' not in st.session_state:
+        st.session_state.password = None
+    if 'generated_otp' not in st.session_state:
+        st.session_state.generated_otp = None
     
     def next_page():
         st.session_state.page += 1
@@ -60,7 +73,8 @@ def signup():
                     return False
 
                 return True
-                
+
+            
             register = st.button('Register', disabled=not all_fields_filled)
     
             if register:
@@ -77,10 +91,14 @@ def signup():
                         st.error('Username already exists')
                     elif check_email(email):
                         st.error('Email already exists')
-                    else:    
+                    else:
+                        # assign all variables to session state
+                        st.session_state.org_name = org_name
+                        st.session_state.username = username
+                        st.session_state.abbreviation = abbreviation
+                        st.session_state.email = email
+                        st.session_state.password = password    
                         next_page()
-    if st.button('regis'):
-        st.write('hi')
     # DPA Page
     if st.session_state.page == 2:       
         st.header('Data Privacy Act of 2012')
@@ -92,18 +110,27 @@ def signup():
     # OTP Page            
     if st.session_state.page == 3:
         with st.container(border=True):
-            st.write('Enter OTP')
+            st.write(f'A One-Time Password (OTP) has been sent to your email at *{st.session_state.email}*. Please enter the OTP below to verify your account.')
             
-            otp = st.text_input('OTP')
+            # Generate random OTP if not yet sent
+            if not st.session_state.otp_sent:
+                st.session_state.generated_otp = random.randint(100000, 999999)
+                send_otp_email(st.session_state.email, st.session_state.generated_otp, st.session_state.abbreviation)
+                st.session_state.otp_sent = True
+                
+            st.session_state.entered_otp = st.text_input('Enter OTP')
+                
             if st.button('Submit'):
-                if otp == st.session_state.otp:
-                    st.success('Account successfully created')
+                if str(st.session_state.entered_otp) == str(st.session_state.generated_otp):
+                    next_page()
                 else:
-                    st.error('Invalid OTP')
+                    st.error('OTP does not match')
                     
     if st.session_state.page == 4:
-        st.success('Account successfully created')
-
+        if register_user(st.session_state.email, st.session_state.password, st.session_state.org_name, st.session_state.username, st.session_state.abbreviation):
+            st.success('Registration successful!')
+        else:
+            st.error('An error occurred. Please try again.')
 signup()
 
 # Add timeline - 1. Register, 2. DPA, 3. OTP, 4. Success
