@@ -3,7 +3,7 @@ import pandas as pd
 from helpers import fetch_data, render_menu, page_router
 
 def accredited_orgs():
-    st.logo('logo.png')
+    st.logo('https://i.imgur.com/pA9lYh5.png')
     
     org_data = fetch_data('https://ap-southeast-1.data.tidbcloud.com/api/v1beta/app/dataapp-SxHAXFax/endpoint/accredited_orgs')
 

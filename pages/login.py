@@ -5,8 +5,6 @@ import streamlit_authenticator as stauth
 # Insert login here so that it doesn't render in other pages
 
 def login(logout: bool = False):
-    st.write('login page')
-    
     user_data = fetch_data('https://ap-southeast-1.data.tidbcloud.com/api/v1beta/app/dataapp-SxHAXFax/endpoint/users')['data']
 
     credentials = unpack_credentials(user_data)

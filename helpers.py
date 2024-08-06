@@ -60,28 +60,30 @@ def page_router(active_index, current_index):
         elif active_index == 0:
             st.switch_page('main.py')
 
-def register_user(abbreviation, email, org_name, password, role, username):
+def register_user(email, password, org_name, username, abbreviation):
     PUBLIC_KEY = st.secrets.tidb_keys.public_key
     PRIVATE_KEY = st.secrets.tidb_keys.private_key
-    
+
     url = 'https://ap-southeast-1.data.tidbcloud.com/api/v1beta/app/dataapp-SxHAXFax/endpoint/users'
-    
+
     headers = {
         'Content-Type': 'application/json',
     }
-    
+
     data = {
         "abbreviation": abbreviation,
         "email": email,
+        "entered_pass": password,
         "org_name": org_name,
-        "password": password,
-        "role": role,
         "username": username
     }
-    
-    response = requests.post(url, headers=headers, json=data, auth=HTTPBasicAuth(PUBLIC_KEY, PRIVATE_KEY))
-    
-    return response.status_code
+
+    response = requests.post(url, headers=headers, auth=HTTPBasicAuth(PUBLIC_KEY, PRIVATE_KEY), data=json.dumps(data))
+
+    if response.status_code == 200:
+        return True
+    else:
+        return False
 
 def check_username(username):
     PUBLIC_KEY = st.secrets.tidb_keys.public_key
@@ -133,25 +135,53 @@ def send_otp_email(email, otp, name):
     except:
         return False
     
-def register_user(email, password, org_name, username, abbreviation):
+def get_role(username):
     PUBLIC_KEY = st.secrets.tidb_keys.public_key
     PRIVATE_KEY = st.secrets.tidb_keys.private_key
+    
+    url = f'https://ap-southeast-1.data.tidbcloud.com/api/v1beta/app/dataapp-SxHAXFax/endpoint/get_role?username={username}'
+    response = requests.get(url, auth=HTTPBasicAuth(PUBLIC_KEY, PRIVATE_KEY))
 
-    url = 'https://ap-southeast-1.data.tidbcloud.com/api/v1beta/app/dataapp-SxHAXFax/endpoint/users'
+    # Turn the response into a dictionary
+    response_dict = response.json()
+    response_dict['data']['rows']
+    
+    # Return the role of the user
+    try:
+        return response_dict['data']['rows'][0]['role']
+    except:
+        return None
+    
+def get_abbreviation(username):
+    PUBLIC_KEY = st.secrets.tidb_keys.public_key
+    PRIVATE_KEY = st.secrets.tidb_keys.private_key
+    
+    url = f'https://ap-southeast-1.data.tidbcloud.com/api/v1beta/app/dataapp-SxHAXFax/endpoint/get_abbreviation?username={username}'
+    response = requests.get(url, auth=HTTPBasicAuth(PUBLIC_KEY, PRIVATE_KEY))
 
+    # Turn the response into a dictionary
+    response_dict = response.json()
+    response_dict['data']['rows']
+    
+    # Return the role of the user
+    try:
+        return response_dict['data']['rows'][0]['abbreviation']
+    except:
+        return None
+    
+def update_last_login(username):
+    PUBLIC_KEY = st.secrets.tidb_keys.public_key
+    PRIVATE_KEY = st.secrets.tidb_keys.private_key
+    
+    url = 'https://ap-southeast-1.data.tidbcloud.com/api/v1beta/app/dataapp-SxHAXFax/endpoint/update_last_login'
     headers = {
-        'Content-Type': 'application/json',
+    'content-type': 'application/json',
     }
 
     data = {
-        "abbreviation": abbreviation,
-        "email": email,
-        "entered_pass": password,
-        "org_name": org_name,
         "username": username
     }
-
-    response = requests.post(url, headers=headers, auth=HTTPBasicAuth(PUBLIC_KEY, PRIVATE_KEY), data=json.dumps(data))
+    response = requests.put(url, headers=headers, json=data, auth=HTTPBasicAuth(PUBLIC_KEY, PRIVATE_KEY))
 
     if response.status_code == 200:
         return True

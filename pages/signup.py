@@ -33,9 +33,18 @@ def signup():
     def prev_page():
         st.session_state.page -= 1
         st.rerun()
-    
+    sac.steps(
+            items=[
+            sac.StepsItem(title='Register', disabled=True),
+            sac.StepsItem(title='Confirm DPA', disabled=True),
+            sac.StepsItem(title='Verify Email', disabled=True),
+            sac.StepsItem(title='Account Created', disabled=True, icon="check-circle"),
+        ], return_index=True, placement='vertical', index=st.session_state.page-1
+    ) 
     # Registration Form Page
     if st.session_state.page == 1:
+        
+
         with st.container(border=True):
             sac.divider(label='Signup', icon='clipboard', align='center', color='gray')
             
@@ -55,23 +64,18 @@ def signup():
                 # Check the length of the password
                 if len(password) < 8:
                     return False
-
                 # Check for at least one uppercase letter
                 if not re.search(r'[A-Z]', password):
                     return False
-
                 # Check for at least one lowercase letter
                 if not re.search(r'[a-z]', password):
                     return False
-
                 # Check for at least one number
                 if not re.search(r'[0-9]', password):
                     return False
-
                 # Check for at least one special character
                 if not re.search(r'[!@#$%^&*(),.?":{}|<>]', password):
                     return False
-
                 return True
 
             
