@@ -132,9 +132,9 @@ def signup():
                     
     if st.session_state.page == 4:
         if register_user(st.session_state.email, st.session_state.password, st.session_state.org_name, st.session_state.username, st.session_state.abbreviation):
-            st.success('Registration successful!')
+            sac.result(label='Registration Successful!', description='You may know login to your account.', status='success')
         else:
-            st.error('An error occurred. Please try again.')
+            sac.result(label='Registration Unsuccessful :(', description='Please try again, and if the error persists, please contact us.', status='error')
 signup()
 
 # Add timeline - 1. Register, 2. DPA, 3. OTP, 4. Success
