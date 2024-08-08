@@ -14,7 +14,6 @@ def login(logout: bool = False):
                                         cookie_key='pupsc-cosoa-anr-portal-key', 
                                         cookie_expiry_days=30)
 
-
     authenticator.login()
     
     if st.session_state['authentication_status'] and logout:

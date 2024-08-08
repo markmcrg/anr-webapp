@@ -5,7 +5,8 @@ import pandas as pd
 import streamlit_antd_components as sac
 import mailtrap as mt
 import json
-
+import mysql.connector
+from mysql.connector import Error
 
 # Function to fetch data from the TiDB Cloud API
 def fetch_data(url: str) -> dict:
@@ -187,3 +188,44 @@ def update_last_login(username):
         return True
     else:
         return False
+    
+def modify_user_data(identifier, to_modify, identifier_value, new_value):
+    try:
+        connection = mysql.connector.connect(
+            host=st.secrets['anr_webapp_db']['host'],
+            user=st.secrets['anr_webapp_db']['user'],
+            port=st.secrets['anr_webapp_db']['port'],
+            password=st.secrets['anr_webapp_db']['password'],
+            database=st.secrets["anr_webapp_db"]["database"],
+        )
+    except Error as e:
+        st.error(f"The error '{e}' occurred")
+    cursor = connection.cursor()
+    cursor.execute(f"UPDATE users SET {to_modify} = '{new_value}' WHERE {identifier} = '{identifier_value}'")
+    affected_rows = cursor.rowcount
+    connection.commit()
+    cursor.close()
+    connection.close()
+    return affected_rows
+
+def assign_roles(identifier, identifier_values, role):
+    try:
+        connection = mysql.connector.connect(
+            host=st.secrets['anr_webapp_db']['host'],
+            user=st.secrets['anr_webapp_db']['user'],
+            port=st.secrets['anr_webapp_db']['port'],
+            password=st.secrets['anr_webapp_db']['password'],
+            database=st.secrets["anr_webapp_db"]["database"],
+        )
+    except Error as e:
+        st.error(f"The error '{e}' occurred")
+    cursor = connection.cursor()
+    query = f"UPDATE users SET role = '{role}' WHERE {identifier} IN (%s)" % ','.join(['%s'] * len(identifier_values))
+
+    # Execute the query with the email list
+    cursor.execute(query, tuple(identifier_values))
+    affected_rows = cursor.rowcount
+    connection.commit()
+    cursor.close()
+    connection.close()
+    return affected_rows

@@ -6,3 +6,4 @@ from .signup import signup
 from .login import login
 from .accreditation_application import accreditation_application
 from .accreditation_status import accreditation_status
+from .user_management import user_management
