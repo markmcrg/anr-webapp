@@ -122,7 +122,7 @@ def check_email(email):
     
 def send_otp_email(email, otp, name):
     mail = mt.MailFromTemplate(
-        sender=mt.Address(email='noreply@sccosoa.com', name='PUP SC COSOA'),
+        sender=mt.Address(email='no-reply@sccosoa.com', name='PUP SC COSOA'),
         to=[mt.Address(email=email)],
         template_uuid=st.secrets.mailtrap_creds.template_uuid,
         template_variables={
