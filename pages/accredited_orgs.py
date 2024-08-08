@@ -3,12 +3,12 @@ import pandas as pd
 from helpers import fetch_data, render_menu, page_router
 from streamlit_searchbox import st_searchbox
 from st_keyup import st_keyup
+import streamlit_antd_components as sac
 
 def accredited_orgs():
     st.logo('https://i.imgur.com/pA9lYh5.png')
     
     org_data = fetch_data('https://ap-southeast-1.data.tidbcloud.com/api/v1beta/app/dataapp-SxHAXFax/endpoint/accredited_orgs')
-
     org_data = org_data['data']
     
     columns = [col['col'] for col in org_data['columns']]
@@ -17,13 +17,8 @@ def accredited_orgs():
     org_data_df = pd.DataFrame(org_data['rows'], columns=columns)
     org_data_df.columns = column_names
     st.markdown("<h1 style='text-align: center;'>List of Accredited Organizations for Term 2324</h1>", unsafe_allow_html=True)
+    
     col1, col2 = st.columns([1.5, 8.5])
-    def search_orgs(org_query):
-        # Return a list of org names that contain the query
-        return org_data_df[org_data_df['Organization Name'].str.contains(org_query, case=False)]['Organization Name'].tolist()
-    
-    
-    
     with col1:
         toggle_type = st.checkbox("Filter by type")
         if toggle_type:
@@ -55,12 +50,12 @@ def accredited_orgs():
     with col2:
         org_query = None
         if not toggle_jurisdiction:
-            org_query = st_keyup('Search for an organization', key="0")
+            org_query = st_keyup('Search for an organization:', debounce=300, key="0", placeholder="Organization Name/Abbreviation")
         if org_query:
             filtered_df = filtered_df[filtered_df['Organization Name'].str.contains(org_query, case=False, regex=False)]
         # Check if there are any results
         if filtered_df.empty:
-            st.markdown("<h3 style='text-align: center;'>No results found</h3>", unsafe_allow_html=True)
+            sac.result(label='No Results Found', description="We couldn't locate any matching results. Consider using different filters or keywords.", status='empty')
         else:
             filtered_df = filtered_df.style.hide(axis="index").set_table_styles([{
                 'selector': '.col2, .col3',  

@@ -11,18 +11,16 @@ from helpers import fetch_data, unpack_credentials, get_role, get_abbreviation, 
 import mysql.connector
 from mysql.connector import Error
 
-
 # Entrypoint / page router for the app
 
 st.set_page_config(page_title="PUP SC COSOA AnR Portal", page_icon="🏫", layout="wide")
-st.logo('https://i.imgur.com/pA9lYh5.png')
+st.logo('https://i.imgur.com/pA9lYh5.png', link='http://localhost:8501/') # Change link to sccosoa.com in production
 
 if 'authentication_status' not in st.session_state:
     st.session_state['authentication_status'] = None
 if 'name' not in st.session_state:
     st.session_state['name'] = None
-    
-    
+
 with st.sidebar:
     if st.session_state["authentication_status"] == None or st.session_state["authentication_status"] == False:
         menu_item = sac.menu([
@@ -33,8 +31,8 @@ with st.sidebar:
             sac.MenuItem('Application Requirements', icon='bi bi-clipboard-check'),
             sac.MenuItem('Frequently Asked Questions', icon='bi bi-question-circle'),
             sac.MenuItem('Sign Up', icon='bi bi-person-plus'),
-            sac.MenuItem('Login', icon='bi bi-box-arrow-right'),
-        ], open_all=False)
+            sac.MenuItem('Login', icon='bi bi-box-arrow-in-right'),
+        ], open_all=False, index=2)
     
     if st.session_state["authentication_status"]:
         role = get_role(st.session_state["username"])
@@ -47,10 +45,9 @@ with st.sidebar:
                 sac.MenuItem('Application Requirements', icon='bi bi-clipboard-check'),
                 sac.MenuItem('Frequently Asked Questions', icon='bi bi-question-circle'),
                 sac.MenuItem('View Submissions', icon='bi bi-file-earmark-text'),
-                sac.MenuItem('Internal Evaluations', icon='bi bi-clipboard-check'),
-                sac.MenuItem('Account Settings', icon='bi bi-person-plus'),
-                sac.MenuItem('Logout', icon='bi bi-box-arrow-right'),
-            ], open_all=False)
+                sac.MenuItem('Account Settings', icon='bi bi-person-gear'),
+                sac.MenuItem('Logout', icon='bi bi-box-arrow-in-left'),
+            ], open_all=False, index=2)
         elif role == 'user':
             abbreviation = get_abbreviation(st.session_state["username"])
             menu_item = sac.menu([
@@ -62,9 +59,9 @@ with st.sidebar:
                 sac.MenuItem('Frequently Asked Questions', icon='bi bi-question-circle'),
                 sac.MenuItem('Accreditation Application', icon='bi bi-file-earmark-text'),
                 sac.MenuItem('Accreditation Status', icon='bi bi-graph-up-arrow'),
-                sac.MenuItem('Account Settings', icon='bi bi-person-plus'),
-                sac.MenuItem('Logout', icon='bi bi-box-arrow-right'),
-            ], open_all=False)
+                sac.MenuItem('Account Settings', icon='bi bi-person-gear'),
+                sac.MenuItem('Logout', icon='bi bi-box-arrow-in-left'),
+            ], open_all=False, index=2)
         elif role == 'chair':
             menu_item = sac.menu([
                 sac.MenuItem(f'Welcome, Chair!', disabled=True),
@@ -73,17 +70,18 @@ with st.sidebar:
                 sac.MenuItem('Accredited Organizations', icon='bi bi-building'),
                 sac.MenuItem('Application Requirements', icon='bi bi-clipboard-check'),
                 sac.MenuItem('Frequently Asked Questions', icon='bi bi-question-circle'),
-                sac.MenuItem('Internal Evaluations', icon='bi bi-clipboard-check'),
-                sac.MenuItem('Account Settings', icon='bi bi-person-plus'),
-                sac.MenuItem('Logout', icon='bi bi-box-arrow-right'),
+                sac.MenuItem('View Submissions', icon='bi bi-clipboard-check'),
+                sac.MenuItem('Account Settings', icon='bi bi-person-gear'),
+                sac.MenuItem('Logout', icon='bi bi-box-arrow-in-left'),
                 
                 sac.MenuItem("", disabled=True),
                 
                 sac.MenuItem(f'Admin Tools', disabled=True),
                 sac.MenuItem(type='divider'),
+                sac.MenuItem('Assign Organizations', icon='bi bi-person-check'),
                 sac.MenuItem("User Management", icon='bi bi-person-lines-fill'),
                 sac.MenuItem("Metrics", icon='bi bi-graph-up-arrow'),
-            ], open_all=False)
+            ], open_all=False, index=2)
         elif role == 'execcomm':
             menu_item = sac.menu([
                 sac.MenuItem(f'Welcome, Executive Committee!', disabled=True),
@@ -92,12 +90,17 @@ with st.sidebar:
                 sac.MenuItem('Accredited Organizations', icon='bi bi-building'),
                 sac.MenuItem('Application Requirements', icon='bi bi-clipboard-check'),
                 sac.MenuItem('Frequently Asked Questions', icon='bi bi-question-circle'),
-                sac.MenuItem('Admin Tools', icon='bi bi-clipboard-check'),
-                sac.MenuItem('Account Settings', icon='bi bi-person-plus'),
-                sac.MenuItem('Logout', icon='bi bi-box-arrow-right'),
+
+                sac.MenuItem('Account Settings', icon='bi bi-person-gear'),
+                sac.MenuItem('Logout', icon='bi bi-box-arrow-in-left'),
+                
+                sac.MenuItem("", disabled=True),
+
+                sac.MenuItem('Admin Tools', disabled=True),
+                sac.MenuItem(type='divider'),
+                sac.MenuItem('Assign Organizations', icon='bi bi-person-check'),
             ], open_all=False)
         
-
 if menu_item == 'Home':
     pg.home()
 if menu_item == 'Accredited Organizations':
@@ -109,11 +112,12 @@ elif menu_item == 'Frequently Asked Questions':
 elif menu_item == 'Sign Up':
     pg.signup()
 elif menu_item == 'Login':
-    pg.login()
-    if st.session_state["authentication_status"]:
-        menu_item = 'Home'
-        update_last_login(st.session_state["username"])
-        st.rerun()
+    with st.spinner("Loading..."):
+        pg.login()
+        if st.session_state["authentication_status"]:
+            menu_item = 'Home'
+            update_last_login(st.session_state["username"])
+            st.rerun()
 elif menu_item == 'Logout':
     pg.login(logout=True)
 elif menu_item == 'Accreditation Application':
@@ -129,6 +133,9 @@ if st.session_state["authentication_status"]:
     menu_item = 'Home'
 elif st.session_state["authentication_status"] is None or st.session_state["authentication_status"] == False:
     pass
+
+# can modify: org name, abbreviation password
+# still show other fields but disable
 
 # user - for orgs
 # cosoa - for evals

@@ -9,10 +9,12 @@ import mysql.connector
 from mysql.connector import Error
 
 # Function to fetch data from the TiDB Cloud API
+@st.cache_data
 def fetch_data(url: str) -> dict:
     PUBLIC_KEY = st.secrets.tidb_keys.public_key
     PRIVATE_KEY = st.secrets.tidb_keys.private_key
     response = requests.get(url, auth=HTTPBasicAuth(PUBLIC_KEY, PRIVATE_KEY))
+    print('wow')
     return response.json()
 
 def unpack_credentials(user_data: dict) -> dict:

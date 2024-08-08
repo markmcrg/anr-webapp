@@ -5,6 +5,7 @@ anr_webapp_venv
 *.sql
 test.py
 mail_stuff/
+total_lines.py
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
