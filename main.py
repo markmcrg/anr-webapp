@@ -7,7 +7,7 @@ import time
 import pandas as pd
 import requests
 from requests.auth import HTTPBasicAuth
-from helpers import fetch_data, unpack_credentials, get_role, get_abbreviation, update_last_login
+from helpers import fetch_data, get_email, unpack_credentials, get_role, get_abbreviation, update_last_login, modify_user_data
 import mysql.connector
 from mysql.connector import Error
 
@@ -133,6 +133,85 @@ if st.session_state["authentication_status"]:
     menu_item = 'Home'
 elif st.session_state["authentication_status"] is None or st.session_state["authentication_status"] == False:
     pass
+
+col1, col2 = st.columns([2,1])
+if st.session_state["authentication_status"]:
+    
+    cols = st.columns([0.3, 1, 0.3], vertical_alignment='center')   
+
+    with cols[1]:
+        current_tab = sac.tabs([
+        sac.TabsItem(label='Update Profile', icon='pencil-square'),
+        sac.TabsItem(label='Update Email Address', icon='envelope'),
+        sac.TabsItem(label='Update Password', icon='person-lock'),
+    ], align='center', position='top', size='sm', variant='outline')
+        if current_tab == 'Update Profile':
+            with st.container(border=True):
+                if 'abbreviation' not in st.session_state:
+                    st.session_state['abbreviation'] = get_abbreviation(st.session_state["username"])
+                if 'email' not in st.session_state:
+                    st.session_state['email'] = get_email(st.session_state["username"])
+                st.subheader('Account Information')
+                org_name = st.text_input('**Organization Name**', value=st.session_state['name'])
+                cols = st.columns(2)
+                username = cols[1].text_input('**Username**', value=st.session_state["username"], disabled=True, help='Username cannot be changed.')
+                abbreviation = cols[0].text_input('**Abbreviation**', value=get_abbreviation(st.session_state["username"]))
+                email = st.text_input('**Email**', value=get_email(st.session_state["username"]), disabled=True, help='Email can be changed at the "Update Email Address" tab.')
+
+                fields_blank = (
+                    not org_name or org_name.strip() == '' or
+                    not abbreviation or abbreviation.strip() == ''
+                )
+                
+                # Dictionary to track changed fields and their new values
+                changed_fields = {}
+
+                # Check if each field has changed and update the dictionary
+                if org_name != st.session_state['name']:
+                    changed_fields['Organization Name'] = org_name
+                if abbreviation != st.session_state['abbreviation']:
+                    changed_fields['Abbreviation'] = abbreviation
+                
+                fields_changed = bool(changed_fields)
+                
+                update_records = st.button('Save', disabled=fields_blank or not fields_changed)
+                if update_records:
+                    updated_fields = []
+                    msg = st.toast('Updating Records...', icon='🔄')
+                    for field, new_value in changed_fields.items():
+                        # Run the modify_user_data function for each changed field
+                        affected_rows = modify_user_data("username", field, st.session_state["username"], new_value)
+                    time.sleep(1)
+                    msg.toast('Records Updated!', icon='✅')
+                    time.sleep(1)
+                    if updated_fields:
+                        if len(updated_fields) == 1:
+                            success_message = f"{updated_fields[0]} has been changed."
+                        elif len(updated_fields) == 2:
+                            success_message = f"{' and '.join(updated_fields)} have been changed."
+                        else:
+                            success_message = f"{', '.join(updated_fields[:-1])}, and {updated_fields[-1]} have been changed."
+
+                        st.success(success_message)
+                    sac.alert(label='Organization Name successfully changed.', description=success_message, size='sm', radius='lg', variant='quote-light', color='success', icon=True, closable=True)
+
+
+        elif current_tab == 'Update Email Address':
+            with st.container(border=True):
+                st.subheader('Update Email Address')
+                email = st.text_input('**Current Email**', value=get_email(st.session_state["username"]))
+                new_email = st.text_input('**New Email**')
+                st.button('Save', disabled=True)
+        elif current_tab == 'Update Password':
+            with st.container(border=True):
+                st.subheader('Update Password')
+                password = st.text_input('**Old Password**', type='password')
+                new_password = st.text_input('**New Password**', type='password')
+                confirm_password = st.text_input('**Confirm Password**', type='password')
+                st.button('Save', disabled=True)
+        
+
+# add results screen
 
 # can modify: org name, abbreviation password
 # still show other fields but disable

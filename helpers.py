@@ -166,9 +166,26 @@ def get_abbreviation(username):
     response_dict = response.json()
     response_dict['data']['rows']
     
-    # Return the role of the user
+    # Return the abbreviation of the user
     try:
         return response_dict['data']['rows'][0]['abbreviation']
+    except:
+        return None
+    
+def get_email(username):
+    PUBLIC_KEY = st.secrets.tidb_keys.public_key
+    PRIVATE_KEY = st.secrets.tidb_keys.private_key
+    
+    url = f'https://ap-southeast-1.data.tidbcloud.com/api/v1beta/app/dataapp-SxHAXFax/endpoint/get_email?username={username}'
+    response = requests.get(url, auth=HTTPBasicAuth(PUBLIC_KEY, PRIVATE_KEY))
+
+    # Turn the response into a dictionary
+    response_dict = response.json()
+    response_dict['data']['rows']
+    
+    # Return the email of the user
+    try:
+        return response_dict['data']['rows'][0]['email']
     except:
         return None
     
