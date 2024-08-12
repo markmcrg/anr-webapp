@@ -2,8 +2,6 @@ import streamlit as st
 import streamlit_antd_components as sac
 import re
 import random
-
-from helpers import send_otp_email
 from helpers import register_user, check_email, check_username, send_otp_email
 
 def signup():
@@ -13,6 +11,8 @@ def signup():
         st.session_state.entered_otp = None
     if 'otp_sent' not in st.session_state:
         st.session_state.otp_sent = False
+    if 'generated_otp' not in st.session_state:
+        st.session_state.generated_otp = None
     if 'org_name' not in st.session_state:
         st.session_state.org_name = None
     if 'username' not in st.session_state:
@@ -23,9 +23,7 @@ def signup():
         st.session_state.email = None
     if 'password' not in st.session_state:
         st.session_state.password = None
-    if 'generated_otp' not in st.session_state:
-        st.session_state.generated_otp = None
-    
+
     def next_page():
         st.session_state.page += 1
         st.rerun()
@@ -126,6 +124,7 @@ def signup():
                 
             if st.button('Submit'):
                 if str(st.session_state.entered_otp) == str(st.session_state.generated_otp):
+                    st.session_state.otp_sent = False
                     next_page()
                 else:
                     st.error('OTP does not match')

@@ -1,9 +1,9 @@
-from .home import home
-from .accredited_orgs import accredited_orgs
-from .application_requirements import application_requirements
-from .faqs import faqs
-from .signup import signup
-from .login import login
-from .accreditation_application import accreditation_application
-from .accreditation_status import accreditation_status
-from .user_management import user_management
+from .home import home  # noqa: F401
+from .accredited_orgs import accredited_orgs # noqa: F401
+from .application_requirements import application_requirements # noqa: F401
+from .faqs import faqs # noqa: F401
+from .signup import signup # noqa: F401
+from .login import login # noqa: F401
+from .accreditation_application import accreditation_application # noqa: F401
+from .accreditation_status import accreditation_status # noqa: F401
+from .user_management import user_management# noqa: F401

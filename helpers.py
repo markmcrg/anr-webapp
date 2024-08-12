@@ -189,6 +189,23 @@ def get_email(username):
     except:
         return None
     
+def get_name(username):
+    PUBLIC_KEY = st.secrets.tidb_keys.public_key
+    PRIVATE_KEY = st.secrets.tidb_keys.private_key
+    
+    url = f'https://ap-southeast-1.data.tidbcloud.com/api/v1beta/app/dataapp-SxHAXFax/endpoint/get_org_name?username={username}'
+    response = requests.get(url, auth=HTTPBasicAuth(PUBLIC_KEY, PRIVATE_KEY))
+
+    # Turn the response into a dictionary
+    response_dict = response.json()
+    response_dict['data']['rows']
+    
+    # Return the org_name of the user
+    try:
+        return response_dict['data']['rows'][0]['org_name']
+    except:
+        return None
+    
 def update_last_login(username):
     PUBLIC_KEY = st.secrets.tidb_keys.public_key
     PRIVATE_KEY = st.secrets.tidb_keys.private_key

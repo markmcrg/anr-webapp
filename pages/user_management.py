@@ -33,7 +33,7 @@ def user_management():
                 to_modify = st.radio('**Modify:**', [col for col in columns_to_show if col not in ['username', 'role', 'last_login', 'created_at']])
             with col2:
                 identifier_value = st.selectbox(f'**Select {identifier}**', user_data[identifier].unique())
-                if to_modify == None:
+                if to_modify is None:
                     st.info("Please select a column to modify.")
                 else:
                     new_value = st.text_input(f'**New {to_modify}**')
