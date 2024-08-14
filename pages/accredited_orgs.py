@@ -65,4 +65,3 @@ def accredited_orgs():
             st.markdown(f"<div style='max-width: fit-content; margin-inline: auto;'>{filtered_df.to_html(index=False)}</div>", unsafe_allow_html=True)
             st.markdown("<a href='#list-of-accredited-organizations-for-term-2324'>Back to top</a>", unsafe_allow_html=True)
         
-accredited_orgs()
