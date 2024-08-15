@@ -7,14 +7,15 @@ import mailtrap as mt
 import json
 import mysql.connector
 from mysql.connector import Error
+from datetime import datetime, timezone, timedelta
+from b2sdk.v2 import InMemoryAccountInfo, B2Api, UploadSourceBytes
 
 # Function to fetch data from the TiDB Cloud API
-@st.cache_data
+@st.cache_data(show_spinner=False)
 def fetch_data(url: str) -> dict:
     PUBLIC_KEY = st.secrets.tidb_keys.public_key
     PRIVATE_KEY = st.secrets.tidb_keys.private_key
     response = requests.get(url, auth=HTTPBasicAuth(PUBLIC_KEY, PRIVATE_KEY))
-    print('wow')
     return response.json()
 
 def unpack_credentials(user_data: dict) -> dict:
@@ -154,7 +155,8 @@ def get_role(username):
         return response_dict['data']['rows'][0]['role']
     except:
         return None
-    
+
+@st.cache_data(show_spinner=False)
 def get_abbreviation(username):
     PUBLIC_KEY = st.secrets.tidb_keys.public_key
     PRIVATE_KEY = st.secrets.tidb_keys.private_key
@@ -281,3 +283,43 @@ def assign_roles(identifier, identifier_values, role):
     cursor.close()
     connection.close()
     return affected_rows
+
+def upload_document(uploaded_file, file_name):
+    if not file_name.lower().endswith('.pdf'):
+        file_name += '.pdf'
+        
+    # Setup B2 API
+    info = InMemoryAccountInfo()
+    b2_api = B2Api(info)
+    application_key_id = st.secrets['b2_user_app_key']['keyID']
+    application_key = st.secrets['b2_user_app_key']['applicationKey']
+    b2_api.authorize_account("production", application_key_id, application_key)
+    bucket = b2_api.get_bucket_by_name("anr-webapp")
+    
+    # Upload the file
+    file_bytes = uploaded_file.read()
+    upload_source = UploadSourceBytes(file_bytes)
+    bucket.upload(upload_source, file_name, content_type='application/pdf')
+    
+    # Return file URL
+    file_url = bucket.get_download_url(file_name)
+    
+    return file_url
+
+def list_files():
+    # Setup B2 API
+    info = InMemoryAccountInfo()
+    b2_api = B2Api(info)
+    application_key_id = st.secrets['b2_user_app_key']['keyID']
+    application_key = st.secrets['b2_user_app_key']['applicationKey']
+    b2_api.authorize_account("production", application_key_id, application_key)
+    bucket = b2_api.get_bucket_by_name("anr-webapp")
+    
+    # List all files in the bucket
+    for file_version, folder_name in bucket.ls(latest_only=False, recursive=True):
+        # Convert upload timestamp epoch to human-readable format
+        epoch_timestamp = file_version.upload_timestamp / 1000
+        upload_timestamp = datetime.fromtimestamp(epoch_timestamp, timezone(timedelta(hours=8))).strftime('%Y-%m-%d %H:%M:%S')
+        st.write(f'**{file_version.file_name}** | {upload_timestamp}')
+
+    
