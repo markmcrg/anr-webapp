@@ -47,3 +47,5 @@ The AnR Web App is hosted at [sccosoa.com](https://sccosoa.com).
 - [Mailtrap](https://api-docs.mailtrap.io/) - [Python SDK](https://github.com/railsware/mailtrap-python)
 - [Backblaze B2 Native API](https://www.backblaze.com/docs/cloud-storage-native-api) - [Python SDK](https://b2-sdk-python.readthedocs.io/en/master/api_reference.html)
 - [Backblaze B2 API Call Pricing](https://www.backblaze.com/cloud-storage/transaction-pricing)
+
+<img href="https://codetime.dev" alt="CodeTime Badge" src="https://img.shields.io/endpoint?style=flat&color=222&url=https%3A%2F%2Fapi.codetime.dev%2Fshield%3Fid%3D26488%26project%3D%26in=0">
