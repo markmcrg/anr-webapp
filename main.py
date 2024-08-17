@@ -1,7 +1,7 @@
 import streamlit as st
 import streamlit_antd_components as sac
 import pages as pg
-from helpers import get_role, get_abbreviation, update_last_login, upload_document, list_files
+from helpers import authenticate_b2, get_role, get_abbreviation, update_last_login, upload_document, list_files
 
 
 # Entrypoint / page router for the app
@@ -131,18 +131,6 @@ elif st.session_state["authentication_status"] is None or not st.session_state["
     pass
 
 if st.session_state["authentication_status"]:
-    from b2sdk.v2 import InMemoryAccountInfo, B2Api, UploadSourceBytes
-    
-    st.write('b2 stuff')
-    uploaded_file = st.file_uploader("Choose a file") 
-    if uploaded_file is not None:
-        file_url = upload_document(uploaded_file, 'wow2')
-        if file_url:
-            st.write('File uploaded successfully!')
-            st.write(file_url)
-    # write all files in the bucket
-    list_files()
-    
     st.markdown("<h1 style='text-align: center;'>Accreditation Application</h1><br><br>", unsafe_allow_html=True)
     if 'current_step' not in st.session_state:
         st.session_state.current_step = 0
@@ -178,7 +166,7 @@ if st.session_state["authentication_status"]:
                 sac.StepsItem(title='Organization Info', disabled=st.session_state.step_2_disabled),
                 sac.StepsItem(title='Upload Documents', disabled=st.session_state.step_3_disabled),
                 sac.StepsItem(title='Confirm Application', disabled=st.session_state.step_4_disabled),
-                sac.StepsItem(title='Application Submitted!', disabled=st.session_state.step_5_disabled),
+                sac.StepsItem(title='Application Submitted!', disabled=st.session_state.step_5_disabled, icon='check-circle-fill'),
             ], return_index=True, placement='horizontal', direction='vertical', index=st.session_state.current_step
         )
         
@@ -244,17 +232,59 @@ if st.session_state["authentication_status"]:
             st.header("3. Upload Document Compilation")
             st.session_state.org_doc = st.file_uploader("Upload your document compilation here:", type=['pdf'], help='Please upload your document compilation in PDF format.', label_visibility='visible')
             next_btn = st.button("Next", key="next3", disabled= not st.session_state.org_doc)
-            
+        
+            if st.session_state.org_doc is not None:
+                sac.alert(label='File uploaded successfully.', size='sm', variant='quote-light', color='success', icon=True)
+                
             if next_btn:
-                # Function to upload document compilation
-                pass
-            
+                next_step()
+                
+    if st.session_state.current_step == 3:
+        st.session_state.current_step = 3
+        st.session_state.step_4_disabled = False
+        with page_cols[2]:
+            st.header("4. Confirm Application")
+            st.write(f"**Organization:** {st.session_state.org_abbrv}")
+            st.write(f"**Jurisdiction:** {st.session_state.jurisdiction}")
+            st.write(f"**Application Type:** {st.session_state.app_type}")
+            st.write(f"**Application Order:** {st.session_state.app_order}")
+            st.write(f"**Document Compilation:** {st.session_state.org_doc}")
+        
+            submit_btn = st.button("Submit Application", key="submit")
+            if submit_btn:
+                from helpers import authenticate_b2, get_download_url, upload_document, list_files
+                msg = st.toast('Submitting Application...', icon='⬆️')
+                bucket = authenticate_b2('anr-webapp')
+                filename = f'{st.session_state.org_abbrv} - {st.session_state.app_order}'
+                file_ver = upload_document(bucket, st.session_state.org_doc, filename)
+                if file_ver:
+                    msg.toast('Application submitted successfully!', icon='🎉')
+                    next_step()
+                
+    if st.session_state.current_step == 4:
+        st.session_state.current_step = 4
+        for i in range(1, 6):
+            st.session_state[f'step_{i}_disabled'] = True
+        with page_cols[2]:
+            sac.result(label='Application Submitted!', description='Please check the status of your submission by clicking on "Accreditation Status."', status='success')
+        
+
+
+
+        from helpers import authenticate_b2, get_download_url, upload_document, list_files
+
+        bucket = authenticate_b2('anr-webapp')
+        filename = f'{st.session_state.org_abbrv} - {st.session_state.app_order}' +'.pdf'
+        list_files(bucket)
+        pdf_url = get_download_url(bucket, filename)
+        st.write(pdf_url)
     st.write(st.session_state)
 
 # Upload file with filename of abbrv + app_type 
-# Get link of doc from server
-# Insert link to submissions table
-# Table headers: Organization Name + Abbreviation, Application Type + app_type + username, jurisdiction, date submitted, eval_phase, assigned_to
+# Get link of doc from server 
+# Insert link to submissions table with view (download link + auth token)
+# Table headers: Organization Name + Abbreviation, app_type, app_order, username, jurisdiction, date submitted, eval_phase, assigned_to
+# Disable certain app type once submitted by adding more headers to users table
 
 
 

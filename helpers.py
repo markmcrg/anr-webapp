@@ -284,37 +284,26 @@ def assign_roles(identifier, identifier_values, role):
     connection.close()
     return affected_rows
 
-def upload_document(uploaded_file, file_name):
+def authenticate_b2(bucket_name):
+    info = InMemoryAccountInfo()
+    b2_api = B2Api(info)
+    application_key_id = st.secrets['b2_user_app_key']['keyID']
+    application_key = st.secrets['b2_user_app_key']['applicationKey']
+    b2_api.authorize_account("production", application_key_id, application_key)
+    bucket = b2_api.get_bucket_by_name(bucket_name)
+    return bucket
+
+def upload_document(bucket, uploaded_file, file_name):
     if not file_name.lower().endswith('.pdf'):
         file_name += '.pdf'
         
-    # Setup B2 API
-    info = InMemoryAccountInfo()
-    b2_api = B2Api(info)
-    application_key_id = st.secrets['b2_user_app_key']['keyID']
-    application_key = st.secrets['b2_user_app_key']['applicationKey']
-    b2_api.authorize_account("production", application_key_id, application_key)
-    bucket = b2_api.get_bucket_by_name("anr-webapp")
-    
-    # Upload the file
     file_bytes = uploaded_file.read()
     upload_source = UploadSourceBytes(file_bytes)
-    bucket.upload(upload_source, file_name, content_type='application/pdf')
+    file_ver = bucket.upload(upload_source, file_name, content_type='application/pdf')
     
-    # Return file URL
-    file_url = bucket.get_download_url(file_name)
-    
-    return file_url
+    return file_ver
 
-def list_files():
-    # Setup B2 API
-    info = InMemoryAccountInfo()
-    b2_api = B2Api(info)
-    application_key_id = st.secrets['b2_user_app_key']['keyID']
-    application_key = st.secrets['b2_user_app_key']['applicationKey']
-    b2_api.authorize_account("production", application_key_id, application_key)
-    bucket = b2_api.get_bucket_by_name("anr-webapp")
-    
+def list_files(bucket):
     # List all files in the bucket
     for file_version, folder_name in bucket.ls(latest_only=False, recursive=True):
         # Convert upload timestamp epoch to human-readable format
@@ -322,4 +311,8 @@ def list_files():
         upload_timestamp = datetime.fromtimestamp(epoch_timestamp, timezone(timedelta(hours=8))).strftime('%Y-%m-%d %H:%M:%S')
         st.write(f'**{file_version.file_name}** | {upload_timestamp}')
 
-    
+def get_download_url(bucket, filename):
+    download_auth_token = bucket.get_download_authorization(filename, 3600) # Modfiy this to change depending on filename and access
+    download_url = bucket.get_download_url(filename)
+    auth_download_url = str(f"{download_url}?Authorization={download_auth_token}")
+    return auth_download_url
