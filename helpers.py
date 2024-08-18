@@ -339,8 +339,37 @@ def list_files(bucket):
         upload_timestamp = datetime.fromtimestamp(epoch_timestamp, timezone(timedelta(hours=8))).strftime('%Y-%m-%d %H:%M:%S')
         st.write(f'**{file_version.file_name}** | {upload_timestamp}')
 
-def get_download_url(bucket, filename):
+def get_download_url(bucket, filename, auth=True):
     download_auth_token = bucket.get_download_authorization(filename, 3600) # Modfiy this to change depending on filename and access
     download_url = bucket.get_download_url(filename)
-    auth_download_url = str(f"{download_url}?Authorization={download_auth_token}")
-    return auth_download_url
+    if auth:
+        auth_download_url = str(f"{download_url}?Authorization={download_auth_token}")
+        return auth_download_url
+    else:
+        return download_url
+
+def record_submission(filename, org_name, app_type, app_order, jurisdiction, b2_file_url):
+    PUBLIC_KEY = st.secrets.tidb_keys.public_key
+    PRIVATE_KEY = st.secrets.tidb_keys.private_key
+
+    url = 'https://ap-southeast-1.data.tidbcloud.com/api/v1beta/app/dataapp-SxHAXFax/endpoint/record_submission'
+
+    headers = {
+        'Content-Type': 'application/json',
+    }
+
+    data = {
+        "app_order": app_order,
+        "app_type": app_type,
+        "b2_file_url": b2_file_url,
+        "filename": filename,
+        "jurisdiction": jurisdiction,
+        "org_name": org_name
+    }
+
+    response = requests.post(url, headers=headers, auth=HTTPBasicAuth(PUBLIC_KEY, PRIVATE_KEY), data=json.dumps(data))
+
+    if response.status_code == 200:
+        return True
+    else:
+        return False
