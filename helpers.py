@@ -242,7 +242,7 @@ def update_last_login(username):
         return True
     else:
         return False
-    
+
 def modify_user_data(identifier, to_modify, identifier_value, new_value):
     try:
         connection = mysql.connector.connect(
@@ -283,6 +283,34 @@ def assign_roles(identifier, identifier_values, role):
     cursor.close()
     connection.close()
     return affected_rows
+# @st.cache_data(show_spinner=False)
+def get_app_orders(username):
+    PUBLIC_KEY = st.secrets.tidb_keys.public_key
+    PRIVATE_KEY = st.secrets.tidb_keys.private_key
+    
+    url = f'https://ap-southeast-1.data.tidbcloud.com/api/v1beta/app/dataapp-SxHAXFax/endpoint/get_app_orders?username={username}'
+    response = requests.get(url, auth=HTTPBasicAuth(PUBLIC_KEY, PRIVATE_KEY))
+
+    # Turn the response into a dictionary
+    response_dict = response.json()
+    app_orders = response_dict['data']['rows'][0]
+    
+    return app_orders
+
+# @st.cache_data(show_spinner=False)
+def get_app_type(username):
+    PUBLIC_KEY = st.secrets.tidb_keys.public_key
+    PRIVATE_KEY = st.secrets.tidb_keys.private_key
+    
+    url = f'https://ap-southeast-1.data.tidbcloud.com/api/v1beta/app/dataapp-SxHAXFax/endpoint/get_app_type?username={username}'
+    response = requests.get(url, auth=HTTPBasicAuth(PUBLIC_KEY, PRIVATE_KEY))
+
+    # Turn the response into a dictionary
+    response_dict = response.json()
+    app_type = response_dict['data']['rows'][0]['app_type']
+    
+    return app_type
+
 
 def authenticate_b2(bucket_name):
     info = InMemoryAccountInfo()

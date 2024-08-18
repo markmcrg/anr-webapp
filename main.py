@@ -1,7 +1,7 @@
 import streamlit as st
 import streamlit_antd_components as sac
 import pages as pg
-from helpers import authenticate_b2, get_role, get_abbreviation, update_last_login, upload_document, list_files
+from helpers import authenticate_b2, get_role, get_abbreviation, update_last_login, upload_document, list_files, modify_user_data, get_app_orders, get_app_type, get_download_url
 
 
 # Entrypoint / page router for the app
@@ -155,7 +155,7 @@ if st.session_state["authentication_status"]:
         st.session_state.current_step += 1
         st.rerun()
 
-    def prev_prev():
+    def prev_step():
         st.session_state.current_step -= 1
         st.rerun()
     page_cols = st.columns([0.5, 0.1, 1, 0.1], vertical_alignment='center')
@@ -191,19 +191,31 @@ if st.session_state["authentication_status"]:
             st.markdown("<h4 style='text-align: center;'>1. Select your application type, and the order of your application.</h1><br><br>", unsafe_allow_html=True)
             st.write("")
             cols = st.columns([0.2, 1,1, 0.2], gap='small', vertical_alignment='center')
+            # st.write(get_download_url(authenticate_b2('anr-webapp'), 'wow2.pdf'))
+            # Check if user has submitted an application before
+            accre_disabled = False
+            reval_disabled = False
+            app_type = get_app_type(st.session_state['username'])
+            
+            if app_type == "Accreditation":
+                reval_disabled = True
+            elif app_type == "Revalidation":
+                accre_disabled = True
+                
+            app_orders = get_app_orders(st.session_state['username'])
             
             with cols[1]:
                 with st.container(border=True):
                     st.session_state.app_type = sac.buttons([
-                        sac.ButtonsItem(label='Accreditation', icon='check2-circle'),
-                        sac.ButtonsItem(label='Revalidation', icon='arrow-repeat'),
+                        sac.ButtonsItem(label='Accreditation', icon='check2-circle', disabled=accre_disabled),
+                        sac.ButtonsItem(label='Revalidation', icon='arrow-repeat', disabled=reval_disabled),
                     ], label='', direction='vertical', gap='md', variant='outline', use_container_width=True, align='center', size='md', index=2)
             with cols[2]:
                 with st.container(border=True):
                     st.session_state.app_order = sac.buttons([
-                        sac.ButtonsItem(label='Initial Submission', icon='1-circle'),
-                        sac.ButtonsItem(label='1st Resubmission', icon='2-circle'),
-                        sac.ButtonsItem(label='2nd Resubmission', icon='3-circle'),
+                        sac.ButtonsItem(label='Initial Submission', icon='1-circle', disabled=True if int(app_orders['initial_sub']) == 1 else False),
+                        sac.ButtonsItem(label='1st Resubmission', icon='2-circle', disabled=True if int(app_orders['first_resub']) == 1 else False),
+                        sac.ButtonsItem(label='2nd Resubmission', icon='3-circle', disabled=True if int(app_orders['second_resub']) == 1 else False),
                     ], label='', direction='vertical', gap='md', variant='outline', use_container_width=True, align='center', size='md', index=3)
             next_btn = st.button("Next", key="next", disabled= not (st.session_state.app_type and st.session_state.app_order))
             if next_btn:
@@ -248,17 +260,35 @@ if st.session_state["authentication_status"]:
             st.write(f"**Jurisdiction:** {st.session_state.jurisdiction}")
             st.write(f"**Application Type:** {st.session_state.app_type}")
             st.write(f"**Application Order:** {st.session_state.app_order}")
-            st.write(f"**Document Compilation:** {st.session_state.org_doc}")
         
             submit_btn = st.button("Submit Application", key="submit")
             if submit_btn:
                 from helpers import authenticate_b2, get_download_url, upload_document, list_files
+                import time
                 msg = st.toast('Submitting Application...', icon='⬆️')
+                
+                # Upload document to B2
                 bucket = authenticate_b2('anr-webapp')
                 filename = f'{st.session_state.org_abbrv} - {st.session_state.app_order}'
                 file_ver = upload_document(bucket, st.session_state.org_doc, filename)
+            
+                # Modify table app type
+                modify_user_data('username', 'app_type', st.session_state.username, st.session_state.app_type)
+                # Modify table app order
+                if st.session_state.app_order == 'Initial Submission':
+                    modify_user_data('username', 'initial_sub', st.session_state.username, 1)
+                elif st.session_state.app_order == '1st Resubmission':
+                    modify_user_data('username', 'first_resub', st.session_state.username, 1)
+                elif st.session_state.app_order == '2nd Resubmission':
+                    modify_user_data('username', 'second_resub', st.session_state.username, 1)
+                
+                
+                # Get link of doc from server
+                pdf_url = get_download_url(bucket, filename + '.pdf')
+                st.write(pdf_url)
                 if file_ver:
                     msg.toast('Application submitted successfully!', icon='🎉')
+                    time.sleep(1)
                     next_step()
                 
     if st.session_state.current_step == 4:
@@ -267,30 +297,25 @@ if st.session_state["authentication_status"]:
             st.session_state[f'step_{i}_disabled'] = True
         with page_cols[2]:
             sac.result(label='Application Submitted!', description='Please check the status of your submission by clicking on "Accreditation Status."', status='success')
-        
-
-
-
+            
+            if st.button('Previous'):
+                prev_step()
+    
         from helpers import authenticate_b2, get_download_url, upload_document, list_files
 
         bucket = authenticate_b2('anr-webapp')
         filename = f'{st.session_state.org_abbrv} - {st.session_state.app_order}' +'.pdf'
         list_files(bucket)
         pdf_url = get_download_url(bucket, filename)
+        
         st.write(pdf_url)
-    st.write(st.session_state)
+        st.write(st.session_state)
 
-# Upload file with filename of abbrv + app_type 
-# Get link of doc from server 
+# Clear all session state variables used for the application form
 # Insert link to submissions table with view (download link + auth token)
-# Table headers: Organization Name + Abbreviation, app_type, app_order, username, jurisdiction, date submitted, eval_phase, assigned_to
 # Disable certain app type once submitted by adding more headers to users table
 
-
-
 # Display summary screen to review application details - once they submit, show warning that they can't edit anymore
-# set up session state for variables for each step
-# set up proper enabling of steps once visited
             
 # user - for orgs
 # cosoa - for evals
