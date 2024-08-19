@@ -283,6 +283,7 @@ def assign_roles(identifier, identifier_values, role):
     cursor.close()
     connection.close()
     return affected_rows
+
 # @st.cache_data(show_spinner=False)
 def get_app_orders(username):
     PUBLIC_KEY = st.secrets.tidb_keys.public_key
@@ -310,7 +311,6 @@ def get_app_type(username):
     app_type = response_dict['data']['rows'][0]['app_type']
     
     return app_type
-
 
 def authenticate_b2(bucket_name):
     info = InMemoryAccountInfo()
@@ -340,7 +340,7 @@ def list_files(bucket):
         st.write(f'**{file_version.file_name}** | {upload_timestamp}')
 
 def get_download_url(bucket, filename, auth=True):
-    download_auth_token = bucket.get_download_authorization(filename, 3600) # Modfiy this to change depending on filename and access
+    download_auth_token = bucket.get_download_authorization(filename, 86400) # Modfiy this to change depending on filename and access
     download_url = bucket.get_download_url(filename)
     if auth:
         auth_download_url = str(f"{download_url}?Authorization={download_auth_token}")
@@ -348,7 +348,7 @@ def get_download_url(bucket, filename, auth=True):
     else:
         return download_url
 
-def record_submission(filename, org_name, app_type, app_order, jurisdiction, b2_file_url):
+def record_submission(filename, org_name, app_type, app_order, jurisdiction, b2_file_url, username):
     PUBLIC_KEY = st.secrets.tidb_keys.public_key
     PRIVATE_KEY = st.secrets.tidb_keys.private_key
 
@@ -364,7 +364,8 @@ def record_submission(filename, org_name, app_type, app_order, jurisdiction, b2_
         "b2_file_url": b2_file_url,
         "filename": filename,
         "jurisdiction": jurisdiction,
-        "org_name": org_name
+        "org_name": org_name,
+        "username": username
     }
 
     response = requests.post(url, headers=headers, auth=HTTPBasicAuth(PUBLIC_KEY, PRIVATE_KEY), data=json.dumps(data))
@@ -373,3 +374,16 @@ def record_submission(filename, org_name, app_type, app_order, jurisdiction, b2_
         return True
     else:
         return False
+    
+def get_submissions(username):
+    PUBLIC_KEY = st.secrets.tidb_keys.public_key
+    PRIVATE_KEY = st.secrets.tidb_keys.private_key
+    
+    url = f'https://ap-southeast-1.data.tidbcloud.com/api/v1beta/app/dataapp-SxHAXFax/endpoint/get_submissions?username={username}'
+    response = requests.get(url, auth=HTTPBasicAuth(PUBLIC_KEY, PRIVATE_KEY))
+
+    # Turn the response into a dictionary
+    response_dict = response.json()
+    submissions = response_dict['data']['rows']
+    
+    return submissions

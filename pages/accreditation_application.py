@@ -104,9 +104,33 @@ def accreditation_application():
                                     value=st.session_state.org_abbrv, 
                                     disabled=True, 
                                     help='To modify this, please change your details in Account Settings.')
-            st.session_state.jurisdiction = st.selectbox("**Jurisdiction**", 
-                                        ["University-Wide (U-Wide)", "College of Architecture, Design, and the Built Environment (CADBE)", "College of Accountancy and Finance (CAF)", "College of Arts and Letters (CAL)", "College of Business Administration (CBA)", "College of Computer and Information Sciences (CCIS)", "College of Engineering (CE)", "College of Human Kinetics (CHK)", "College of Communication (COC)", "College of Education (COED)", "College of Political Science and Public Administration (CPSPA)", "College of Science (CS)", "College of Social Sciences and Development (CSSD)", "College of Tourism, Hospitality, and Transportation Management (CTHTM)", "Insititute of Technology (ITech)", "Open University System (OUS)", "Graduate School (GS)", "Lab High School (LHS)", "Senior High School (SHS)"], 
+            jurisdictions = {
+                "University-Wide (U-Wide)": "U-WIDE",
+                "College of Architecture, Design, and the Built Environment (CADBE)": "CADBE",
+                "College of Accountancy and Finance (CAF)": "CAF",
+                "College of Arts and Letters (CAL)": "CAL",
+                "College of Business Administration (CBA)": "CBA",
+                "College of Computer and Information Sciences (CCIS)": "CCIS",
+                "College of Engineering (CE)": "CE",
+                "College of Human Kinetics (CHK)": "CHK",
+                "College of Communication (COC)": "COC",
+                "College of Education (COED)": "COED",
+                "College of Political Science and Public Administration (CPSPA)": "CPSPA",
+                "College of Science (CS)": "CS",
+                "College of Social Sciences and Development (CSSD)": "CSSD",
+                "College of Tourism, Hospitality, and Transportation Management (CTHTM)": "CTHTM",
+                "Insititute of Technology (ITech)": "ITECH",
+                "Open University System (OUS)": "OUS",
+                "Graduate School (GS)": "GS",
+                "Lab High School (LHS)": "LHS",
+                "Senior High School (SHS)": "SHS"
+            }
+
+            jurisdiction = st.selectbox("**Jurisdiction**", list(jurisdictions.keys()), 
                                         help='This is where your organization and its members will be based.')
+
+            st.session_state.jurisdiction = jurisdictions[jurisdiction] if jurisdiction else None
+                
             next_btn = st.button("Next", key="next2")
             if next_btn:
                 next_step()
@@ -161,7 +185,8 @@ def accreditation_application():
                                 st.session_state.app_type,
                                 st.session_state.app_order,
                                 st.session_state.jurisdiction,
-                                b2_pdf_url)
+                                b2_pdf_url,
+                                st.session_state.username)
                 
                 if file_ver and b2_pdf_url:
                     msg.toast('Application submitted successfully!', icon='🎉')

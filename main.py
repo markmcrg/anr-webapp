@@ -1,7 +1,7 @@
 import streamlit as st
 import streamlit_antd_components as sac
 import pages as pg
-from helpers import get_role, get_abbreviation, update_last_login
+from helpers import get_role, get_abbreviation, update_last_login, get_submissions
 
 # Entrypoint / page router for the app
 
