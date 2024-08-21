@@ -11,4 +11,4 @@ jobs:
     steps:
       - name: Send a request to keep the app awake
         run: |
-          curl -I https://your-streamlit-app-url.com
+          curl -I https://anr-temp-page.streamlit.app/
