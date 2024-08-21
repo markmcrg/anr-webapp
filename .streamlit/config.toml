@@ -7,3 +7,4 @@ primaryColor="#8b0000"
 
 [server]
 maxUploadSize = 100
+runOnSave = true

@@ -112,7 +112,7 @@ def signup():
     # OTP Page            
     if st.session_state.page == 3:
         with st.container(border=True):
-            st.write(f'A One-Time Password (OTP) has been sent to your email at *{st.session_state.email}*. Please enter the OTP below to verify your account.')
+            st.write(f'A One-Time Passcode (OTP) has been sent to your email at *{st.session_state.email}*. Please enter the OTP below to verify your account.')
             
             # Generate random OTP if not yet sent
             if not st.session_state.otp_sent:

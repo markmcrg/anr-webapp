@@ -11,7 +11,6 @@ from datetime import datetime, timezone, timedelta
 from b2sdk.v2 import InMemoryAccountInfo, B2Api, UploadSourceBytes
 
 # Function to fetch data from the TiDB Cloud API
-@st.cache_data(show_spinner=False)
 def fetch_data(url: str) -> dict:
     PUBLIC_KEY = st.secrets.tidb_keys.public_key
     PRIVATE_KEY = st.secrets.tidb_keys.private_key
@@ -387,3 +386,21 @@ def get_submissions(username):
     submissions = response_dict['data']['rows']
     
     return submissions
+
+def get_abbreviation_from_webmail(webmail):
+    PUBLIC_KEY = st.secrets.tidb_keys.public_key
+    PRIVATE_KEY = st.secrets.tidb_keys.private_key
+    
+    url = f'https://ap-southeast-1.data.tidbcloud.com/api/v1beta/app/dataapp-SxHAXFax/endpoint/get_abbreviation_from_webmail?email={webmail}'
+    
+    response = requests.get(url, auth=HTTPBasicAuth(PUBLIC_KEY, PRIVATE_KEY))
+    
+    # Turn the response into a dictionary
+    response_dict = response.json()
+    
+    try:
+        return response_dict['data']['rows'][0]['abbreviation']
+    except:
+        return None
+    
+    

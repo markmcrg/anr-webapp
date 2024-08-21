@@ -1,7 +1,8 @@
 import streamlit as st
 import streamlit_antd_components as sac
 import pages as pg
-from helpers import get_role, get_abbreviation, update_last_login, get_submissions
+from helpers import get_role, get_abbreviation, update_last_login
+
 
 # Entrypoint / page router for the app
 
@@ -25,7 +26,8 @@ with st.sidebar:
             sac.MenuItem('Frequently Asked Questions', icon='bi bi-question-circle'),
             sac.MenuItem('Sign Up', icon='bi bi-person-plus'),
             sac.MenuItem('Login', icon='bi bi-box-arrow-in-right'),
-        ], open_all=False, index=2)
+            sac.MenuItem('Password Reset', icon='bi bi-key'),
+        ], open_all=False, index=2, size ='md')
     
     if st.session_state["authentication_status"]:
         role = get_role(st.session_state["username"])
@@ -121,7 +123,9 @@ elif menu_item == 'User Management':
     pg.user_management()
 elif menu_item == 'Account Settings':
     pg.account_settings()
-
+elif menu_item == 'Password Reset':
+    pg.forgot_password()
+    
 # Sidebar Footer Login info
 
 if st.session_state["authentication_status"]:

@@ -8,3 +8,4 @@ from .accreditation_application import accreditation_application # noqa: F401
 from .accreditation_status import accreditation_status # noqa: F401
 from .user_management import user_management# noqa: F401
 from .account_settings import account_settings # noqa: F401
+from .forgot_password import forgot_password # noqa: F401

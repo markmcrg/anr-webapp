@@ -119,8 +119,9 @@ def accreditation_status():
                     {rows}
             </table>
         """
+        st.markdown(table_html, unsafe_allow_html=True)
     else:
         sac.result(label='No Submissions Found', description='Click on "Accreditation Application" to submit your first application.', status='empty')
-    st.markdown(table_html, unsafe_allow_html=True)
+    
 
 # Have info to show what each status means (Approved, Pending, etc.)
