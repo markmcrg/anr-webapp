@@ -1,6 +1,6 @@
 import streamlit as st
 import streamlit_antd_components as sac
-from helpers import fetch_data, modify_user_data, assign_roles
+from helpers import fetch_data, modify_user_data, assign_roles, update_settings
 import pandas as pd
 
 def user_management():
@@ -21,6 +21,7 @@ def user_management():
     tab = sac.tabs([
         sac.TabsItem(label='Modify User Data'),
         sac.TabsItem(label='Assign Roles'),
+        sac.TabsItem(label='Toggle Settings'),
     ], align='start', variant='outline', size='sm')
 
     if columns_to_show == []:
@@ -31,6 +32,7 @@ def user_management():
             with col1:
                 identifier = st.radio('**Select by:**', [col for col in columns_to_show if col not in ['role', 'last_login', 'created_at']])
                 to_modify = st.radio('**Modify:**', [col for col in columns_to_show if col not in ['username', 'role', 'last_login', 'created_at']])
+                st.button("Refresh Data", help="Refresh the data to see the changes made.")
             with col2:
                 identifier_value = st.selectbox(f'**Select {identifier}**', user_data[identifier].unique())
                 if to_modify is None:
@@ -46,6 +48,7 @@ def user_management():
             with st.container(border=True):
                 with col1:
                     identifier = st.radio('**Select by:**', [col for col in columns_to_show if col not in ['role', 'last_login', 'created_at']])
+                    st.button("Refresh Data", help="Refresh the data to see the changes made.")
                 with col2:
                     if 'role' not in columns_to_show:
                         identifier_value = st.multiselect(f'**Select {identifier}**', user_data[identifier].unique(), disabled=True)
@@ -59,5 +62,26 @@ def user_management():
                         if assign_role:
                             affected_rows = assign_roles(identifier, identifier_value, assigned_role)
                             st.toast(f"Successfully assigned {affected_rows} row(s) to {assigned_role}.", icon="✅")
-        with col1:
-            st.button("Refresh Data", help="Refresh the data to see the changes made.")
+        if tab == "Toggle Settings":
+            settings = fetch_data('https://ap-southeast-1.data.tidbcloud.com/api/v1beta/app/dataapp-SxHAXFax/endpoint/get_settings')['data']['rows']
+            if settings:
+                toggle_submissions = st.toggle("Toggle Submissions", value= True if settings[1]['status'] == "TRUE" else False)
+                toggle_resubmissions = st.toggle("Toggle Resubmissions", value= True if settings[0]['status'] == "TRUE" else False)
+                
+                # Show update button if changes have been made
+                update_settings_btn = st.button("Update Settings")
+                if update_settings_btn:
+                    if toggle_submissions:
+                        update_settings('accepting_submissions', "TRUE")
+                    else:
+                        update_settings('accepting_submissions', "FALSE")
+                    if toggle_resubmissions:
+                        update_settings('accepting_resubmissions', "TRUE")
+                    else:
+                        update_settings('accepting_resubmissions', "FALSE")
+                        
+                    sac.alert(label='Settings updated successfully.', size='sm', variant='quote-light', color='success', icon=True)
+            else:
+                st.warning("No settings found.")
+
+        

@@ -402,5 +402,24 @@ def get_abbreviation_from_webmail(webmail):
         return response_dict['data']['rows'][0]['abbreviation']
     except:
         return None
+
+def update_settings(setting, status):
+    PUBLIC_KEY = st.secrets.tidb_keys.public_key
+    PRIVATE_KEY = st.secrets.tidb_keys.private_key
     
+    url = 'https://ap-southeast-1.data.tidbcloud.com/api/v1beta/app/dataapp-SxHAXFax/endpoint/change_settings'
+    headers = {
+    'content-type': 'application/json',
+    }
+
+    data = {
+        "setting": setting,
+        "status": status
+    }
     
+    response = requests.put(url, headers=headers, json=data, auth=HTTPBasicAuth(PUBLIC_KEY, PRIVATE_KEY))
+
+    if response.status_code == 200:
+        return True
+    else:
+        return False

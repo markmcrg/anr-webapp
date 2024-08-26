@@ -1,6 +1,6 @@
 import streamlit as st
 import streamlit_antd_components as sac
-from helpers import authenticate_b2, get_download_url, upload_document, list_files, modify_user_data, get_app_orders, get_app_type, record_submission, get_abbreviation
+from helpers import authenticate_b2, get_download_url, upload_document, list_files, modify_user_data, get_app_orders, get_app_type, record_submission, get_abbreviation, fetch_data
 import time
 
 def accreditation_application():
@@ -57,42 +57,52 @@ def accreditation_application():
             '''
         )
     if st.session_state.current_step == 0:
-        with page_cols[2]:
-            st.session_state.current_step = 0
-            st.session_state.step_1_disabled = False
-            st.write("")
-            st.markdown("<h4 style='text-align: center;'>1. Select your application type, and the order of your application.</h1><br><br>", unsafe_allow_html=True)
-            st.write("")
-            cols = st.columns([0.2, 1,1, 0.2], gap='small', vertical_alignment='center')
-            # st.write(get_download_url(authenticate_b2('anr-webapp'), 'wow2.pdf'))
-            # Check if user has submitted an application before
-            accre_disabled = False
-            reval_disabled = False
-            app_type = get_app_type(st.session_state['username'])
-            
-            if app_type == "Accreditation":
-                reval_disabled = True
-            elif app_type == "Revalidation":
-                accre_disabled = True
+        # Fetch data here from settings table to check if accepting_responses is True and if accepting_resubmissions is True
+        settings = fetch_data('https://ap-southeast-1.data.tidbcloud.com/api/v1beta/app/dataapp-SxHAXFax/endpoint/get_settings')['data']['rows']
+        # if accepting submissions is False, show a screen that says "We are currently not accepting applications at the moment. Please check back later."
+        if settings[1]['status'] == "TRUE":
+            # if accepting resubmissions is False, show a screen that says "We are currently not accepting new submissions at the moment. Please check back later."
+            with page_cols[2]:
+                st.session_state.current_step = 0
+                st.session_state.step_1_disabled = False
+                st.write("")
+                st.markdown("<h4 style='text-align: center;'>1. Select your application type, and the order of your application.</h1><br><br>", unsafe_allow_html=True)
+                st.write("")
+                cols = st.columns([0.2, 1,1, 0.2], gap='small', vertical_alignment='center')
+
+                # Check if user has submitted an application before
+                accre_disabled = False
+                reval_disabled = False
+                app_type = get_app_type(st.session_state['username'])
                 
-            app_orders = get_app_orders(st.session_state['username'])
-            
-            with cols[1]:
-                with st.container(border=True):
-                    st.session_state.app_type = sac.buttons([
-                        sac.ButtonsItem(label='Accreditation', icon='check2-circle', disabled=accre_disabled),
-                        sac.ButtonsItem(label='Revalidation', icon='arrow-repeat', disabled=reval_disabled),
-                    ], label='', direction='vertical', gap='md', variant='outline', use_container_width=True, align='center', size='md', index=2)
-            with cols[2]:
-                with st.container(border=True):
-                    st.session_state.app_order = sac.buttons([
-                        sac.ButtonsItem(label='Initial Submission', icon='1-circle', disabled=True if int(app_orders['initial_sub']) == 1 else False),
-                        sac.ButtonsItem(label='1st Resubmission', icon='2-circle', disabled=True if int(app_orders['first_resub']) == 1 else False),
-                        sac.ButtonsItem(label='2nd Resubmission', icon='3-circle', disabled=True if int(app_orders['second_resub']) == 1 else False),
-                    ], label='', direction='vertical', gap='md', variant='outline', use_container_width=True, align='center', size='md', index=3)
-            next_btn = st.button("Next", key="next", disabled= not (st.session_state.app_type and st.session_state.app_order))
-            if next_btn:
-                next_step()
+                if app_type == "Accreditation":
+                    reval_disabled = True
+                elif app_type == "Revalidation":
+                    accre_disabled = True
+                    
+                app_orders = get_app_orders(st.session_state['username'])
+                
+                with cols[1]:
+                    with st.container(border=True):
+                        st.session_state.app_type = sac.buttons([
+                            sac.ButtonsItem(label='Accreditation', icon='check2-circle', disabled=accre_disabled),
+                            sac.ButtonsItem(label='Revalidation', icon='arrow-repeat', disabled=reval_disabled),
+                        ], label='', direction='vertical', gap='md', variant='outline', use_container_width=True, align='center', size='md', index=2)
+                with cols[2]:
+                    with st.container(border=True):
+                        st.session_state.app_order = sac.buttons([
+                            sac.ButtonsItem(label='Initial Submission', icon='1-circle', disabled=True if int(app_orders['initial_sub']) == 1 or settings[0]['status'] == "FALSE" else False),
+                            sac.ButtonsItem(label='1st Resubmission', icon='2-circle', disabled=True if int(app_orders['first_resub']) == 1 else False),
+                            sac.ButtonsItem(label='2nd Resubmission', icon='3-circle', disabled=True if int(app_orders['second_resub']) == 1 else False),
+                        ], label='', direction='vertical', gap='md', variant='outline', use_container_width=True, align='center', size='md', index=3)
+                next_btn = st.button("Next", key="next", disabled= not (st.session_state.app_type and st.session_state.app_order))
+                if settings[0]['status'] == "FALSE":
+                    sac.alert(label='Initial submissions are closed. Proceed with your application only if you have submitted your initial submission.', size='sm', variant='quote-light', color='info', icon=True)
+                if next_btn:
+                    next_step()
+        else:
+            with page_cols[2]:
+                sac.result(label='Submissions closed.', description='We are currently not accepting applications at the moment. Please check back later.', status="info")
     if st.session_state.current_step == 1:
         st.session_state.current_step = 1
         st.session_state.step_2_disabled = False

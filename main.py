@@ -134,9 +134,11 @@ if st.session_state["authentication_status"]:
     menu_item = 'Home'
 elif st.session_state["authentication_status"] is None or not st.session_state["authentication_status"]:
     pass
-
-
-    
+from helpers import fetch_data
+settings = fetch_data('https://ap-southeast-1.data.tidbcloud.com/api/v1beta/app/dataapp-SxHAXFax/endpoint/get_settings')['data']['rows']
+# From list of dicts, get the dict with setting "accepting_submissions"
+if settings[0]['status'] == "TRUEas":
+    st.write('hi')
 
 # user - for orgs
 # cosoa - for evals
