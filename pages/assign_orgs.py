@@ -8,7 +8,7 @@ from st_keyup import st_keyup
 import streamlit_antd_components as sac
 
 def assign_orgs():
-    st.subheader("Organization Submissions")
+    st.subheader("📄 Organization Submissions")
     submission_data = fetch_data("https://ap-southeast-1.data.tidbcloud.com/api/v1beta/app/dataapp-SxHAXFax/endpoint/get_all_submissions")['data']['rows']
     cosoa_names = [d['org_name'] for d in fetch_data("https://ap-southeast-1.data.tidbcloud.com/api/v1beta/app/dataapp-SxHAXFax/endpoint/get_cosoa_users")['data']['rows']]
 
@@ -25,6 +25,8 @@ def assign_orgs():
                 'IE2',
                 'FE1',
                 'FE2',
+                'Returned',
+                'Approved'
             ],
             label='Filter by evaluation phase', index=[0, 1, 2, 3], align='center'
         )
@@ -82,7 +84,7 @@ def assign_orgs():
                         "Evaluation Phase" : st.column_config.SelectboxColumn(
                             "Evaluation Phase",
                             required=True,
-                            options=["IE1", "IE2", "FE1", "FE2"]
+                            options=["IE1", "IE2", "FE1", "FE2", "Returned", "Approved"],
                             ),
                             "Person Assigned" : st.column_config.SelectboxColumn(
                             "Person Assigned",
