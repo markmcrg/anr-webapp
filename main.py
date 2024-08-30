@@ -138,11 +138,36 @@ elif st.session_state["authentication_status"] is None or not st.session_state["
 
 from helpers import fetch_data
 import pandas as pd
+from st_keyup import st_keyup
 # add filters for which eval phase to show
 submission_data = fetch_data("https://ap-southeast-1.data.tidbcloud.com/api/v1beta/app/dataapp-SxHAXFax/endpoint/get_all_submissions")['data']['rows']
-submission_data_df = pd.DataFrame(submission_data, columns=["filename", "jurisdiction", "app_type", "date_submitted", "eval_phase", "b2_file_url"])
-submission_data_df.columns = ["Organization Submission", "Jurisdiction", "Application Type", "Date Submitted", "Evaluation Phase", "View"]
-st.dataframe(submission_data_df, hide_index=True)
+submission_data_df = pd.DataFrame(submission_data)
+submission_data_df = submission_data_df.rename(columns={"filename": "Organization Submission", "jurisdiction": "Jurisdiction", "app_type": "Application Type", "date_submitted": "Date Submitted", "eval_phase": "Evaluation Phase", "b2_file_url": "View"})
+
+submission_data_df['Date Submitted'] = pd.to_datetime(submission_data_df['Date Submitted'])
+
+top_cols = st.columns([2, 1, 1], vertical_alignment='center')
+with top_cols[0]:
+    submission_query = st_keyup('Search for an organization or user:', debounce=300, key="1", placeholder="Organization Name/Abbreviation or Person Assigned")
+with top_cols[1]:
+    eval_phase_filter = sac.checkbox(
+        items=[
+            'IE',
+            'FE',
+            'CA',
+        ],
+        label='Filter by evaluation phase', index=[0, 1, 2, 3], align='center'
+    )
+if submission_query:
+    submission_data_df = submission_data_df[
+        submission_data_df['Organization Submission'].str.contains(submission_query, case=False, regex=False)
+    ]
+if eval_phase_filter:
+    submission_data_df = submission_data_df[
+        submission_data_df['Evaluation Phase'].isin(eval_phase_filter)
+    ]
+
+st.dataframe(submission_data_df, hide_index=True, column_order=['Organization Submission', 'Jurisdiction', 'Application Type', 'Date Submitted', 'Evaluation Phase', 'View'])
 cols = st.columns([1,1], gap="medium")
 approval_data = {}
 accre_docs = {
@@ -164,43 +189,181 @@ reval_docs = {
     'RD008': 'Copy of Approved Financial Statements',
     'RD009': 'Turnover of Assets and Funds',
 }
-
-with cols[0]:
-    sub_to_eval = st.selectbox("**Select submission to evaluate:**", submission_data_df['Organization Submission'])
-    # Check app type of submission to know if ad or rd dict to use
-    # Check app_order to know whether to show previous remarks (if FE), or not, then whether to show option to return with revised comments (if FE), or transfer to OC Endorsement
-    if submission_data_df[submission_data_df['Organization Submission'] == sub_to_eval]['Application Type'].values[0] == 'Accreditation':
-        for doc_code, doc_name in accre_docs.items():
-            with st.expander(f"{doc_code} - {doc_name}"):
-                remark = st.text_area(f"Remarks for {doc_name}", key=f"remark_{doc_code}", height=100)
-                approved = st.checkbox(f"Approve {doc_code}", key=f"approve_{doc_code}")
-                
-                approval_data[doc_code] = {"approved": approved, "remark": remark}
-                
-    elif submission_data_df[submission_data_df['Organization Submission'] == sub_to_eval]['Application Type'].values[0] == 'Revalidation':
-        for doc_code, doc_name in reval_docs.items():
-            with st.expander(f"{doc_code} - {doc_name}"):
-                remark = st.text_area(f"Remarks for {doc_name}", key=f"remark_{doc_code}", height=100)
-                approved = st.checkbox(f"Approve {doc_code}", key=f"approve_{doc_code}")
-                
-                approval_data[doc_code] = {"approved": approved, "remark": remark}
-
-    save_btn = st.button("Save")
-
-if save_btn:
-    if any([approval_data[doc]['remark'] == "" for doc in accre_docs]):
-        with cols[0]:
-            sac.alert(label='Please ensure that there are remarks for each document.', size='sm', variant='quote-light', color='warning', icon=True)
-    else:
-        with cols[1]:
-            st.subheader("⭐ Evaluation Summary")
-            # show st.table
-            eval_summary = pd.DataFrame(approval_data).T
-            st.table(eval_summary)
+if not submission_data_df.empty:
+    with cols[0]:
+        # Check eval_phase to know whether to show previous remarks (if FE), or not, then whether to show option to return with revised comments (if FE), or transfer to OC Endorsement
+        # Check app type of submission to know if ad or rd dict to use
+        # Check eval_phase
+        
+            sub_to_eval = st.selectbox("**Select submission to evaluate:**", submission_data_df['Organization Submission'])
             
-            confirm_btn = st.button("Confirm Evaluation")
-            
+            if submission_data_df[submission_data_df['Organization Submission'] == sub_to_eval]['Evaluation Phase'].values[0] == 'IE':
+                if submission_data_df[submission_data_df['Organization Submission'] == sub_to_eval]['Application Type'].values[0] == 'Accreditation':
+                    for idx, (doc_code, doc_name) in enumerate(accre_docs.items(), start=1):
+                        with st.expander(f"{doc_code} - {doc_name}"):
+                            remark = st.text_area(f"Remarks for {doc_name}", key=f"remark_{doc_code}", height=100)
+                            approved = st.checkbox(f"Approve {doc_code}", key=f"approve_{doc_code}")
+                            
+                            approval_data[f'REQ{idx:03d}'] = {"approved": approved, "remark": remark}
+                            
+                elif submission_data_df[submission_data_df['Organization Submission'] == sub_to_eval]['Application Type'].values[0] == 'Revalidation':
+                    for idx, (doc_code, doc_name) in enumerate(reval_docs.items(), start=1):
+                        with st.expander(f"{doc_code} - {doc_name}"):
+                            remark = st.text_area(f"Remarks for {doc_name}", key=f"remark_{doc_code}", height=100)
+                            approved = st.checkbox(f"Approve {doc_code}", key=f"approve_{doc_code}")
+                            
+                            approval_data[f'REQ{idx:03d}'] = {"approved": approved, "remark": remark}
+                            
+            elif submission_data_df[submission_data_df['Organization Submission'] == sub_to_eval]['Evaluation Phase'].values[0] == 'FE':
+                if submission_data_df[submission_data_df['Organization Submission'] == sub_to_eval]['Application Type'].values[0] == 'Accreditation':
+                    filtered_record = submission_data_df[
+                        (submission_data_df['Evaluation Phase'] != 'IE') &
+                        (submission_data_df['Organization Submission'] == sub_to_eval)  
+                    ]
+                    st.write(filtered_record)
+                    data = {}
 
+                    # Extract the columns of interest and store them in a nested dictionary
+                    if not filtered_record.empty:
+                        for i in range(1, 7):  # Loop from 1 to 9 for req001 to req009
+                            req_key = f'REQ{i:03d}'
+                            data[req_key] = {
+                                'approved': filtered_record[f'{req_key}_approved'].values[0],
+                                'remarks': filtered_record[f'{req_key}_remarks'].values[0]
+                            }
+
+                    for idx, (doc_code, doc_name) in enumerate(accre_docs.items(), start=1):
+                        with st.expander(f"{doc_code} - {doc_name}"):
+                            with st.popover("View Previous Remarks"):
+                                prev_remark = data[f'REQ{idx:03d}']['remarks']
+                                
+                                # Display the formatted remark with bullet points
+                                st.write('\n'.join(
+                                    line if line.strip().startswith('- ') else f'- {line.strip()}'
+                                    for line in prev_remark.split('\n') if line.strip()
+                                ))
+
+                            remark = st.text_area(f"Remarks for {doc_name}", key=f"remark_{doc_code}", height=100)
+                            approved = st.checkbox(f"Approve {doc_code}", key=f"approve_{doc_code}")
+                            
+                            approval_data[doc_code] = {"approved": approved, "remark": remark}
+                            
+                elif submission_data_df[submission_data_df['Organization Submission'] == sub_to_eval]['Application Type'].values[0] == 'Revalidation':
+                    filtered_record = submission_data_df[
+                        (submission_data_df['Evaluation Phase'] != 'IE') &
+                        (submission_data_df['Organization Submission'] == sub_to_eval)  
+                    ]
+                    st.write(filtered_record)
+                    data = {}
+
+                    # Extract the columns of interest and store them in a nested dictionary
+                    if not filtered_record.empty:
+                        for i in range(1, 10):  # Loop from 1 to 9 for req001 to req009
+                            req_key = f'REQ{i:03d}'
+                            data[req_key] = {
+                                'approved': filtered_record[f'{req_key}_approved'].values[0],
+                                'remarks': filtered_record[f'{req_key}_remarks'].values[0]
+                            }
+
+                    for idx, (doc_code, doc_name) in enumerate(reval_docs.items(), start=1):
+                        with st.expander(f"{doc_code} - {doc_name}"):
+                            with st.popover("View Previous Remarks"):
+                                prev_remark = data[f'REQ{idx:03d}']['remarks']
+                                
+                                # Display the formatted remark with bullet points
+                                st.write('\n'.join(
+                                    line if line.strip().startswith('- ') else f'- {line.strip()}'
+                                    for line in prev_remark.split('\n') if line.strip()
+                                ))
+                            remark = st.text_area(f"Remarks for {doc_name}", key=f"remark_{doc_code}", height=100)
+                            approved = st.checkbox(f"Approve {doc_code}", key=f"approve_{doc_code}")
+                            
+                            approval_data[doc_code] = {"approved": approved, "remark": remark}
+                            
+            elif submission_data_df[submission_data_df['Organization Submission'] == sub_to_eval]['Evaluation Phase'].values[0] == 'CA':
+                if submission_data_df[submission_data_df['Organization Submission'] == sub_to_eval]['Application Type'].values[0] == 'Accreditation':
+                    filtered_record = submission_data_df[
+                        (submission_data_df['Evaluation Phase'] != 'IE') &
+                        (submission_data_df['Organization Submission'] == sub_to_eval)  
+                    ]
+                    st.write(filtered_record)
+                    data = {}
+
+                    # Extract the columns of interest and store them in a nested dictionary
+                    if not filtered_record.empty:
+                        for i in range(1, 7):  # Loop from 1 to 9 for req001 to req009
+                            req_key = f'REQ{i:03d}'
+                            data[req_key] = {
+                                'approved': filtered_record[f'{req_key}_approved'].values[0],
+                                'remarks': filtered_record[f'{req_key}_remarks'].values[0]
+                            }
+
+                    for idx, (doc_code, doc_name) in enumerate(accre_docs.items(), start=1):
+                        with st.expander(f"{doc_code} - {doc_name}"):
+                            with st.popover("View Previous Remarks"):
+                                prev_remark = data[f'REQ{idx:03d}']['remarks']
+                                
+                                # Display the formatted remark with bullet points
+                                st.write('\n'.join(
+                                    line if line.strip().startswith('- ') else f'- {line.strip()}'
+                                    for line in prev_remark.split('\n') if line.strip()
+                                ))
+
+                            remark = st.text_area(f"Remarks for {doc_name}", key=f"remark_{doc_code}", height=100)
+                            approved = st.checkbox(f"Approve {doc_code}", key=f"approve_{doc_code}")
+                            
+                            approval_data[doc_code] = {"approved": approved, "remark": remark}
+                elif submission_data_df[submission_data_df['Organization Submission'] == sub_to_eval]['Application Type'].values[0] == 'Revalidation':
+                    filtered_record = submission_data_df[
+                        (submission_data_df['Evaluation Phase'] != 'IE') &
+                        (submission_data_df['Organization Submission'] == sub_to_eval)  
+                    ]
+                    st.write(filtered_record)
+                    data = {}
+
+                    # Extract the columns of interest and store them in a nested dictionary
+                    if not filtered_record.empty:
+                        for i in range(1, 10):  # Loop from 1 to 9 for req001 to req009
+                            req_key = f'REQ{i:03d}'
+                            data[req_key] = {
+                                'approved': filtered_record[f'{req_key}_approved'].values[0],
+                                'remarks': filtered_record[f'{req_key}_remarks'].values[0]
+                            }
+
+                    for idx, (doc_code, doc_name) in enumerate(reval_docs.items(), start=1):
+                        with st.expander(f"{doc_code} - {doc_name}"):
+                            with st.popover("View Previous Remarks"):
+                                prev_remark = data[f'REQ{idx:03d}']['remarks']
+                                
+                                # Display the formatted remark with bullet points
+                                st.write('\n'.join(
+                                    line if line.strip().startswith('- ') else f'- {line.strip()}'
+                                    for line in prev_remark.split('\n') if line.strip()
+                                ))
+                            remark = st.text_area(f"Remarks for {doc_name}", key=f"remark_{doc_code}", height=100)
+                            approved = st.checkbox(f"Approve {doc_code}", key=f"approve_{doc_code}")
+                            
+                            approval_data[doc_code] = {"approved": approved, "remark": remark}
+
+
+            save_btn = st.button("Save")
+
+            if save_btn:
+                # Check if any of the remarks in approval_data is empty
+                if any(not doc_data['remark'] for doc_data in approval_data.values()):
+                    sac.alert(label='Please provide remarks for all documents.', size='sm', variant='quote-light', color='info', icon=True)
+                else:
+                    with cols[1]:
+                        st.subheader("⭐ Evaluation Summary")
+                        # show st.table
+                        eval_summary = pd.DataFrame(approval_data).T
+                        st.table(eval_summary)
+                        
+                        confirm_btn = st.button("Confirm Evaluation")
+else:
+    sac.result(label='No Results Found', description="We couldn't locate any matching submissions.", status='empty')
+            
+# To do: refactor, and remove repeating code, and implement saving evaluation_dict to database
 
 # user - for orgs
 # cosoa - for evals

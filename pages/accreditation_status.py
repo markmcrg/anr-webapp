@@ -14,31 +14,30 @@ def accreditation_status():
         # Create table rows dynamically
         rows = ""
         for item in data:
-            if item['eval_phase'] == "IE1":
-                eval_phase = "Initial Evaluation 1"
+            if item['eval_phase'] == "IE":
+                eval_phase = "Initial Evaluation"
                 status_class = "status-evaluation"
                 status_icon = "bi-hourglass-split"
-            elif item['eval_phase'] == "IE2":
-                eval_phase = "Initial Evaluation 2"
+            elif item['eval_phase'] == "FE":
+                eval_phase = "Final Evaluation"
                 status_class = "status-evaluation"
                 status_icon = "bi-hourglass-split"
-            elif item['eval_phase'] == "FE1":
-                eval_phase = "Final Evaluation 1"
+            elif item['eval_phase'] == "CA":
+                eval_phase = "Chairperson's Approval"
                 status_class = "status-evaluation"
                 status_icon = "bi-hourglass-split"
-            elif item['eval_phase'] == "FE2":
-                eval_phase = "Final Evaluation 2"
-                status_class = "status-evaluation"
-                status_icon = "bi-hourglass-split"
-                
-            elif item['eval_phase'] == "returned":
+            elif item['eval_phase'] == "Returned":
                 eval_phase = "Returned for Revisions"
                 status_class = "status-returned"
                 status_icon = "bi-arrow-counterclockwise"
-            elif item['eval_phase'] == "approved":
+            elif item['eval_phase'] == "Approved":
                 eval_phase = "Approved"
                 status_class = "status-approved"
                 status_icon = "bi-check-circle-fill"
+            elif item['eval_phase'] == 'Rejected':
+                eval_phase = "Rejected"
+                status_class = "status-returned"
+                status_icon = "bi-x-circle-fill"
             
             b2_file_url = f"{item['b2_file_url']}?Authorization={download_auth_token}"
             date_submitted = datetime.strptime(item['date_submitted'], "%Y-%m-%d %H:%M:%S").strftime("%Y-%m-%d")
