@@ -423,3 +423,101 @@ def update_settings(setting, status):
         return True
     else:
         return False
+    
+def submit_evaluation_accre(filename, eval_data):
+    PUBLIC_KEY = st.secrets.tidb_keys.public_key
+    PRIVATE_KEY = st.secrets.tidb_keys.private_key
+    
+    url = 'https://ap-southeast-1.data.tidbcloud.com/api/v1beta/app/dataapp-SxHAXFax/endpoint/evaluate_org_accre'
+    
+    headers = {
+    'content-type': 'application/json',
+    }
+    
+    # Convert the 'approved' values from boolean to integer
+    for key in eval_data:
+        eval_data[key]["approved"] = int(eval_data[key]["approved"])
+        
+    data = {
+        'req001_approved' : eval_data['AD001']['approved'],
+        'req001_remarks' : eval_data['AD001']['remark'],
+        'req002_approved' : eval_data['AD002']['approved'],
+        'req002_remarks' : eval_data['AD002']['remark'],
+        'req003_approved' : eval_data['AD003']['approved'],
+        'req003_remarks' : eval_data['AD003']['remark'],
+        'req004_approved' : eval_data['AD004']['approved'],
+        'req004_remarks' : eval_data['AD004']['remark'],
+        'req005_approved' : eval_data['AD005']['approved'],
+        'req005_remarks' : eval_data['AD005']['remark'],
+        'req006_approved' : eval_data['AD006']['approved'],
+        'req006_remarks' : eval_data['AD006']['remark'],
+        'filename' : filename
+    }
+    response = requests.put(url, headers=headers, json=data, auth=HTTPBasicAuth(PUBLIC_KEY, PRIVATE_KEY))
+
+    return response.json()
+    
+def submit_evaluation_reval(filename, eval_data):
+    PUBLIC_KEY = st.secrets.tidb_keys.public_key
+    PRIVATE_KEY = st.secrets.tidb_keys.private_key
+    
+    url = 'https://ap-southeast-1.data.tidbcloud.com/api/v1beta/app/dataapp-SxHAXFax/endpoint/evaluate_org_reval'
+    
+    headers = {
+    'content-type': 'application/json',
+    }
+    
+    # Convert the 'approved' values from boolean to integer
+    for key in eval_data:
+        eval_data[key]["approved"] = int(eval_data[key]["approved"])
+        
+    data = {
+        'req001_approved' : eval_data['RD001']['approved'],
+        'req001_remarks' : eval_data['RD001']['remark'],
+        'req002_approved' : eval_data['RD002']['approved'],
+        'req002_remarks' : eval_data['RD002']['remark'],
+        'req003_approved' : eval_data['RD003']['approved'],
+        'req003_remarks' : eval_data['RD003']['remark'],
+        'req004_approved' : eval_data['RD004']['approved'],
+        'req004_remarks' : eval_data['RD004']['remark'],
+        'req005_approved' : eval_data['RD005']['approved'],
+        'req005_remarks' : eval_data['RD005']['remark'],
+        'req006_approved' : eval_data['RD006']['approved'],
+        'req006_remarks' : eval_data['RD006']['remark'],
+        'req007_approved' : eval_data['RD007']['approved'],
+        'req007_remarks' : eval_data['RD007']['remark'],
+        'req008_approved' : eval_data['RD008']['approved'],
+        'req008_remarks' : eval_data['RD008']['remark'],
+        'req009_approved' : eval_data['RD009']['approved'],
+        'req009_remarks' : eval_data['RD009']['remark'],
+        'filename' : filename
+    }
+    
+    response = requests.put(url, headers=headers, json=data, auth=HTTPBasicAuth(PUBLIC_KEY, PRIVATE_KEY))
+    
+    if response.status_code == 200:
+        return True
+    else:
+        return False
+    
+def modify_eval_phase(filename, eval_phase):
+    PUBLIC_KEY = st.secrets.tidb_keys.public_key
+    PRIVATE_KEY = st.secrets.tidb_keys.private_key
+    
+    url = 'https://ap-southeast-1.data.tidbcloud.com/api/v1beta/app/dataapp-SxHAXFax/endpoint/modify_eval_phase'
+    
+    headers = {
+    'content-type': 'application/json',
+    }
+    
+    data = {
+        'filename' : filename,
+        'eval_phase' : eval_phase
+    }
+    
+    response = requests.put(url, headers=headers, json=data, auth=HTTPBasicAuth(PUBLIC_KEY, PRIVATE_KEY))
+    
+    if response.status_code == 200:
+        return True
+    else:
+        return False
