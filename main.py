@@ -150,26 +150,42 @@ submission_data_df = submission_data_df.rename(columns={"filename": "Organizatio
 
 submission_data_df['Date Submitted'] = pd.to_datetime(submission_data_df['Date Submitted'])
 
-top_cols = st.columns([2, 1, 1], vertical_alignment='center')
+top_cols = st.columns([1, 1], vertical_alignment='center')
 with top_cols[0]:
     submission_query = st_keyup('Search for an organization or user:', debounce=300, key="1", placeholder="Organization Name/Abbreviation or Person Assigned")
 with top_cols[1]:
-    eval_phase_filter = sac.checkbox(
-        items=[
-            'IE',
-            'FE',
-            'CA',
-            'Returned',
-        ],
-        label='Filter by evaluation phase', index=[0, 1, 2, 3], align='center'
-    )
+    role = get_role(st.session_state["username"])
+    if role in ['execcomm', 'chair']:
+        eval_phase_filter = sac.checkbox(
+            items=[
+                'IE',
+                'FE',
+                'CA',
+                'Returned',
+                'Approved',
+                'Rejected'
+            ],
+            label='Filter by evaluation phase', index=[0, 1, 2], align='center', key='eval_phase_filter'
+        )
+        submission_data_df = submission_data_df[
+        submission_data_df['Evaluation Phase'].isin(eval_phase_filter)
+    ]
+    elif role == 'cosoa':
+        eval_phase_filter = sac.checkbox(
+            items=[
+                'IE',
+                'FE',
+                'Returned',
+            ],
+            label='Filter by evaluation phase', index=0, align='center', key='eval_phase_filter'
+        )
+        submission_data_df = submission_data_df[
+        submission_data_df['Evaluation Phase'].isin(eval_phase_filter)
+    ]
+        
 if submission_query:
     submission_data_df = submission_data_df[
         submission_data_df['Organization Submission'].str.contains(submission_query, case=False, regex=False)
-    ]
-if eval_phase_filter:
-    submission_data_df = submission_data_df[
-        submission_data_df['Evaluation Phase'].isin(eval_phase_filter)
     ]
 
 st.dataframe(submission_data_df, hide_index=True, column_order=['Organization Submission', 'Jurisdiction', 'Application Type', 'Date Submitted', 'Evaluation Phase', 'View'])
@@ -326,6 +342,7 @@ if not submission_data_df.empty:
                 confirm_btn = st.button("Confirm Evaluation", disabled=not new_status)
                 if confirm_btn:
                     msg = st.toast("Submitting Evaluation...", icon="🔃")
+                    
                     # Save evaluation data to database
                     with st.spinner("Submitting Organization Evaluation..."):
                         if str(app_type) == "Accreditation":
@@ -341,14 +358,12 @@ if not submission_data_df.empty:
                             
 else:
     sac.result(label='No Results Found', description="We couldn't locate any matching submissions.", status='empty')
-     
-# Show tracker form for each submission on evaluator side [Tracker form name, form code, status (approved/for revision)]
-# CA should only be visible to chair role
-# Improve table styling
 
+# Improve table styling   
+# Show tracker form for each submission on evaluator side [Tracker form name, form code, status (approved/for revision)]
 
 
 # user - for orgs
 # cosoa - for evals
 # execcomm - for org assignment
-# chair - for admin level access (see all user info and change access
+# chair - for admin level access (see all user info and change access levels)
