@@ -1,3 +1,4 @@
+from altair import Data
 import streamlit as st
 import streamlit_antd_components as sac
 import pages as pg
@@ -39,7 +40,7 @@ with st.sidebar:
                 sac.MenuItem('Accredited Organizations', icon='bi bi-building'),
                 sac.MenuItem('Application Requirements', icon='bi bi-clipboard-check'),
                 sac.MenuItem('Frequently Asked Questions', icon='bi bi-question-circle'),
-                sac.MenuItem('View Submissions', icon='bi bi-file-earmark-text'),
+                sac.MenuItem('Evaluate Submissions', icon='bi bi-file-earmark-text'),
                 sac.MenuItem('Account Settings', icon='bi bi-person-gear'),
                 sac.MenuItem('Logout', icon='bi bi-box-arrow-in-left'),
             ], open_all=False, index=2)
@@ -65,7 +66,7 @@ with st.sidebar:
                 sac.MenuItem('Accredited Organizations', icon='bi bi-building'),
                 sac.MenuItem('Application Requirements', icon='bi bi-clipboard-check'),
                 sac.MenuItem('Frequently Asked Questions', icon='bi bi-question-circle'),
-                sac.MenuItem('View Submissions', icon='bi bi-clipboard-check'),
+                sac.MenuItem('Evaluate Submissions', icon='bi bi-clipboard-check'),
                 sac.MenuItem('Account Settings', icon='bi bi-person-gear'),
                 sac.MenuItem('Logout', icon='bi bi-box-arrow-in-left'),
                 
@@ -85,7 +86,7 @@ with st.sidebar:
                 sac.MenuItem('Accredited Organizations', icon='bi bi-building'),
                 sac.MenuItem('Application Requirements', icon='bi bi-clipboard-check'),
                 sac.MenuItem('Frequently Asked Questions', icon='bi bi-question-circle'),
-                sac.MenuItem('View Submissions', icon='bi bi-clipboard-check'),
+                sac.MenuItem('Evaluate Submissions', icon='bi bi-clipboard-check'),
                 sac.MenuItem('Account Settings', icon='bi bi-person-gear'),
                 sac.MenuItem('Logout', icon='bi bi-box-arrow-in-left'),
                 
@@ -127,7 +128,7 @@ elif menu_item == 'Password Reset':
     pg.forgot_password()
 elif menu_item == "Assign Organizations":
     pg.assign_orgs()
-elif menu_item == "View Submissions":
+elif menu_item == "Evaluate Submissions":
     pg.view_submissions() 
 # Sidebar Footer Login info
 
@@ -140,7 +141,9 @@ from helpers import fetch_data, submit_evaluation_accre, submit_evaluation_reval
 import pandas as pd
 from st_keyup import st_keyup
 import time
-# add filters for which eval phase to show
+
+st.subheader("📋 Evaluate Submissions")
+
 submission_data = fetch_data("https://ap-southeast-1.data.tidbcloud.com/api/v1beta/app/dataapp-SxHAXFax/endpoint/get_all_submissions")['data']['rows']
 submission_data_df = pd.DataFrame(submission_data)
 submission_data_df = submission_data_df.rename(columns={"filename": "Organization Submission", "jurisdiction": "Jurisdiction", "app_type": "Application Type", "date_submitted": "Date Submitted", "eval_phase": "Evaluation Phase", "b2_file_url": "View"})
@@ -156,6 +159,7 @@ with top_cols[1]:
             'IE',
             'FE',
             'CA',
+            'Returned',
         ],
         label='Filter by evaluation phase', index=[0, 1, 2, 3], align='center'
     )
@@ -206,6 +210,15 @@ def show_expander(documents, data=None):
             remark = st.text_area(f"Remarks for {doc_name}", key=f"remark_{doc_code}", height=100)
             approved = st.checkbox(f"Approve {doc_code}", key=f"approve_{doc_code}")
             eval_data[doc_code] = {"approved": approved, "remark": remark}
+            
+def show_expander_returned(documents, data):
+    for idx, (doc_code, doc_name) in enumerate(documents.items(), start=1):
+        with st.expander(f"{doc_code} - {doc_name}"):
+            prev_remark = data[f'REQ{idx:03d}']['remarks']
+            st.write('\n'.join(
+                line if line.strip().startswith('- ') else f'- {line.strip()}'
+                for line in prev_remark.split('\n') if line.strip()
+            ))
 
 def get_filtered_record(submission_data_df, sub_to_eval, exclude_phase='IE'):
     return submission_data_df[
@@ -245,7 +258,6 @@ if not submission_data_df.empty:
 
             elif eval_phase in ['FE', 'CA']:
                 filtered_record = get_filtered_record(submission_data_df, sub_to_eval)
-                st.write(filtered_record)
                 num_requirements = 6 if app_type == 'Accreditation' else 9
                 data = extract_data(filtered_record, num_requirements)
 
@@ -253,6 +265,17 @@ if not submission_data_df.empty:
                     show_expander(accre_docs, data)
                 elif app_type == 'Revalidation':
                     show_expander(reval_docs, data)
+            elif eval_phase == 'Returned':
+                sac.alert(label='This submission has been returned for revisions.', size='sm', variant='quote-light', color='info', icon=True)
+                doc_type = accre_docs if app_type == 'Accreditation' else reval_docs
+                filtered_record = get_filtered_record(submission_data_df, sub_to_eval)
+                num_requirements = 6 if app_type == 'Accreditation' else 9
+                data = extract_data(filtered_record, num_requirements)
+                if app_type == 'Accreditation':
+                    show_expander_returned(accre_docs, data)
+                elif app_type == 'Revalidation':
+                    show_expander_returned(reval_docs, data)
+                
 
             save_btn = st.form_submit_button("Save")
         
@@ -270,9 +293,9 @@ if not submission_data_df.empty:
                 eval_summary = pd.DataFrame(eval_data).T
                 st.table(eval_summary)
                 
-                
                 if eval_phase == "IE":
                     sac.alert(label='Once you click on confirm, your evaluation will be submitted and transferred to your final evaluator.', size='sm', variant='quote-light', color='info', icon=True)
+                    new_status = 'Final Evaluation'
                 elif eval_phase == "FE":
                     new_status = sac.chip(
                         items=[
@@ -280,7 +303,25 @@ if not submission_data_df.empty:
                             sac.ChipItem(label='Chairperson\'s Approval', icon='bi bi-check-circle'),
                         ], label='Status', description='Once you click on confirm, your evaluation will be submitted and transferred to the next phase.', index=2, align='start', radius='md', variant='light',
                     )
-
+                elif eval_phase == "CA":
+                    new_status = sac.chip(
+                        items=[
+                            sac.ChipItem(label='Returned for Revisions', icon='bi bi-arrow-counterclockwise'),
+                            sac.ChipItem(label='Approved', icon='bi bi-check-circle'),
+                            sac.ChipItem(label='Rejected', icon='bi bi-x-circle')
+                        ], label='Status', description='Once you click on confirm, your evaluation will be submitted and transferred to the next phase.', index=3, align='start', radius='md', variant='light',
+                    )
+                    
+                if new_status == 'Final Evaluation':
+                    next_eval_phase = 'FE'
+                elif new_status == 'Chairperson\'s Approval':
+                    next_eval_phase = 'CA'
+                elif new_status == 'Returned for Revisions':
+                    next_eval_phase = 'Returned'
+                elif new_status == 'Approved':
+                    next_eval_phase = 'Approved'
+                elif new_status == 'Rejected':
+                    next_eval_phase = 'Rejected'
                     
                 confirm_btn = st.button("Confirm Evaluation", disabled=not new_status)
                 if confirm_btn:
@@ -292,7 +333,7 @@ if not submission_data_df.empty:
                         elif str(app_type) == "Revalidation":
                             response_code = submit_evaluation_reval(sub_to_eval, eval_data)
                         if response_code:
-                            modify_eval_phase(sub_to_eval, eval_phase)
+                            modify_eval_phase(sub_to_eval, next_eval_phase)
                             time.sleep(2)
                             msg.toast("Evaluation submitted successfully.", icon="✅")
                             st.session_state['show_eval_sumamary'] = False
@@ -300,13 +341,11 @@ if not submission_data_df.empty:
                             
 else:
     sac.result(label='No Results Found', description="We couldn't locate any matching submissions.", status='empty')
-            
-# implement changing of phases after submitting, show dropdown only if phase is FE or CA, if not, then just transfer to FE
-# change the name 'view submissions' to 'evaluate submissions'
-# Show tracker form for each submission on evaluator side Tracker form name, form code, status (approved/for revision)
+     
+# Show tracker form for each submission on evaluator side [Tracker form name, form code, status (approved/for revision)]
 # CA should only be visible to chair role
-# Make new page for chair approve orgs ?
-# Show org submissions returned for revisions
+# Improve table styling
+
 
 
 # user - for orgs

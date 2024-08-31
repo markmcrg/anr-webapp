@@ -500,7 +500,7 @@ def submit_evaluation_reval(filename, eval_data):
     else:
         return False
     
-def modify_eval_phase(filename, eval_phase):
+def modify_eval_phase(filename, eval_phase='FE'):
     PUBLIC_KEY = st.secrets.tidb_keys.public_key
     PRIVATE_KEY = st.secrets.tidb_keys.private_key
     
@@ -512,7 +512,7 @@ def modify_eval_phase(filename, eval_phase):
     
     data = {
         'filename' : filename,
-        'eval_phase' : eval_phase
+        'new_eval_phase' : eval_phase
     }
     
     response = requests.put(url, headers=headers, json=data, auth=HTTPBasicAuth(PUBLIC_KEY, PRIVATE_KEY))
