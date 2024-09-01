@@ -1,12 +1,9 @@
-from altair import Data
 import streamlit as st
 import streamlit_antd_components as sac
 import pages as pg
 from helpers import get_role, get_abbreviation, update_last_login
 
-
 # Entrypoint / page router for the app
-
 st.set_page_config(page_title="PUP SC COSOA AnR Portal", page_icon="🏫", layout="wide")
 st.logo('https://i.imgur.com/pA9lYh5.png', link='http://localhost:8501/') # Change link to sccosoa.com in production
 
@@ -359,6 +356,7 @@ if not submission_data_df.empty:
 else:
     sac.result(label='No Results Found', description="We couldn't locate any matching submissions.", status='empty')
 
+# mail functionality for sending notification of lapses once documents are either returned, approved, or rejected
 # Improve table styling   
 # Show tracker form for each submission on evaluator side [Tracker form name, form code, status (approved/for revision)]
 
