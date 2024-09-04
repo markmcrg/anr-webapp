@@ -92,10 +92,10 @@ def accreditation_status():
                 }}
                 .btn-outline-maroon {{
                     color: maroon !important;
-                    border-color: maroon;
+                    border-color: maroon !important; 
                 }}
                 .btn-outline-maroon:hover {{
-                    background-color: maroon;
+                    background-color: maroon !important;
                     color: white !important;
                 }}
             </style>
