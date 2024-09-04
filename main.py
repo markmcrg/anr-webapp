@@ -134,7 +134,7 @@ if st.session_state["authentication_status"]:
 elif st.session_state["authentication_status"] is None or not st.session_state["authentication_status"]:
     pass
 
-from helpers import fetch_data, submit_evaluation_accre, submit_evaluation_reval, modify_eval_phase
+from helpers import fetch_data, submit_evaluation_accre, submit_evaluation_reval, modify_eval_phase, send_notif_email, get_email, get_abbreviation
 import pandas as pd
 from st_keyup import st_keyup
 import time
@@ -253,6 +253,9 @@ def extract_data(filtered_record, num_requirements):
 if not submission_data_df.empty:
     with cols[0]:
         sub_to_eval = st.selectbox("**Select submission to evaluate:**", submission_data_df['Organization Submission'])
+        username = submission_data_df[submission_data_df['Organization Submission'] == sub_to_eval]['username'].item()
+        
+        app_order = submission_data_df[submission_data_df['Organization Submission'] == sub_to_eval]['app_order'].item()
         
         eval_phase = submission_data_df[
             submission_data_df['Organization Submission'] == sub_to_eval
@@ -291,16 +294,144 @@ if not submission_data_df.empty:
                 
 
             save_btn = st.form_submit_button("Save")
+
+        if 'show_eval_summary' not in st.session_state:
+            st.session_state['show_eval_summary'] = False
         
-        if 'show_eval_sumamary' not in st.session_state:
-            st.session_state['show_eval_sumamary'] = False
-            
+        if st.session_state['show_eval_summary'] is False:
+            with cols[1]:
+                tracker_form_data = ""
+                filename = submission_data_df[submission_data_df['Organization Submission'] == sub_to_eval]['Organization Submission'].item()
+                st.subheader("📝 Evaluation Tracker")
+                tracker_form = st.empty()
+                if eval_phase == 'IE':
+                    if app_type == 'Accreditation':
+                        accre_doc_names = [doc_name for doc_name in accre_docs.values()]
+                        for idx, doc_name in enumerate(accre_doc_names, start=1):
+                            tracker_form_data += f"""
+                            <tr>
+                                <td class="center-align">AD{idx:03d}</td>
+                                <td class="left-align">{doc_name}</td>
+                                <td class="center-align"><i class="fas fa-times status-icon status-cross"></i></td>
+                            </tr>
+                            """
+                    elif app_type == 'Revalidation':
+                        with tracker_form.container():
+                            reval_doc_names = [doc_name for doc_name in reval_docs.values()]
+                            for idx, doc_name in enumerate(reval_doc_names, start=1):
+                                tracker_form_data += f"""
+                                <tr>
+                                    <td class="center-align">RD{idx:03d}</td>
+                                    <td class="left-align">{doc_name}</td>
+                                    <td class="center-align"><i class="fas fa-times status-icon status-cross"></i></td>
+                                """
+                if eval_phase in ['FE', 'CA']:
+                    if app_type == 'Accreditation':
+                        accre_doc_names = [doc_name for doc_name in accre_docs.values()]
+                        for idx, doc_name in enumerate(accre_doc_names, start=1):
+                            if data[f'REQ{idx:03d}']['approved'] == '1':
+                                status_icon = 'check'
+                                status_class = 'status-check'
+                            else:
+                                status_icon = 'times'
+                                status_class = 'status-cross'
+                            tracker_form_data += f"""
+                            <tr>
+                                <td class="center-align">AD{idx:03d}</td>
+                                <td class="left-align">{doc_name}</td>
+                                <td class="center-align"><i class="fas fa-{status_icon} status-icon {status_class}"></i></td>
+                            </tr>
+                            """
+                    elif app_type == 'Revalidation':
+                        reval_doc_names = [doc_name for doc_name in reval_docs.values()]
+                        for idx, doc_name in enumerate(reval_doc_names, start=1):
+                            if data[f'REQ{idx:03d}']['approved'] == '1':
+                                status_icon = 'check'
+                                status_class = 'status-check'
+                            else:
+                                status_icon = 'times'
+                                status_class = 'status-cross'
+                            tracker_form_data += f"""
+                            <tr>
+                                <td class="center-align">RD{idx:03d}</td>
+                                <td class="left-align">{doc_name}</td>
+                                <td class="center-align"><i class="fas fa-{status_icon} status-icon {status_class}"></i></td>
+                            </tr>
+                            """
+                with tracker_form.container():
+                    st.markdown(f"""
+                                <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+                                <style>
+                                    body {{
+                                        font-family: Arial, sans-serif;
+                                        display: flex;
+                                        justify-content: center;
+                                        align-items: center;
+                                        min-height: 100vh;
+                                        margin: 0;
+                                        background-color: #f0f0f0;
+                                    }}
+                                    table {{
+                                        border-collapse: separate;
+                                        border-spacing: 0;
+                                        border-radius: 10px;
+                                        overflow: hidden;
+                                        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                                        background-color: #ffffff;
+                                        margin: 20px;
+                                        width:100%;
+                                    }}
+                                    th, td {{
+                                        padding: 12px 15px;
+                                        border-bottom: 1px solid #e0e0e0;
+                                    }}
+                                    th {{
+                                        background-color: #800000;
+                                        color: white;
+                                    }}
+                                    tr:last-child td {{
+                                        border-bottom: none;
+                                    }}
+                                    tr:nth-child(even) {{
+                                        background-color: #f8f8f8;
+                                    }}
+                                    .status-icon {{
+                                        font-size: 1.2em;
+                                    }}
+                                    .status-check {{
+                                        color: #28a745;
+                                    }}
+                                    .status-cross {{
+                                        color: #dc3545;
+                                    }}
+                                    .center-align {{
+                                        text-align: center;
+                                    }}
+                                    .left-align {{
+                                        text-align: left;
+                                    }}
+                                </style>
+                                <table>
+                                    <tr>
+                                        <th colspan="3" class="center-align">{filename}</th>
+                                    </tr>
+                                    <tr>
+                                        <th class="center-align">Code</th>
+                                        <th class="left-align">Form Name</th>
+                                        <th class="center-align">Status</th>
+                                    </tr>
+                                    
+                                    {tracker_form_data}
+                                """, unsafe_allow_html=True)
+    
         if save_btn:
             if any(not doc_data['remark'] for doc_data in eval_data.values()):
                 sac.alert(label='Please provide remarks for all documents.', size='sm', variant='quote-light', color='info', icon=True)
             else:
-                st.session_state['show_eval_sumamary'] = True
-        if st.session_state['show_eval_sumamary']:
+                tracker_form.empty()
+                st.session_state['show_eval_summary'] = True
+
+        if st.session_state['show_eval_summary']:
             with cols[1]:
                 st.subheader("⭐ Evaluation Summary")
                 eval_summary = pd.DataFrame(eval_data).T
@@ -348,18 +479,24 @@ if not submission_data_df.empty:
                             response_code = submit_evaluation_reval(sub_to_eval, eval_data)
                         if response_code:
                             modify_eval_phase(sub_to_eval, next_eval_phase)
+                            
+                            # If submission is returned, approved, or rejected, send notification email
+                            if next_eval_phase in ['Returned', 'Approved', 'Rejected']:
+                                email = get_email(username)
+                                abbreviation = get_abbreviation(username)
+                                send_notif_email(email, abbreviation, app_type, app_order)
+                                
                             time.sleep(2)
                             msg.toast("Evaluation submitted successfully.", icon="✅")
-                            st.session_state['show_eval_sumamary'] = False
+                            st.session_state['show_eval_summary'] = False
                             sac.alert(label='Evaluation submitted successfully.', size='sm', variant='quote-light', color='success', icon=True)
+                            
+                            
                             
 else:
     sac.result(label='No Results Found', description="We couldn't locate any matching submissions.", status='empty')
 
-# mail functionality for sending notification of lapses once documents are either returned, approved, or rejected
 # Improve table styling   
-# Show tracker form for each submission on evaluator side [Tracker form name, form code, status (approved/for revision)]
-
 
 # user - for orgs
 # cosoa - for evals

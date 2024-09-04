@@ -134,14 +134,13 @@ def send_otp_email(email, otp, name):
         return False
 
 
-def send_notif_email(email, name, org_name, app_type, app_order):
+def send_notif_email(email, name, app_type, app_order):
     mail = mt.MailFromTemplate(
         sender=mt.Address(email="no-reply@sccosoa.com", name="PUP SC COSOA"),
         to=[mt.Address(email=email)],
         template_uuid=st.secrets.mailtrap_creds.notif_template_uuid,
         template_variables={
             "name": name,
-            "org_name": org_name,
             "app_type": app_type,
             "app_order": app_order,
         },
