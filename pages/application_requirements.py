@@ -17,55 +17,226 @@ def application_requirements():
         )
 
     if accre_type == "Accreditation":
-        columns = ["Form Code", "Requirement", "Template", "Sample"]
-        table_data = [
-            ["AD001", "Certificate of Recognition from Central/Local Student Council", "Download", "View"],
-            ["AD002", "Official List of Officers and Adviser(s) with signatures over printed names, and list of members (at least 15 members including the officers/executives)", "Download", "View"],
-            ["AD003", "Officers’ Profile with 1st Semester Certificate of Registration", "Download", "View"],
-            ["AD004", "Adviser(s)’s Letter of Concurrence with scanned copy of their university-issued ID", "Download", "View"],
-            ["AD005", "Student Organization’s Constitution and Bylaws (CBL)", "Download", "View"],
-            ["AD006", "General Plan of Activities with Budgetary Outlay", "Download", "View"],
-            ["AD007", "Organization's Advocacy Plan", "Download", "View"],
-            ["AD008", "Certificate of Clearance from PUP Student Council Commission on Audit (PUP SC COA)", "Download", "View"],
-            ["AD009", "OSS Anti-Hazing Orientation Certificate of Registration", "Download", "View"],
-        ]
-        
-        # Convert the data to a DataFrame
-        accre_reqs_df = pd.DataFrame(table_data, columns=columns)
-        accre_reqs_df = accre_reqs_df.style.hide(axis="index").set_table_styles([{
-            'selector': '.col2, .col3',  
-            'props': [
-                ('text-align', 'center')
-            ]
-        }])
-        st.markdown(f"<div style='max-width: fit-content; margin-inline: auto;'>{accre_reqs_df.to_html(index=False)}</div>", unsafe_allow_html=True)
+        st.markdown("""
+                        <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/css/bootstrap.min.css" rel="stylesheet">
+                        <style>
+                            h1 {
+                                font-family: "Source Sans Pro", sans-serif;
+                                font-weight: 700;
+                                color: rgb(49, 51, 63);
+                                padding: 1.25rem 0px 1rem;
+                                margin: 0px;
+                                line-height: 1.2;
+                            }
+                            .table {
+                                background-color: white;
+                                border-radius: 15px;
+                                box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+                                overflow: hidden;
+                                margin-bottom: 0;
+                            }
+                            .table th {
+                                background-color: #800000;
+                                color: white;
+                                vertical-align: middle;
+                            }
+                            .table td {
+                                vertical-align: middle;
+                            }
+                            .table ul {
+                                margin-bottom: -5px;
+                            }
+                            .table-striped tbody tr:nth-of-type(odd) {
+                                background-color: rgba(128, 0, 0, 0.05);
+                            }
+                            .btn-maroon {
+                                background-color: #800000;
+                                border-color: #800000;
+                                color: white;
+                            }
+                            .btn-maroon:hover {
+                                background-color: #600000;
+                                border-color: #600000;
+                                color: white;
+                            }
+                            .text-center {
+                                text-align: center;
+                            }
+                            
+                            .table tbody tr:last-child td {
+                                border-bottom: none;
+                            }
+                        </style>
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th class="text-center">Form Code</th>
+                                    <th>Requirement</th>
+                                    <th class="text-center">Template</th>
+                                    <th class="text-center">Sample</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="text-center">AD001</td>
+                                    <td>Compilation of Compulsory Certificates
+                                        <ul>
+                                            <li>Certificate of Recognition from Central/Local Student Council</li>
+                                            <li>Certificate of Clearance from PUP Student Council Commission on Audit (PUP SC COA)</li>
+                                            <li>OSS Anti-Hazing Orientation Certificate of Registration</li>
+                                        </ul>
+                                    </td>
+                                    <td class="text-center"><button class="btn btn-sm btn-maroon">View</button></td>
+                                    <td class="text-center"><button class="btn btn-sm btn-maroon">View</button></td>
+                                </tr>
+                                <tr>
+                                    <td class="text-center">AD002</td>
+                                    <td>Officers' Profile with 1st Semester Certificate of Registration, and list of members (at least 15 members including the officers/executives)</td>
+                                    <td class="text-center"><button class="btn btn-sm btn-maroon">View</button></td>
+                                    <td class="text-center"><button class="btn btn-sm btn-maroon">View</button></td>
+                                </tr>
+                                <tr>
+                                    <td class="text-center">AD003</td>
+                                    <td>Adviser(s)'s Letter of Concurrence with scanned copy of their university-issued ID</td>
+                                    <td class="text-center"><button class="btn btn-sm btn-maroon">View</button></td>
+                                    <td class="text-center"><button class="btn btn-sm btn-maroon">View</button></td>
+                                </tr>
+                                <tr>
+                                    <td class="text-center">AD004</td>
+                                    <td>Student Organization's Constitution and Bylaws (CBL)</td>
+                                    <td class="text-center"><button class="btn btn-sm btn-maroon">View</button></td>
+                                    <td class="text-center"><button class="btn btn-sm btn-maroon">View</button></td>
+                                </tr>
+                                <tr>
+                                    <td class="text-center">AD005</td>
+                                    <td>General Plan of Activities with Budgetary Outlay</td>
+                                    <td class="text-center"><button class="btn btn-sm btn-maroon">View</button></td>
+                                    <td class="text-center"><button class="btn btn-sm btn-maroon">View</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    """, unsafe_allow_html=True)
 
         
     elif accre_type == "Revalidation":
-        columns = ["Form Code", "Requirement", "Template", "Sample"]
-        table_data = [
-            ["RD001", "Certificate of Recognition from Central/Local Student Council", "Download", "View"],\
-            ["RD002", "Scanned Copy of the Latest Certificate of Accreditation/Revalidation", "Download", "View"],
-            ["RD003", "Official List of Officers and Adviser(s) with signatures over printed names, and list of members (at least 15 members including the officers/executives)", "Download", "View"],
-            ["RD004", "Officers’ Profile with 1st Semester Certificate of Registration", "Download", "View"],
-            ["RD005", "Adviser(s)’s Letter of Concurrence with scanned copy of their university-issued ID", "Download", "View"],
-            ["RD006", "Student Organization’s Constitution and Bylaws (CBL)", "Download", "View"],
-            ["RD007", "General Plan of Activities with Budgetary Outlay", "Download", "View"],
-            ["RD008", "Organization's Advocacy Plan", "Download", "View"],
-            ["RD009", "Accomplishment Report", "Download", "View"],
-            ["RD09X", "Accomplishment Report Substitute", "Download", "View"],
-            ["RD010", "Financial Statements", "Download", "View"],
-            ["RD011", "Certificate of Clearance from PUP Student Council Commission on Audit (PUP SC COA)", "Download", "View"],
-            ["RD012", "Turnover of Assets and Funds", "Download", "View"],
-            ["RD013", "OSS Anti-Hazing Orientation Certificate of Registration", "Download", "View"],
-        ]
-        
-        reval_reqs_df = pd.DataFrame(table_data, columns=columns)
-        reval_reqs_df = reval_reqs_df.style.hide(axis="index").set_table_styles([{
-            'selector': '.col2, .col3',  
-            'props': [
-                ('text-align', 'center')
-            ]
-        }])
-        st.markdown(f"<div style='max-width: fit-content; margin-inline: auto;'>{reval_reqs_df.to_html(index=False)}</div>", unsafe_allow_html=True)
-        
+         st.markdown("""
+                        <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/css/bootstrap.min.css" rel="stylesheet">
+                        <style>
+                            h1 {
+                                font-family: "Source Sans Pro", sans-serif;
+                                font-weight: 700;
+                                color: rgb(49, 51, 63);
+                                padding: 1.25rem 0px 1rem;
+                                margin: 0px;
+                                line-height: 1.2;
+                            }
+                            .table {
+                                background-color: white;
+                                border-radius: 15px;
+                                box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+                                overflow: hidden;
+                                margin-bottom: 0;
+                            }
+                            .table th {
+                                background-color: #800000;
+                                color: white;
+                                vertical-align: middle;
+                            }
+                            .table td {
+                                vertical-align: middle;
+                            }
+                            .table ul {
+                                margin-bottom: -5px;
+                            }
+                            .table-striped tbody tr:nth-of-type(odd) {
+                                background-color: rgba(128, 0, 0, 0.05);
+                            }
+                            .btn-maroon {
+                                background-color: #800000;
+                                border-color: #800000;
+                                color: white;
+                            }
+                            .btn-maroon:hover {
+                                background-color: #600000;
+                                border-color: #600000;
+                                color: white;
+                            }
+                            .text-center {
+                                text-align: center;
+                            }
+                            
+                            .table tbody tr:last-child td {
+                                border-bottom: none;
+                            }
+                        </style>
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th class="text-center">Form Code</th>
+                                    <th>Requirement</th>
+                                    <th class="text-center">Template</th>
+                                    <th class="text-center">Sample</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="text-center">RD001</td>
+                                    <td>Compilation of Compulsory Certificates
+                                        <ul>
+                                            <li>Certificate of Recognition from Central/Local Student Council</li>
+                                            <li>Certificate of Clearance from PUP Student Council Commission on Audit (PUP SC COA)</li>
+                                            <li>OSS Anti-Hazing Orientation Certificate of Registration</li>
+                                            <li>Scanned Copy of the Latest Certificate of Accreditation/Revalidation</li>
+                                        </ul>
+                                    </td>
+                                    <td class="text-center"><button class="btn btn-sm btn-maroon">View</button></td>
+                                    <td class="text-center"><button class="btn btn-sm btn-maroon">View</button></td>
+                                </tr>
+                                <tr>
+                                    <td class="text-center">RD002</td>
+                                    <td>Officers' Profile with 1st Semester Certificate of Registration, and list of members (at least 15 members including the officers/executives)</td>
+                                    <td class="text-center"><button class="btn btn-sm btn-maroon">View</button></td>
+                                    <td class="text-center"><button class="btn btn-sm btn-maroon">View</button></td>
+                                </tr>
+                                <tr>
+                                    <td class="text-center">RD003</td>
+                                    <td>Adviser(s)'s Letter of Concurrence with scanned copy of their university-issued ID</td>
+                                    <td class="text-center"><button class="btn btn-sm btn-maroon">View</button></td>
+                                    <td class="text-center"><button class="btn btn-sm btn-maroon">View</button></td>
+                                </tr>
+                                <tr>
+                                    <td class="text-center">RD004</td>
+                                    <td>Student Organization's Constitution and Bylaws (CBL)</td>
+                                    <td class="text-center"><button class="btn btn-sm btn-maroon">View</button></td>
+                                    <td class="text-center"><button class="btn btn-sm btn-maroon">View</button></td>
+                                </tr>
+                                <tr>
+                                    <td class="text-center">RD005</td>
+                                    <td>General Plan of Activities with Budgetary Outlay</td>
+                                    <td class="text-center"><button class="btn btn-sm btn-maroon">View</button></td>
+                                    <td class="text-center"><button class="btn btn-sm btn-maroon">View</button></td>
+                                </tr>
+                                <tr>
+                                    <td class="text-center">RD006</td>
+                                    <td>Accomplishment Report (or substitute)</td>
+                                    <td class="text-center"><button class="btn btn-sm btn-maroon">View</button></td>
+                                    <td class="text-center"><button class="btn btn-sm btn-maroon">View</button></td>
+                                </tr>
+                                <tr>
+                                    <td class="text-center">RD007</td>
+                                    <td>Copy of Approved Financial Statements</td>
+                                    <td class="text-center"><button class="btn btn-sm btn-maroon">View</button></td>
+                                    <td class="text-center"><button class="btn btn-sm btn-maroon">View</button></td>
+                                </tr>
+                                <tr>
+                                    <td class="text-center">RD008</td>
+                                    <td>Turnover of Assets and Funds</td>
+                                    <td class="text-center"><button class="btn btn-sm btn-maroon">View</button></td>
+                                    <td class="text-center"><button class="btn btn-sm btn-maroon">View</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    """, unsafe_allow_html=True)
+
+
+application_requirements()

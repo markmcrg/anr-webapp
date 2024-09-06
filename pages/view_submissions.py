@@ -181,22 +181,20 @@ def view_submissions():
     eval_data = {}
     accre_docs = {
         'AD001': 'Compilation of Compulsory Certificates',
-        'AD002': 'Official List of Officers and Adviser(s)',
-        'AD003': 'Officers’ Profile with 1st Semester COR',
-        'AD004': 'Adviser(s)’s Letter of Concurrence',
-        'AD005': 'Student Organization’s Constitution and Bylaws (CBL)',
-        'AD006': 'General Plan of Activities with Budgetary Outlay',
+        'AD002': 'Officers’ Profile with 1st Semester COR',
+        'AD003': 'Adviser(s)’s Letter of Concurrence',
+        'AD004': 'Student Organization’s Constitution and Bylaws (CBL)',
+        'AD005': 'General Plan of Activities with Budgetary Outlay',
     }
     reval_docs = {
         'RD001': 'Compilation of Compulsory Certificates',
-        'RD002': 'Official List of Officers and Adviser(s)',
-        'RD003': 'Officers’ Profile with 1st Semester COR',
-        'RD004': 'Adviser(s)’s Letter of Concurrence',
-        'RD005': 'Student Organization’s Constitution and Bylaws (CBL)',
-        'RD006': 'General Plan of Activities with Budgetary Outlay',
-        'RD007': 'Accomplishment Report',
-        'RD008': 'Copy of Approved Financial Statements',
-        'RD009': 'Turnover of Assets and Funds',
+        'RD002': 'Officers’ Profile with 1st Semester COR',
+        'RD003': 'Adviser(s)’s Letter of Concurrence',
+        'RD004': 'Student Organization’s Constitution and Bylaws (CBL)',
+        'RD005': 'General Plan of Activities with Budgetary Outlay',
+        'RD006': 'Accomplishment Report',
+        'RD007': 'Copy of Approved Financial Statements',
+        'RD008': 'Turnover of Assets and Funds',
     }
     def display_previous_remarks(data, doc_code, idx):
         with st.popover("View Previous Remarks"):
@@ -268,7 +266,7 @@ def view_submissions():
 
                 elif eval_phase in ['FE', 'CA']:
                     filtered_record = get_filtered_record(submission_data_df, sub_to_eval)
-                    num_requirements = 6 if app_type == 'Accreditation' else 9
+                    num_requirements = 5 if app_type == 'Accreditation' else 8
                     data = extract_data(filtered_record, num_requirements)
 
                     if app_type == 'Accreditation':
@@ -277,9 +275,8 @@ def view_submissions():
                         show_expander(reval_docs, data)
                 elif eval_phase == 'Returned':
                     sac.alert(label='This submission has been returned for revisions.', size='sm', variant='quote-light', color='info', icon=True)
-                    doc_type = accre_docs if app_type == 'Accreditation' else reval_docs
                     filtered_record = get_filtered_record(submission_data_df, sub_to_eval)
-                    num_requirements = 6 if app_type == 'Accreditation' else 9
+                    num_requirements = 5 if app_type == 'Accreditation' else 8
                     data = extract_data(filtered_record, num_requirements)
                     if app_type == 'Accreditation':
                         show_expander_returned(accre_docs, data)

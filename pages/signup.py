@@ -41,11 +41,7 @@ def signup():
     ) 
     # Registration Form Page
     if st.session_state.page == 1:
-        
-
         with st.container(border=True):
-            sac.divider(label='Signup', icon='clipboard', align='center', color='gray')
-            
             org_name = st.text_input('Organization Name', placeholder='PUP Student Council Commission on Student Organizations and Accreditation')
             cols = st.columns(2)
             username = cols[0].text_input('Username', help='Username must be unique', max_chars=20, placeholder='pupsccosoa')

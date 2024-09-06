@@ -127,7 +127,6 @@ elif menu_item == "Assign Organizations":
     pg.assign_orgs()
 elif menu_item == "Evaluate Submissions":
     pg.view_submissions() 
-# Sidebar Footer Login info
 
 if st.session_state["authentication_status"]:
     menu_item = 'Home'

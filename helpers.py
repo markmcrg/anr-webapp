@@ -9,6 +9,7 @@ import mysql.connector
 from mysql.connector import Error
 from datetime import datetime, timezone, timedelta
 from b2sdk.v2 import InMemoryAccountInfo, B2Api, UploadSourceBytes
+import streamlit_antd_components as sac
 
 # Function to fetch data from the TiDB Cloud API
 def fetch_data(url: str) -> dict:
@@ -499,7 +500,6 @@ def submit_evaluation_accre(filename, eval_data):
         "req005_approved": eval_data["AD005"]["approved"],
         "req005_remarks": eval_data["AD005"]["remark"],
         "req006_approved": eval_data["AD006"]["approved"],
-        "req006_remarks": eval_data["AD006"]["remark"],
         "filename": filename,
     }
     response = requests.put(
@@ -540,8 +540,6 @@ def submit_evaluation_reval(filename, eval_data):
         "req007_remarks": eval_data["RD007"]["remark"],
         "req008_approved": eval_data["RD008"]["approved"],
         "req008_remarks": eval_data["RD008"]["remark"],
-        "req009_approved": eval_data["RD009"]["approved"],
-        "req009_remarks": eval_data["RD009"]["remark"],
         "filename": filename,
     }
 
