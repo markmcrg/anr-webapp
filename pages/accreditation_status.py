@@ -1,7 +1,12 @@
 import streamlit as st
-from helpers import authenticate_b2, get_submissions
+import sys
+import os
 import streamlit_antd_components as sac
 from datetime import datetime
+# Add the main directory to the system path if necessary
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+from helpers import authenticate_b2, get_submissions
+
 
 def accreditation_status():
     # session state this bucket to minimize API calls
@@ -9,7 +14,7 @@ def accreditation_status():
     download_auth_token = bucket.get_download_authorization("", 86400)
     st.subheader("My Submissions")
     # API call to fetch user's submissions based on username
-    data = get_submissions(st.session_state["username"])
+    data = get_submissions('pupppge')
     if data:
         # Create table rows dynamically
         rows = ""
@@ -119,9 +124,24 @@ def accreditation_status():
             </table>
         """
         st.markdown(table_html, unsafe_allow_html=True)
+        
+        # Check each submission if existing, if not then disable the respective option
+        # Add chairperson's remarks to the tracker form at the bottom
+        st.write(data)
+        tracker_form_to_view = sac.segmented(
+                            items=[
+                                sac.SegmentedItem(label='Initial Submission'),
+                                sac.SegmentedItem(label='1st Resubmission'),
+                                sac.SegmentedItem(label='2nd Reusbmission'),
+                            ], label='View Tracker Form', direction='vertical'
+                        )
+
     else:
         sac.result(label='No Submissions Found', description='Click on "Accreditation Application" to submit your first application.', status='empty')
     
 
+
 # Have info to show what each status means (Approved, Pending, etc.)
 # Tracker form should only be visible once returned for revisions is the eval phase
+
+accreditation_status()

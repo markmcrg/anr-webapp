@@ -78,17 +78,17 @@ def signup():
             if register:
                 # Check if password is strong
                 if not is_strong_password(password):
-                    st.error('Password must be at least 8 characters long, with at least one uppercase letter, one lowercase letter, one number, and one special character')
+                    sac.alert(label='Password must be at least 8 characters long, with at least one uppercase letter, one lowercase letter, one number, and one special character.', size='sm', variant='quote-light', color='error', icon=True)
                 elif not password_match:
-                    st.error('Passwords do not match')
+                    sac.alert(label='Passwords do not match.', size='sm', variant='quote-light', color='error', icon=True)
                 elif not valid_email:
-                    st.error('Email must end in @iskolarngbayan.pup.edu.ph')
+                    sac.alert(label='Email must end in @iskolarngbayan.pup.edu.ph.', size='sm', variant='quote-light', color='error', icon=True)
                 else:
                     # Check if username is unique
                     if check_username(username):
-                        st.error('Username already exists')
+                        sac.alert(label='Username is already in use by a registered account.', size='sm', variant='quote-light', color='error', icon=True)
                     elif check_email(email):
-                        st.error('Email already exists')
+                        sac.alert(label='Email is already in use by a registered account.', size='sm', variant='quote-light', color='error', icon=True)
                     else:
                         # assign all variables to session state
                         st.session_state.org_name = org_name
@@ -123,14 +123,13 @@ def signup():
                     st.session_state.otp_sent = False
                     next_page()
                 else:
-                    st.error('OTP does not match')
+                    sac.alert(label='One-Time Passcode does not matach.', size='sm', variant='quote-light', color='error', icon=True)
                     
     if st.session_state.page == 4:
         if register_user(st.session_state.email, st.session_state.password, st.session_state.org_name, st.session_state.username, st.session_state.abbreviation):
-            sac.result(label='Registration Successful!', description='You may know login to your account.', status='success')
+            sac.result(label='Registration Successful!', description='You may now login to your account.', status='success')
         else:
             sac.result(label='Registration Unsuccessful :(', description='Please try again, and if the error persists, please contact us.', status='error')
-signup()
 
 # Add timeline - 1. Register, 2. DPA, 3. OTP, 4. Success
 # FORM VALIDATION:

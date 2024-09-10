@@ -1,6 +1,5 @@
 import streamlit as st
 import streamlit_antd_components as sac
-import pandas as pd
 
 def application_requirements():
     st.markdown("<h1 style='text-align: center;'>Application Requirements</h1>", unsafe_allow_html=True)
@@ -237,6 +236,3 @@ def application_requirements():
                             </tbody>
                         </table>
                     """, unsafe_allow_html=True)
-
-
-application_requirements()
