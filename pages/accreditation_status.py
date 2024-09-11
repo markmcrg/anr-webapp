@@ -9,8 +9,9 @@ from helpers import authenticate_b2, get_submissions
 
 
 def accreditation_status():
-    # session state this bucket to minimize API calls
-    bucket = authenticate_b2('anr-webapp')
+    if 'bucket' not in st.session_state:
+        st.session_state.bucket = authenticate_b2('anr-webapp')
+    bucket = st.session_state.bucket
     download_auth_token = bucket.get_download_authorization("", 86400)
     st.subheader("My Submissions")
     # API call to fetch user's submissions based on username
@@ -127,14 +128,151 @@ def accreditation_status():
         
         # Check each submission if existing, if not then disable the respective option
         # Add chairperson's remarks to the tracker form at the bottom
-        st.write(data)
-        tracker_form_to_view = sac.segmented(
-                            items=[
-                                sac.SegmentedItem(label='Initial Submission'),
-                                sac.SegmentedItem(label='1st Resubmission'),
-                                sac.SegmentedItem(label='2nd Reusbmission'),
-                            ], label='View Tracker Form', direction='vertical'
-                        )
+        st.write("---")
+        # Checking for entries
+        app_orders = {"Initial Submission": False, "1st Resubmission": False,  "2nd Resubmission": False}
+
+        # Iterate through the data and check for specific 'app_order' values
+        for entry in data:
+            if entry["app_order"] in app_orders:
+                app_orders[entry["app_order"]] = True
+        cols = st.columns([0.2, 0.8])
+        with cols[0]:
+            sub_to_view = sac.segmented(
+                                items=[
+                                    sac.SegmentedItem(label='Initial Submission', disabled=not app_orders["Initial Submission"]),
+                                    sac.SegmentedItem(label='1st Resubmission', disabled=not app_orders["1st Resubmission"]),
+                                    sac.SegmentedItem(label='2nd Resubmission', disabled=not app_orders["2nd Resubmission"]),
+                                ], label='View Tracker Form', direction='vertical'
+                            )
+        with cols[1]:
+            st.subheader("Tracker Form")
+            selected_record = next((entry for entry in data if entry["app_order"] == sub_to_view))
+            
+            # Check if status is returned first, then check application type (accre or reval)
+            if selected_record['eval_phase'] == 'Returned':
+                tracker_form_data = ""
+                accre_docs = {
+                    'AD001': 'Compilation of Compulsory Certificates',
+                    'AD002': 'Officers’ Profile with 1st Semester COR',
+                    'AD003': 'Adviser(s)’s Letter of Concurrence',
+                    'AD004': 'Student Organization’s Constitution and Bylaws (CBL)',
+                    'AD005': 'General Plan of Activities with Budgetary Outlay',
+                }
+                reval_docs = {
+                    'RD001': 'Compilation of Compulsory Certificates',
+                    'RD002': 'Officers’ Profile with 1st Semester COR',
+                    'RD003': 'Adviser(s)’s Letter of Concurrence',
+                    'RD004': 'Student Organization’s Constitution and Bylaws (CBL)',
+                    'RD005': 'General Plan of Activities with Budgetary Outlay',
+                    'RD006': 'Accomplishment Report',
+                    'RD007': 'Copy of Approved Financial Statements',
+                    'RD008': 'Turnover of Assets and Funds',
+                }
+                if selected_record['app_type'] == 'Accreditation':
+                    accre_doc_names = [doc_name for doc_name in accre_docs.values()]
+                    for idx, doc_name in enumerate(accre_doc_names, start=1):
+                        if selected_record[f'REQ{idx:03d}_approved'] == '1':
+                            status_icon = 'check'
+                            status_class = 'status-check'
+                        else:
+                            status_icon = 'times'
+                            status_class = 'status-cross'
+                        tracker_form_data += f"""
+                        <tr>
+                            <td class="center-align">AD{idx:03d}</td>
+                            <td class="left-align">{doc_name}</td>
+                            <td class="center-align"><i class="fas fa-{status_icon} status-icon {status_class}"></i></td>
+                            <td class="left-align">{selected_record[f'REQ{idx:03d}_remarks']}</td>
+                        </tr>
+                        """            
+                elif selected_record['app_type'] == 'Revalidation':
+                    reval_doc_names = [doc_name for doc_name in reval_docs.values()]    
+                    for idx, doc_name in enumerate(reval_doc_names, start=1):
+                        if selected_record[f'REQ{idx:03d}_approved'] == '1':
+                            status_icon = 'check'
+                            status_class = 'status-check'
+                        else:
+                            status_icon = 'times'
+                            status_class = 'status-cross'
+                        tracker_form_data += f"""
+                        <tr>
+                            <td class="center-align">RD{idx:03d}</td>
+                            <td class="left-align">{doc_name}</td>
+                            <td class="center-align"><i class="fas fa-{status_icon} status-icon {status_class}"></i></td>
+                            <td class="left-align">{selected_record[f'REQ{idx:03d}_remarks']}</td>
+                        </tr>
+                        """   
+                st.markdown(f"""
+                                    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+                                    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" rel="stylesheet">
+                                    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+                                    <style>
+                                        body {{
+                                            font-family: Arial, sans-serif;
+                                            display: flex;
+                                            justify-content: center;
+                                            align-items: center;
+                                            min-height: 100vh;
+                                            margin: 0;
+                                            background-color: #f0f0f0;
+                                        }}
+                                        table {{
+                                            border-collapse: separate;
+                                            border-spacing: 0;
+                                            border-radius: 10px;
+                                            overflow: hidden;
+                                            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                                            background-color: #ffffff;
+                                            margin: 20px;
+                                            width:100%;
+                                        }}
+                                        th, td {{
+                                            padding: 12px 15px;
+                                            border-bottom: 1px solid #e0e0e0;
+                                        }}
+                                        th {{
+                                            background-color: #800000;
+                                            color: white;
+                                        }}
+                                        tr:last-child td {{
+                                            border-bottom: none;
+                                        }}
+                                        tr:nth-child(even) {{
+                                            background-color: #f8f8f8;
+                                        }}
+                                        .status-icon {{
+                                            font-size: 1.2em;
+                                        }}
+                                        .status-check {{
+                                            color: #28a745;
+                                        }}
+                                        .status-cross {{
+                                            color: #dc3545;
+                                        }}
+                                        .center-align {{
+                                            text-align: center;
+                                        }}
+                                        .left-align {{
+                                            text-align: left;
+                                        }}
+                                    </style>
+                                    <table>
+                                        <tr>
+                                            <th colspan="4" class="center-align">{selected_record['filename']}</th>
+                                        </tr>
+                                        <tr>
+                                            <th class="center-align">Code</th>
+                                            <th class="left-align">Form Name</th>
+                                            <th class="center-align">Status</th>
+                                            <th class="center-align">Remarks</th>
+                                        </tr>
+                                    {tracker_form_data}
+                                        
+                                    """, unsafe_allow_html=True)
+        
+            else:
+                sac.result(label='Tracker Form Unavailable.', description='Please wait until your submission is tagged as "Returned."')
 
     else:
         sac.result(label='No Submissions Found', description='Click on "Accreditation Application" to submit your first application.', status='empty')

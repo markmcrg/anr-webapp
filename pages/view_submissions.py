@@ -316,7 +316,7 @@ def view_submissions():
                                         <td class="left-align">{doc_name}</td>
                                         <td class="center-align"><i class="fas fa-times status-icon status-cross"></i></td>
                                     """
-                    if eval_phase in ['FE', 'CA']:
+                    if eval_phase in ['FE', 'CA', 'Returned', 'Approved', 'Rejected']:
                         if app_type == 'Accreditation':
                             accre_doc_names = [doc_name for doc_name in accre_docs.values()]
                             for idx, doc_name in enumerate(accre_doc_names, start=1):
