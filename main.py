@@ -133,6 +133,14 @@ if st.session_state["authentication_status"]:
 elif st.session_state["authentication_status"] is None or not st.session_state["authentication_status"]:
     pass
 
+hide_streamlit_style = """
+<style>
+#MainMenu {visibility: hidden;}
+footer {visibility: hidden;}
+</style>
+
+"""
+st.markdown(hide_streamlit_style, unsafe_allow_html=True) 
 # user - for orgs
 # cosoa - for evals
 # execcomm - for org assignment
