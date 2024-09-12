@@ -1,5 +1,7 @@
 [client]
 showSidebarNavigation = false
+showErrorDetails = true
+toolbarMode = "viewer"
 
 [theme]
 base="light"
@@ -8,3 +10,10 @@ primaryColor="#8b0000"
 [server]
 maxUploadSize = 100
 runOnSave = true
+headless = true
+
+[browser]
+serverAddress = "www.sccosoa.com"
+
+[ui]
+hideTopBar = true
