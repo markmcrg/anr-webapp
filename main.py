@@ -5,7 +5,7 @@ from helpers import get_role, get_abbreviation, update_last_login
 
 # Entrypoint / page router for the app
 st.set_page_config(page_title="PUP SC COSOA AnR Portal", page_icon="🏫", layout="wide")
-st.logo('https://i.imgur.com/pA9lYh5.png', link='www.sccosoa.com') # Change link to sccosoa.com in production
+st.logo('https://i.imgur.com/pA9lYh5.png', link='https://www.sccosoa.com') # Change link to sccosoa.com in production
 
 if 'authentication_status' not in st.session_state:
     st.session_state['authentication_status'] = None
