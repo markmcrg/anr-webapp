@@ -10,11 +10,12 @@ from mysql.connector import Error
 from datetime import datetime, timezone, timedelta
 from b2sdk.v2 import InMemoryAccountInfo, B2Api, UploadSourceBytes
 import streamlit_antd_components as sac
+import os
 
 # Function to fetch data from the TiDB Cloud API
 def fetch_data(url: str) -> dict:
-    PUBLIC_KEY = st.secrets.tidb_keys.public_key
-    PRIVATE_KEY = st.secrets.tidb_keys.private_key
+    PUBLIC_KEY = os.environ['tidb_public_key']
+    PRIVATE_KEY = os.environ['tidb_private_key']
     response = requests.get(url, auth=HTTPBasicAuth(PUBLIC_KEY, PRIVATE_KEY))
     return response.json()
 
@@ -55,8 +56,8 @@ def page_router(active_index, current_index):
 
 
 def register_user(email, password, org_name, username, abbreviation):
-    PUBLIC_KEY = st.secrets.tidb_keys.public_key
-    PRIVATE_KEY = st.secrets.tidb_keys.private_key
+    PUBLIC_KEY = os.environ['tidb_public_key']
+    PRIVATE_KEY = os.environ['tidb_private_key']
 
     url = "https://ap-southeast-1.data.tidbcloud.com/api/v1beta/app/dataapp-SxHAXFax/endpoint/users"
 
@@ -86,8 +87,8 @@ def register_user(email, password, org_name, username, abbreviation):
 
 
 def check_username(username):
-    PUBLIC_KEY = st.secrets.tidb_keys.public_key
-    PRIVATE_KEY = st.secrets.tidb_keys.private_key
+    PUBLIC_KEY = os.environ['tidb_public_key']
+    PRIVATE_KEY = os.environ['tidb_private_key']
 
     url = f"https://ap-southeast-1.data.tidbcloud.com/api/v1beta/app/dataapp-SxHAXFax/endpoint/check_username?username={username}"
     response = requests.get(url, auth=HTTPBasicAuth(PUBLIC_KEY, PRIVATE_KEY))
@@ -103,8 +104,8 @@ def check_username(username):
 
 
 def check_email(email):
-    PUBLIC_KEY = st.secrets.tidb_keys.public_key
-    PRIVATE_KEY = st.secrets.tidb_keys.private_key
+    PUBLIC_KEY = os.environ['tidb_public_key']
+    PRIVATE_KEY = os.environ['tidb_private_key']
 
     url = f"https://ap-southeast-1.data.tidbcloud.com/api/v1beta/app/dataapp-SxHAXFax/endpoint/check_email?email={email}"
     response = requests.get(url, auth=HTTPBasicAuth(PUBLIC_KEY, PRIVATE_KEY))
@@ -123,12 +124,12 @@ def send_otp_email(email, otp, name):
     mail = mt.MailFromTemplate(
         sender=mt.Address(email="no-reply@sccosoa.com", name="PUP SC COSOA"),
         to=[mt.Address(email=email)],
-        template_uuid=st.secrets.mailtrap_creds.otp_template_uuid,
+        template_uuid=os.environ['mt_otp_template_uuid'],
         template_variables={"name": name, "otp": otp},
     )
     # create client and send
     try:
-        client = mt.MailtrapClient(token=st.secrets.mailtrap_creds.token)
+        client = mt.MailtrapClient(token=os.environ['mt_token'])
         client.send(mail)
         return True
     except:
@@ -139,7 +140,7 @@ def send_notif_email(email, name, app_type, app_order):
     mail = mt.MailFromTemplate(
         sender=mt.Address(email="no-reply@sccosoa.com", name="PUP SC COSOA"),
         to=[mt.Address(email=email)],
-        template_uuid=st.secrets.mailtrap_creds.notif_template_uuid,
+        template_uuid=os.environ['mt_notif_template_uuid'],
         template_variables={
             "name": name,
             "app_type": app_type,
@@ -148,7 +149,7 @@ def send_notif_email(email, name, app_type, app_order):
     )
     # create client and send
     try:
-        client = mt.MailtrapClient(token=st.secrets.mailtrap_creds.token)
+        client = mt.MailtrapClient(token=os.environ['mt_token'])
         client.send(mail)
         return True
     except:
@@ -156,8 +157,8 @@ def send_notif_email(email, name, app_type, app_order):
 
 
 def get_role(username):
-    PUBLIC_KEY = st.secrets.tidb_keys.public_key
-    PRIVATE_KEY = st.secrets.tidb_keys.private_key
+    PUBLIC_KEY = os.environ['tidb_public_key']
+    PRIVATE_KEY = os.environ['tidb_private_key']
 
     url = f"https://ap-southeast-1.data.tidbcloud.com/api/v1beta/app/dataapp-SxHAXFax/endpoint/get_role?username={username}"
     response = requests.get(url, auth=HTTPBasicAuth(PUBLIC_KEY, PRIVATE_KEY))
@@ -175,8 +176,8 @@ def get_role(username):
 
 @st.cache_data(show_spinner=False)
 def get_abbreviation(username):
-    PUBLIC_KEY = st.secrets.tidb_keys.public_key
-    PRIVATE_KEY = st.secrets.tidb_keys.private_key
+    PUBLIC_KEY = os.environ['tidb_public_key']
+    PRIVATE_KEY = os.environ['tidb_private_key']
 
     url = f"https://ap-southeast-1.data.tidbcloud.com/api/v1beta/app/dataapp-SxHAXFax/endpoint/get_abbreviation?username={username}"
     response = requests.get(url, auth=HTTPBasicAuth(PUBLIC_KEY, PRIVATE_KEY))
@@ -193,8 +194,8 @@ def get_abbreviation(username):
 
 
 def get_email(username):
-    PUBLIC_KEY = st.secrets.tidb_keys.public_key
-    PRIVATE_KEY = st.secrets.tidb_keys.private_key
+    PUBLIC_KEY = os.environ['tidb_public_key']
+    PRIVATE_KEY = os.environ['tidb_private_key']
 
     url = f"https://ap-southeast-1.data.tidbcloud.com/api/v1beta/app/dataapp-SxHAXFax/endpoint/get_email?username={username}"
     response = requests.get(url, auth=HTTPBasicAuth(PUBLIC_KEY, PRIVATE_KEY))
@@ -211,8 +212,8 @@ def get_email(username):
 
 
 def get_name(username):
-    PUBLIC_KEY = st.secrets.tidb_keys.public_key
-    PRIVATE_KEY = st.secrets.tidb_keys.private_key
+    PUBLIC_KEY = os.environ['tidb_public_key']
+    PRIVATE_KEY = os.environ['tidb_private_key']
 
     url = f"https://ap-southeast-1.data.tidbcloud.com/api/v1beta/app/dataapp-SxHAXFax/endpoint/get_org_name?username={username}"
     response = requests.get(url, auth=HTTPBasicAuth(PUBLIC_KEY, PRIVATE_KEY))
@@ -229,8 +230,8 @@ def get_name(username):
 
 
 def get_password(username):
-    PUBLIC_KEY = st.secrets.tidb_keys.public_key
-    PRIVATE_KEY = st.secrets.tidb_keys.private_key
+    PUBLIC_KEY = os.environ['tidb_public_key']
+    PRIVATE_KEY = os.environ['tidb_private_key']
 
     url = f"https://ap-southeast-1.data.tidbcloud.com/api/v1beta/app/dataapp-SxHAXFax/endpoint/get_pw?username={username}"
     response = requests.get(url, auth=HTTPBasicAuth(PUBLIC_KEY, PRIVATE_KEY))
@@ -247,8 +248,8 @@ def get_password(username):
 
 
 def update_last_login(username):
-    PUBLIC_KEY = st.secrets.tidb_keys.public_key
-    PRIVATE_KEY = st.secrets.tidb_keys.private_key
+    PUBLIC_KEY = os.environ['tidb_public_key']
+    PRIVATE_KEY = os.environ['tidb_private_key']
 
     url = "https://ap-southeast-1.data.tidbcloud.com/api/v1beta/app/dataapp-SxHAXFax/endpoint/update_last_login"
     headers = {
@@ -269,11 +270,11 @@ def update_last_login(username):
 def modify_user_data(identifier, to_modify, identifier_value, new_value):
     try:
         connection = mysql.connector.connect(
-            host=st.secrets["anr_webapp_db"]["host"],
-            user=st.secrets["anr_webapp_db"]["user"],
-            port=st.secrets["anr_webapp_db"]["port"],
-            password=st.secrets["anr_webapp_db"]["password"],
-            database=st.secrets["anr_webapp_db"]["database"],
+            host=os.environ['db1_host'],
+            user=os.environ['db1_user'],
+            port=os.environ['db1_port'],
+            password=os.environ['db1_password'],
+            database=os.environ['db1_database'],
         )
     except Error as e:
         st.error(f"The error '{e}' occurred")
@@ -291,11 +292,11 @@ def modify_user_data(identifier, to_modify, identifier_value, new_value):
 def assign_roles(identifier, identifier_values, role):
     try:
         connection = mysql.connector.connect(
-            host=st.secrets["anr_webapp_db"]["host"],
-            user=st.secrets["anr_webapp_db"]["user"],
-            port=st.secrets["anr_webapp_db"]["port"],
-            password=st.secrets["anr_webapp_db"]["password"],
-            database=st.secrets["anr_webapp_db"]["database"],
+            host=os.environ['db1_host'],
+            user=os.environ['db1_user'],
+            port=os.environ['db1_port'],
+            password=os.environ['db1_password'],
+            database=os.environ['db1_database'],
         )
     except Error as e:
         st.error(f"The error '{e}' occurred")
@@ -315,8 +316,8 @@ def assign_roles(identifier, identifier_values, role):
 
 # @st.cache_data(show_spinner=False)
 def get_app_orders(username):
-    PUBLIC_KEY = st.secrets.tidb_keys.public_key
-    PRIVATE_KEY = st.secrets.tidb_keys.private_key
+    PUBLIC_KEY = os.environ['tidb_public_key']
+    PRIVATE_KEY = os.environ['tidb_private_key']
 
     url = f"https://ap-southeast-1.data.tidbcloud.com/api/v1beta/app/dataapp-SxHAXFax/endpoint/get_app_orders?username={username}"
     response = requests.get(url, auth=HTTPBasicAuth(PUBLIC_KEY, PRIVATE_KEY))
@@ -330,8 +331,8 @@ def get_app_orders(username):
 
 # @st.cache_data(show_spinner=False)
 def get_app_type(username):
-    PUBLIC_KEY = st.secrets.tidb_keys.public_key
-    PRIVATE_KEY = st.secrets.tidb_keys.private_key
+    PUBLIC_KEY = os.environ['tidb_public_key']
+    PRIVATE_KEY = os.environ['tidb_private_key']
 
     url = f"https://ap-southeast-1.data.tidbcloud.com/api/v1beta/app/dataapp-SxHAXFax/endpoint/get_app_type?username={username}"
     response = requests.get(url, auth=HTTPBasicAuth(PUBLIC_KEY, PRIVATE_KEY))
@@ -346,8 +347,8 @@ def get_app_type(username):
 def authenticate_b2(bucket_name):
     info = InMemoryAccountInfo()
     b2_api = B2Api(info)
-    application_key_id = st.secrets["b2_user_app_key"]["keyID"]
-    application_key = st.secrets["b2_user_app_key"]["applicationKey"]
+    application_key_id = os.environ['b2_keyID']
+    application_key = os.environ['b2_applicationKey']
     b2_api.authorize_account("production", application_key_id, application_key)
     bucket = b2_api.get_bucket_by_name(bucket_name)
     return bucket
@@ -390,8 +391,8 @@ def get_download_url(bucket, filename, auth=True):
 def record_submission(
     filename, org_name, app_type, app_order, jurisdiction, b2_file_url, username
 ):
-    PUBLIC_KEY = st.secrets.tidb_keys.public_key
-    PRIVATE_KEY = st.secrets.tidb_keys.private_key
+    PUBLIC_KEY = os.environ['tidb_public_key']
+    PRIVATE_KEY = os.environ['tidb_private_key']
 
     url = "https://ap-southeast-1.data.tidbcloud.com/api/v1beta/app/dataapp-SxHAXFax/endpoint/record_submission"
 
@@ -423,8 +424,8 @@ def record_submission(
 
 
 def get_submissions(username):
-    PUBLIC_KEY = st.secrets.tidb_keys.public_key
-    PRIVATE_KEY = st.secrets.tidb_keys.private_key
+    PUBLIC_KEY = os.environ['tidb_public_key']
+    PRIVATE_KEY = os.environ['tidb_private_key']
 
     url = f"https://ap-southeast-1.data.tidbcloud.com/api/v1beta/app/dataapp-SxHAXFax/endpoint/get_submissions?username={username}"
     response = requests.get(url, auth=HTTPBasicAuth(PUBLIC_KEY, PRIVATE_KEY))
@@ -437,8 +438,8 @@ def get_submissions(username):
 
 
 def get_abbreviation_from_webmail(webmail):
-    PUBLIC_KEY = st.secrets.tidb_keys.public_key
-    PRIVATE_KEY = st.secrets.tidb_keys.private_key
+    PUBLIC_KEY = os.environ['tidb_public_key']
+    PRIVATE_KEY = os.environ['tidb_private_key']
 
     url = f"https://ap-southeast-1.data.tidbcloud.com/api/v1beta/app/dataapp-SxHAXFax/endpoint/get_abbreviation_from_webmail?email={webmail}"
 
@@ -454,8 +455,8 @@ def get_abbreviation_from_webmail(webmail):
 
 
 def update_settings(setting, status):
-    PUBLIC_KEY = st.secrets.tidb_keys.public_key
-    PRIVATE_KEY = st.secrets.tidb_keys.private_key
+    PUBLIC_KEY = os.environ['tidb_public_key']
+    PRIVATE_KEY = os.environ['tidb_private_key']
 
     url = "https://ap-southeast-1.data.tidbcloud.com/api/v1beta/app/dataapp-SxHAXFax/endpoint/change_settings"
     headers = {
@@ -475,8 +476,8 @@ def update_settings(setting, status):
 
 
 def submit_evaluation_accre(filename, eval_data):
-    PUBLIC_KEY = st.secrets.tidb_keys.public_key
-    PRIVATE_KEY = st.secrets.tidb_keys.private_key
+    PUBLIC_KEY = os.environ['tidb_public_key']
+    PRIVATE_KEY = os.environ['tidb_private_key']
 
     url = "https://ap-southeast-1.data.tidbcloud.com/api/v1beta/app/dataapp-SxHAXFax/endpoint/evaluate_org_accre"
 
@@ -510,8 +511,8 @@ def submit_evaluation_accre(filename, eval_data):
 
 
 def submit_evaluation_reval(filename, eval_data):
-    PUBLIC_KEY = st.secrets.tidb_keys.public_key
-    PRIVATE_KEY = st.secrets.tidb_keys.private_key
+    PUBLIC_KEY = os.environ['tidb_public_key']
+    PRIVATE_KEY = os.environ['tidb_private_key']
 
     url = "https://ap-southeast-1.data.tidbcloud.com/api/v1beta/app/dataapp-SxHAXFax/endpoint/evaluate_org_reval"
 
@@ -554,8 +555,8 @@ def submit_evaluation_reval(filename, eval_data):
 
 
 def modify_eval_phase(filename, eval_phase="FE"):
-    PUBLIC_KEY = st.secrets.tidb_keys.public_key
-    PRIVATE_KEY = st.secrets.tidb_keys.private_key
+    PUBLIC_KEY = os.environ['tidb_public_key']
+    PRIVATE_KEY = os.environ['tidb_private_key']
 
     url = "https://ap-southeast-1.data.tidbcloud.com/api/v1beta/app/dataapp-SxHAXFax/endpoint/modify_eval_phase"
 

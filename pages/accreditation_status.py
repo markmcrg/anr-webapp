@@ -1,10 +1,10 @@
 import streamlit as st
-import sys
-import os
 import streamlit_antd_components as sac
 from datetime import datetime
 # Add the main directory to the system path if necessary
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+# import sys
+# import os
+# sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from helpers import authenticate_b2, get_submissions
 
 
@@ -136,14 +136,14 @@ def accreditation_status():
         for entry in data:
             if entry["app_order"] in app_orders:
                 app_orders[entry["app_order"]] = True
-        cols = st.columns([0.2, 0.8])
+        cols = st.columns([0.2, 0.8], vertical_alignment='center')
         with cols[0]:
             sub_to_view = sac.segmented(
                                 items=[
                                     sac.SegmentedItem(label='Initial Submission', disabled=not app_orders["Initial Submission"]),
                                     sac.SegmentedItem(label='1st Resubmission', disabled=not app_orders["1st Resubmission"]),
                                     sac.SegmentedItem(label='2nd Resubmission', disabled=not app_orders["2nd Resubmission"]),
-                                ], label='View Tracker Form', direction='vertical'
+                                ], direction='vertical'
                             )
         with cols[1]:
             st.subheader("Tracker Form")
@@ -270,6 +270,7 @@ def accreditation_status():
                                     {tracker_form_data}
                                         
                                     """, unsafe_allow_html=True)
+                # sac.alert(label='Chairperson\'s Remarks: Please check your...', size='sm', variant='quote-light', color='info', icon=True)
         
             else:
                 sac.result(label='Tracker Form Unavailable.', description='Please wait until your submission is tagged as "Returned."')
@@ -278,8 +279,5 @@ def accreditation_status():
         sac.result(label='No Submissions Found', description='Click on "Accreditation Application" to submit your first application.', status='empty')
     
 
-
 # Have info to show what each status means (Approved, Pending, etc.)
 # Tracker form should only be visible once returned for revisions is the eval phase
-
-accreditation_status()

@@ -6,7 +6,7 @@ from mysql.connector import Error
 import time
 from st_keyup import st_keyup
 import streamlit_antd_components as sac
-
+import os
 def assign_orgs():
     st.subheader("📄 Organization Submissions")
     submission_data = fetch_data("https://ap-southeast-1.data.tidbcloud.com/api/v1beta/app/dataapp-SxHAXFax/endpoint/get_all_submissions")['data']['rows']
@@ -81,11 +81,11 @@ def assign_orgs():
         if st.button("Update"):
             try:
                 connection = mysql.connector.connect(
-                    host=st.secrets['anr_webapp_db2']['host'],
-                    user=st.secrets['anr_webapp_db2']['user'],
-                    port=st.secrets['anr_webapp_db2']['port'],
-                    password=st.secrets['anr_webapp_db2']['password'],
-                    database=st.secrets["anr_webapp_db2"]["database"],
+                    host=os.environ['db2_host'],
+                    user=os.environ['db2_user'],
+                    port=os.environ['db2_port'],
+                    password=os.environ['db2_password'],
+                    database=os.environ['db2_database'],
                 )
             except Error as e:
                 st.error(f"The error '{e}' occurred")
