@@ -19,7 +19,7 @@ def fetch_data(url: str) -> dict:
     response = requests.get(url, auth=HTTPBasicAuth(PUBLIC_KEY, PRIVATE_KEY))
     return response.json()
 
-
+@st.cache_data(show_spinner=False, ttl=3600)
 def unpack_credentials(user_data: dict) -> dict:
     user_data_df = pd.DataFrame(
         user_data["rows"], columns=[col["col"] for col in user_data["columns"]]
@@ -45,7 +45,6 @@ def unpack_credentials(user_data: dict) -> dict:
         }
 
     return credentials
-
 
 def page_router(active_index, current_index):
     if active_index != current_index:
@@ -313,8 +312,6 @@ def assign_roles(identifier, identifier_values, role):
     connection.close()
     return affected_rows
 
-
-# @st.cache_data(show_spinner=False)
 def get_app_orders(username):
     PUBLIC_KEY = os.environ['tidb_public_key']
     PRIVATE_KEY = os.environ['tidb_private_key']
@@ -328,8 +325,6 @@ def get_app_orders(username):
 
     return app_orders
 
-
-# @st.cache_data(show_spinner=False)
 def get_app_type(username):
     PUBLIC_KEY = os.environ['tidb_public_key']
     PRIVATE_KEY = os.environ['tidb_private_key']
@@ -343,7 +338,7 @@ def get_app_type(username):
 
     return app_type
 
-
+@st.cache_data(show_spinner=False, ttl=3600)
 def authenticate_b2(bucket_name):
     info = InMemoryAccountInfo()
     b2_api = B2Api(info)
@@ -375,7 +370,7 @@ def list_files(bucket):
         ).strftime("%Y-%m-%d %H:%M:%S")
         st.write(f"**{file_version.file_name}** | {upload_timestamp}")
 
-
+@st.cache_data(show_spinner=False, ttl=3600)
 def get_download_url(bucket, filename, auth=True):
     download_auth_token = bucket.get_download_authorization(
         filename, 86400
@@ -386,7 +381,6 @@ def get_download_url(bucket, filename, auth=True):
         return auth_download_url
     else:
         return download_url
-
 
 def record_submission(
     filename, org_name, app_type, app_order, jurisdiction, b2_file_url, username
