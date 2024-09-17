@@ -338,7 +338,6 @@ def get_app_type(username):
 
     return app_type
 
-@st.cache_data(show_spinner=False, ttl=3600)
 def authenticate_b2(bucket_name):
     info = InMemoryAccountInfo()
     b2_api = B2Api(info)
