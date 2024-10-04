@@ -105,7 +105,8 @@ if menu_item == 'Accredited Organizations':
     with hc.HyLoader('',hc.Loaders.standard_loaders,index=[loader_index]):
         pg.accredited_orgs()
 elif menu_item == 'Application Requirements':
-    pg.application_requirements()
+    with hc.HyLoader('',hc.Loaders.standard_loaders,index=[loader_index]):
+        pg.application_requirements()
 elif menu_item == 'Frequently Asked Questions':
     pg.faqs()
 elif menu_item == 'Sign Up':
