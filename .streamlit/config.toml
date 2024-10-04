@@ -12,8 +12,5 @@ maxUploadSize = 100
 runOnSave = true
 headless = true
 
-[browser]
-serverAddress = "www.sccosoa.com"
-
 [ui]
 hideTopBar = true

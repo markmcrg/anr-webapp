@@ -3,7 +3,7 @@ from helpers import fetch_data, unpack_credentials
 import streamlit_authenticator as stauth
 
 import streamlit_antd_components as sac
-
+import hydralit_components as hc
 # Insert login here so that it doesn't render in other pages
 
 def login(logout: bool = False):
