@@ -370,11 +370,11 @@ def list_files(bucket):
         st.write(f"**{file_version.file_name}** | {upload_timestamp}")
 
 @st.cache_data(show_spinner=False, ttl=3600)
-def get_download_url(bucket, filename, auth=True):
-    download_auth_token = bucket.get_download_authorization(
+def get_download_url(_bucket, filename, auth=True):
+    download_auth_token = _bucket.get_download_authorization(
         filename, 86400
     )  # Modfiy this to change depending on filename and access
-    download_url = bucket.get_download_url(filename)
+    download_url = _bucket.get_download_url(filename)
     if auth:
         auth_download_url = str(f"{download_url}?Authorization={download_auth_token}")
         return auth_download_url
