@@ -2,12 +2,11 @@ import streamlit as st
 import streamlit_antd_components as sac
 import re
 import random
-# Add the main directory to the system path if necessary
-import sys
-import os
 import streamlit_shadcn_ui as ui
-
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+# # Add the main directory to the system path if necessary
+# import sys
+# import os
+# sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from helpers import register_user, check_email, check_username, send_otp_email
 
 def signup():
@@ -136,17 +135,17 @@ def signup():
                         st.session_state.otp_sent = True
                         
                     st.session_state.entered_otp = st.text_input('Enter OTP')
-                        
-                    if st.button('Submit'):
+                    submit_btn = ui.button(text="Submit", key="submit", className="bg-red-900 text-white")
+                    if submit_btn:
                         if str(st.session_state.entered_otp) == str(st.session_state.generated_otp):
                             st.session_state.otp_sent = False
                             next_page()
                         else:
                             sac.alert(label='One-Time Passcode does not matach.', size='sm', variant='quote-light', color='error', icon=True)
                             
-            if st.session_state.page == 4:
+            if st.session_state.page == 3:
                 if register_user(st.session_state.email, st.session_state.password, st.session_state.org_name, st.session_state.username, st.session_state.abbreviation):
-                    sac.result(label='Registration Successful!', description='You may now login to your account.', status='success')
+                    sac.result(label='Registration Successful!', description='You may now log in to your account.', status='success')
                 else:
                     sac.result(label='Registration Unsuccessful :(', description='Please try again, and if the error persists, please contact us.', status='error')
 
@@ -159,5 +158,3 @@ def signup():
 # 5. Check if password is strong (at least 8 characters long, with at least one uppercase letter, one lowercase letter, one number, and one special character) - done
 # 6. Check if username is unique - done
 # 7. Check if email is unique - done
-
-signup()
