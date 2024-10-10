@@ -3,10 +3,10 @@ import streamlit_antd_components as sac
 import re
 import random
 import streamlit_shadcn_ui as ui
-# # Add the main directory to the system path if necessary
-# import sys
-# import os
-# sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+# Add the main directory to the system path if necessary
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from helpers import register_user, check_email, check_username, send_otp_email
 
 def signup():
@@ -29,7 +29,8 @@ def signup():
     if 'password' not in st.session_state:
         st.session_state.password = None
     if 'dpa_agree' not in st.session_state:
-        st.session_state.dpa_agree = False
+        st.session_state.dpa_agree = False 
+
     def next_page():
         st.session_state.page += 1
         st.rerun()
@@ -64,6 +65,8 @@ def signup():
                     all_fields_filled = org_name and username and abbreviation and email and password and confirm_password
                     password_match = password == confirm_password
                     valid_email = email.endswith('@iskolarngbayan.pup.edu.ph')
+                    existing_username = check_username(username)
+                    existing_email = check_email(email)
                     
                     def is_strong_password(password):
                         # Check the length of the password
@@ -85,8 +88,9 @@ def signup():
 
                     
                     register = ui.button(text="Register", key="register", className="bg-red-900 text-white")
-                    show_state = register and all_fields_filled
+                    show_state = register and all_fields_filled and password_match and valid_email and not existing_username and not existing_email
                     st.session_state.dpa_agree = ui.alert_dialog(show=show_state, title="Data Privacy Act of 2012", description="In accordance with Republic Act No. 10173, otherwise known as the Data Privacy Act of 2012, in answering this form and disclosing your personal information, you consent PUP SC COSOA to access, collect, and process any personal information you encoded. The information gathered will be handled with reasonable and appropriate security measures to maintain the confidentiality of your personal data. By clicking 'I Agree', you acknowledge that you have read and understood the Data Privacy Act of 2012 and consent to the processing of your personal information.", confirm_label="I agree", cancel_label="Cancel", key="dpa_dialog")
+
 
                     if register:
                         # Check if password is strong
@@ -98,21 +102,20 @@ def signup():
                             sac.alert(label='Passwords do not match.', size='sm', variant='quote-light', color='error', icon=True)
                         elif not valid_email:
                             sac.alert(label='Email must end in @iskolarngbayan.pup.edu.ph.', size='sm', variant='quote-light', color='error', icon=True)
-                        else:
-                            # Check if username is unique
-                            if check_username(username):
-                                sac.alert(label='Username is already in use by a registered account.', size='sm', variant='quote-light', color='error', icon=True)
-                            elif check_email(email):
-                                sac.alert(label='Email is already in use by a registered account.', size='sm', variant='quote-light', color='error', icon=True)
-                            else:
-                                # assign all variables to session state
-                                st.session_state.org_name = org_name
-                                st.session_state.username = username
-                                st.session_state.abbreviation = abbreviation
-                                st.session_state.email = email
-                                st.session_state.password = password    
-                                # next_page()
+                        elif existing_username:
+                            sac.alert(label='Username is already in use by a registered account.', size='sm', variant='quote-light', color='error', icon=True)
+                        elif existing_email:
+                            sac.alert(label='Email is already in use by a registered account.', size='sm', variant='quote-light', color='error', icon=True)
 
+                        else:
+                            # assign all variables to session state
+                            st.session_state.org_name = org_name
+                            st.session_state.username = username
+                            st.session_state.abbreviation = abbreviation
+                            st.session_state.email = email
+                            st.session_state.password = password    
+
+                            # next_page()
                     if st.session_state.dpa_agree:
                         next_page()
     # # DPA Page
@@ -126,6 +129,7 @@ def signup():
             # OTP Page            
             if st.session_state.page == 2:
                 with st.container(border=False):
+                    st.write(st.session_state.username)
                     st.write(f'A One-Time Passcode (OTP) has been sent to your email at *{st.session_state.email}*. Please enter the OTP below to verify your account.')
                     
                     # Generate random OTP if not yet sent
@@ -158,3 +162,5 @@ def signup():
 # 5. Check if password is strong (at least 8 characters long, with at least one uppercase letter, one lowercase letter, one number, and one special character) - done
 # 6. Check if username is unique - done
 # 7. Check if email is unique - done
+
+signup()
