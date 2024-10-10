@@ -95,4 +95,4 @@ def faqs():
                 st.write("Kindly contact us at our webmail (cosoa@iskolarngbayan.pup.edu.ph) or at our official Facebook page (link here) for more information.")
             
            
-faqs()
+# faqs()

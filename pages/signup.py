@@ -4,9 +4,9 @@ import re
 import random
 import streamlit_shadcn_ui as ui
 # Add the main directory to the system path if necessary
-import sys
-import os
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+# import sys
+# import os
+# sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from helpers import register_user, check_email, check_username, send_otp_email
 
 def signup():
@@ -129,7 +129,6 @@ def signup():
             # OTP Page            
             if st.session_state.page == 2:
                 with st.container(border=False):
-                    st.write(st.session_state.username)
                     st.write(f'A One-Time Passcode (OTP) has been sent to your email at *{st.session_state.email}*. Please enter the OTP below to verify your account.')
                     
                     # Generate random OTP if not yet sent
@@ -162,5 +161,3 @@ def signup():
 # 5. Check if password is strong (at least 8 characters long, with at least one uppercase letter, one lowercase letter, one number, and one special character) - done
 # 6. Check if username is unique - done
 # 7. Check if email is unique - done
-
-signup()
