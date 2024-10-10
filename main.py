@@ -33,8 +33,9 @@ with st.sidebar:
     if st.session_state["authentication_status"]:
         role = get_role(st.session_state["username"])
         if role == 'cosoa':
+            abbreviation = get_abbreviation(st.session_state["username"])
             menu_item = sac.menu([
-                sac.MenuItem('Welcome, Admin!', disabled=True),
+                sac.MenuItem(f'Welcome, {str(abbreviation)}!', disabled=True),
                 sac.MenuItem(type='divider'),
                 sac.MenuItem('Home', icon='bi bi-house-door'),
                 sac.MenuItem('Accredited Organizations', icon='bi bi-building'),
@@ -80,8 +81,9 @@ with st.sidebar:
                 sac.MenuItem('View Document Status', icon='bi bi-file-earmark-text'),
             ], open_all=False, index=2)
         elif role == 'execcomm':
+            abbreviation = get_abbreviation(st.session_state["username"])
             menu_item = sac.menu([
-                sac.MenuItem('Welcome, Executive Committee!', disabled=True),
+                sac.MenuItem(f'Welcome, {str(abbreviation)}!', disabled=True),
                 sac.MenuItem(type='divider'),
                 sac.MenuItem('Home', icon='bi bi-house-door'),
                 sac.MenuItem('Accredited Organizations', icon='bi bi-building'),
@@ -105,8 +107,7 @@ if menu_item == 'Accredited Organizations':
     with hc.HyLoader('',hc.Loaders.standard_loaders,index=[loader_index]):
         pg.accredited_orgs()
 elif menu_item == 'Application Requirements':
-    with hc.HyLoader('',hc.Loaders.standard_loaders,index=[loader_index]):
-        pg.application_requirements()
+    pg.application_requirements()
 elif menu_item == 'Frequently Asked Questions':
     pg.faqs()
 elif menu_item == 'Sign Up':
@@ -123,6 +124,7 @@ elif menu_item == 'Logout':
 elif menu_item == 'Accreditation Application':
     with hc.HyLoader('',hc.Loaders.standard_loaders,index=[loader_index]):
         pg.accreditation_application()
+        
 elif menu_item == 'Accreditation Status':
     pg.accreditation_status()
 elif menu_item == 'User Management':
