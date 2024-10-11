@@ -82,13 +82,13 @@ def signup():
                         if not re.search(r'[0-9]', password):
                             return False
                         # Check for at least one special character
-                        if not re.search(r'[!@#$%^&*(),.?":{}|<>]', password):
+                        if not re.search(r'[!@#$%^&*(),.?":{}|<>_]', password):
                             return False
                         return True
 
                     
                     register = ui.button(text="Register", key="register", className="bg-red-900 text-white")
-                    show_state = register and all_fields_filled and password_match and valid_email and not existing_username and not existing_email
+                    show_state = register and all_fields_filled and password_match and valid_email and not existing_username and not existing_email and is_strong_password(password)
                     st.session_state.dpa_agree = ui.alert_dialog(show=show_state, title="Data Privacy Act of 2012", description="In accordance with Republic Act No. 10173, otherwise known as the Data Privacy Act of 2012, in answering this form and disclosing your personal information, you consent PUP SC COSOA to access, collect, and process any personal information you encoded. The information gathered will be handled with reasonable and appropriate security measures to maintain the confidentiality of your personal data. By clicking 'I Agree', you acknowledge that you have read and understood the Data Privacy Act of 2012 and consent to the processing of your personal information.", confirm_label="I agree", cancel_label="Cancel", key="dpa_dialog")
 
 
@@ -144,7 +144,7 @@ def signup():
                             st.session_state.otp_sent = False
                             next_page()
                         else:
-                            sac.alert(label='One-Time Passcode does not matach.', size='sm', variant='quote-light', color='error', icon=True)
+                            sac.alert(label='One-Time Passcode does not match.', size='sm', variant='quote-light', color='error', icon=True)
                             
             if st.session_state.page == 3:
                 if register_user(st.session_state.email, st.session_state.password, st.session_state.org_name, st.session_state.username, st.session_state.abbreviation):
