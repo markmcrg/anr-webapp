@@ -5,10 +5,11 @@ from helpers import get_role, get_abbreviation, update_last_login
 import streamlit_shadcn_ui as ui
 from streamlit_tailwind import st_tw
 import hydralit_components as hc
+import time
 
 # Entrypoint / page router for the app
 st.set_page_config(page_title="PUP SC COSOA AnR Portal", page_icon="🏫", layout="wide")
-st.logo('logo.png', link='https://www.sccosoa.com', icon_image='logo.png') # Change link to sccosoa.com in production
+st.logo('logo.png', link='https://www.sccosoa.com', icon_image='logo.png', size='large') # Change link to sccosoa.com in production
 
 if 'authentication_status' not in st.session_state:
     st.session_state['authentication_status'] = None
@@ -28,7 +29,7 @@ with st.sidebar:
             sac.MenuItem('Sign Up', icon='bi bi-person-plus'),
             sac.MenuItem('Login', icon='bi bi-box-arrow-in-right'),
             sac.MenuItem('Password Reset', icon='bi bi-key'),
-        ], open_all=False, index=2, size ='md')
+        ], open_all=False, index=2, size ='md',)
     
     if st.session_state["authentication_status"]:
         role = get_role(st.session_state["username"])
@@ -100,7 +101,33 @@ with st.sidebar:
                 sac.MenuItem('Assign Organizations', icon='bi bi-person-check'),
                 sac.MenuItem('View Document Status', icon='bi bi-file-earmark-text'),
             ], open_all=False)
-        
+    page_bg_img = """
+    <style>
+        [data-testid="stAppViewContainer"] {
+        background-image: url("https://i.imgur.com/uwxp9Br.png");
+        background-size: cover;
+        background-position: center center;
+        background-repeat: no-repeat;
+        background-attachment: local;
+        }
+        [data-testid="stHeader"] {
+            background: rgba(0,0,0,0);
+        }
+        input {
+            background-color: #F0F2F6 !important;
+        }
+        .st-emotion-cache-4uzi61 e1f1d6gn0 {
+            background-color: red !important;
+        }
+        #root > div:nth-child(1) > div.withScreencast > div > div > div > section.stMain.st-emotion-cache-bm2z3a.ea3mdgi8 > div.stMainBlockContainer.block-container.st-emotion-cache-1jicfl2.ea3mdgi5 > div > div > div > div.stHorizontalBlock.st-emotion-cache-ocqkz7.e1f1d6gn5 > div.stColumn.st-emotion-cache-949r0i.e1f1d6gn3 > div > div > div > div > div > div > div > iframe {
+            border-radius: 25px
+            
+        }
+
+    </style>
+"""
+    st.markdown(page_bg_img, unsafe_allow_html=True)
+
 if menu_item == 'Home':
     pg.home()
 if menu_item == 'Accredited Organizations':
@@ -122,7 +149,7 @@ elif menu_item == 'Login':
 elif menu_item == 'Logout':
     pg.login(logout=True)
 elif menu_item == 'Accreditation Application':
-    with hc.HyLoader('',hc.Loaders.standard_loaders,index=[loader_index]):
+    # with hc.HyLoader('',hc.Loaders.standard_loaders,index=[loader_index]):
         pg.accreditation_application()
         
 elif menu_item == 'Accreditation Status':
@@ -266,3 +293,5 @@ st.markdown(
 # st.write(value)
 # st.write(test2.state)
 # st.write(test3.state)
+
+

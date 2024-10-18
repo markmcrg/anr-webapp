@@ -146,7 +146,7 @@ def accreditation_status():
                                 ], direction='vertical'
                             )
         with cols[1]:
-            st.subheader("Tracker Form")
+            # st.subheader("Tracker Form")
             selected_record = next((entry for entry in data if entry["app_order"] == sub_to_view))
             
             # Check if status is returned first, then check application type (accre or reval)

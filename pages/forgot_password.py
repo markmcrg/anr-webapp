@@ -31,8 +31,8 @@ def forgot_password():
         cols = st.columns([0.3, 1, 0.3], vertical_alignment='center')
         if st.session_state.fp_page == 1:
             with cols[1]:
+                st.markdown("<h1 style='color: #f5c472; padding-left: 10px'>Reset Password</h1>", unsafe_allow_html=True)
                 with st.container(border=True):
-                    st.subheader("Reset Password")
                     st.session_state.webmail = st.text_input('Webmail Address', help='Webmail must end in @iskolarngbayan.pup.edu.ph', autocomplete='email')
                     sac.alert(label='Once you click submit, a one-time passcode (OTP) will be sent to your entered email.', size='sm', variant='quote-light', icon=True)
                     

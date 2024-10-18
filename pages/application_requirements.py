@@ -5,31 +5,39 @@ import hydralit_components as hc
 def application_requirements():
     st.markdown("<h1 style='text-align: center;'>Application Requirements</h1>", unsafe_allow_html=True)
 
+    
+
+    
     cols = st.columns([0.4,1,0.4])
-
-
     with cols[1]:
-        accre_type = sac.segmented(
-            items=[
-                sac.SegmentedItem(label='Accreditation'),
-                sac.SegmentedItem(label='Revalidation'),
-            ],  align='center', radius='xl', divider=True, use_container_width=True,
-        )
+        with st.container():
+            accre_type = sac.segmented(
+                items=[
+                    sac.SegmentedItem(label='Accreditation'),
+                    sac.SegmentedItem(label='Revalidation'),
+                ],  align='center', radius='xl', divider=True, use_container_width=True,
+            )
 
     if accre_type == "Accreditation":
         st.markdown("""
                         <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/css/bootstrap.min.css" rel="stylesheet">
                         <style>
+                            #root {
+                                background: red;
+                            }
+                            .st-emotion-cache-4uzi61 e1f1d6gn0 {
+                                background: #f2a642;
+                            }
                             h1 {
                                 font-family: "Source Sans Pro", sans-serif;
                                 font-weight: 700;
-                                color: rgb(49, 51, 63);
+                                color: #f5c472;
                                 padding: 1.25rem 0px 1rem;
                                 margin: 0px;
                                 line-height: 1.2;
                             }
                             .table {
-                                background-color: white;
+                                background-color: #800000;
                                 border-radius: 15px;
                                 box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
                                 overflow: hidden;
@@ -42,6 +50,7 @@ def application_requirements():
                             }
                             .table td {
                                 vertical-align: middle;
+                                background-color: white !important;
                             }
                             .table ul {
                                 margin-bottom: -5px;
@@ -125,25 +134,26 @@ def application_requirements():
                             h1 {
                                 font-family: "Source Sans Pro", sans-serif;
                                 font-weight: 700;
-                                color: rgb(49, 51, 63);
+                                color: #f5c472;
                                 padding: 1.25rem 0px 1rem;
                                 margin: 0px;
                                 line-height: 1.2;
                             }
                             .table {
-                                background-color: white;
+                                background-color: #800000;
                                 border-radius: 15px;
                                 box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
                                 overflow: hidden;
                                 margin-bottom: 0;
                             }
                             .table th {
-                                background-color: #800000;
+                                background-color: #800000 !important;
                                 color: white;
                                 vertical-align: middle;
                             }
                             .table td {
                                 vertical-align: middle;
+                                background-color: white !important;
                             }
                             .table ul {
                                 margin-bottom: -5px;
