@@ -41,17 +41,28 @@ def signup():
         
     cols = st.columns([0.25, 1, 0.25])
     with cols[1]:
-        with st.container(border=True):
-            st.markdown("<h3 style='text-align: center; padding-bottom:1em;'>Sign Up</h3>", unsafe_allow_html=True)
+        st.markdown("<h1 style='text-align: center; color: #f5c472; font-size: 45px; padding-bottom:25px;'>Sign Up</h1>", unsafe_allow_html=True)
+        st.markdown("""
+                    <style>
+                    #root > div:nth-child(1) > div.withScreencast > div > div > div > section.stMain.st-emotion-cache-bm2z3a.ea3mdgi8 > div.stMainBlockContainer.block-container.st-emotion-cache-1jicfl2.ea3mdgi5 > div > div > div > div.stHorizontalBlock.st-emotion-cache-ocqkz7.e1f1d6gn5 > div.stColumn.st-emotion-cache-115gedg.e1f1d6gn3 > div > div > div > div:nth-child(3) > div > div > div {
+                        padding-top: 20px;
+                    }
+                    #sign-up {
+                        margin-bottom: -0.75em;
+                    }
+                    </style>
+                    """, unsafe_allow_html=True)
+        with st.container(border=True, key='step_container'):
             sac.steps(
                     items=[
                     sac.StepsItem(title='Register', disabled=True),
                     # sac.StepsItem(title='Confirm DPA', disabled=True),
-                    sac.StepsItem(title='Verify Email', disabled=True),
-                    sac.StepsItem(title='Account Created', disabled=True, icon="check-circle"),
-                ], return_index=True, placement='vertical', index=st.session_state.page-1
+                    sac.StepsItem(title='Verify', disabled=True),
+                    sac.StepsItem(title='Success', disabled=True, icon="check-circle"),
+                ], return_index=True, placement='vertical', index=st.session_state.page-1, key='signup_steps'
             ) 
             # Registration Form Page
+        with st.container(border=True):
             if st.session_state.page == 1:
                 with st.container(border=False):
                     org_name = st.text_input('Organization Name', placeholder='PUP Student Council Commission on Student Organizations and Accreditation')

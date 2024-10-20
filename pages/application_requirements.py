@@ -15,7 +15,7 @@ def application_requirements():
                 items=[
                     sac.SegmentedItem(label='Accreditation'),
                     sac.SegmentedItem(label='Revalidation'),
-                ],  align='center', radius='xl', divider=True, use_container_width=True,
+                ],  align='center', radius='xl', divider=True, use_container_width=True, color='#800000'
             )
 
     if accre_type == "Accreditation":

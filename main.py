@@ -8,7 +8,7 @@ import hydralit_components as hc
 import time
 
 # Entrypoint / page router for the app
-st.set_page_config(page_title="PUP SC COSOA AnR Portal", page_icon="🏫", layout="wide")
+st.set_page_config(page_title="PUP SC COSOA AnR Portal", page_icon="page_logo.png", layout="wide")
 st.logo('logo.png', link='https://www.sccosoa.com', icon_image='logo.png', size='large') # Change link to sccosoa.com in production
 
 if 'authentication_status' not in st.session_state:
@@ -17,6 +17,7 @@ if 'name' not in st.session_state:
     st.session_state['name'] = None
 
 loader_index = 5
+override_theme = ""
 with st.sidebar:
     if st.session_state["authentication_status"] is None or not st.session_state["authentication_status"] :
         menu_item = sac.menu([
@@ -121,7 +122,13 @@ with st.sidebar:
         }
         #root > div:nth-child(1) > div.withScreencast > div > div > div > section.stMain.st-emotion-cache-bm2z3a.ea3mdgi8 > div.stMainBlockContainer.block-container.st-emotion-cache-1jicfl2.ea3mdgi5 > div > div > div > div.stHorizontalBlock.st-emotion-cache-ocqkz7.e1f1d6gn5 > div.stColumn.st-emotion-cache-949r0i.e1f1d6gn3 > div > div > div > div > div > div > div > iframe {
             border-radius: 25px
-            
+        }
+        #root > ul {
+            font-family: 'Source Sans Pro', sans-serif !important; 
+        }
+        h1 {
+            text-shadow: 2px 4px 6px #2e2c2c;
+            color: #f5c472 !important;
         }
 
     </style>
@@ -130,7 +137,7 @@ with st.sidebar:
 
 if menu_item == 'Home':
     pg.home()
-if menu_item == 'Accredited Organizations':
+if menu_item == 'Accredited Organizations': 
     with hc.HyLoader('',hc.Loaders.standard_loaders,index=[loader_index]):
         pg.accredited_orgs()
 elif menu_item == 'Application Requirements':
