@@ -150,6 +150,7 @@ def signup():
                         
                     st.session_state.entered_otp = st.text_input('Enter OTP')
                     submit_btn = ui.button(text="Submit", key="submit", className="bg-red-900 text-white")
+                    sac.alert(label='Kindly check your spam or junk folder if you don\'t see the OTP email in your inbox.', size='sm', variant='quote-light', color='info', icon=True)
                     if submit_btn:
                         if str(st.session_state.entered_otp) == str(st.session_state.generated_otp):
                             st.session_state.otp_sent = False

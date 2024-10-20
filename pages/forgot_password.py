@@ -31,7 +31,7 @@ def forgot_password():
         cols = st.columns([0.3, 1, 0.3], vertical_alignment='center')
         if st.session_state.fp_page == 1:
             with cols[1]:
-                st.markdown("<h1 style='color: #f5c472; padding-left: 10px'>Reset Password</h1>", unsafe_allow_html=True)
+                st.markdown("<h1 style='color: #f5c472; text-align:center;'>Password Reset</h1>", unsafe_allow_html=True)
                 with st.container(border=True):
                     st.session_state.webmail = st.text_input('Webmail Address', help='Webmail must end in @iskolarngbayan.pup.edu.ph', autocomplete='email')
                     sac.alert(label='Once you click submit, a one-time passcode (OTP) will be sent to your entered email.', size='sm', variant='quote-light', icon=True)
@@ -46,9 +46,8 @@ def forgot_password():
 
         elif st.session_state.fp_page == 2:
             with cols[1]:
+                st.markdown("<h1 style='color: #f5c472; text-align:center;'>Password Reset</h1>", unsafe_allow_html=True)
                 with st.container(border=True):
-                    st.subheader("Reset Password")
-                    
                     if not st.session_state.otp_sent:
                         st.session_state.generated_otp = random.randint(100000, 999999)
                         send_otp_email(st.session_state.webmail, st.session_state.generated_otp, st.session_state.abbreviation)
@@ -66,8 +65,8 @@ def forgot_password():
                             sac.alert(label='Invalid OTP. Please try again.', size='sm', variant='quote-light', icon=True, color='error')
         elif st.session_state.fp_page == 3:
             with cols[1]:
+                st.markdown("<h1 style='color: #f5c472; text-align:center;'>Password Reset</h1>", unsafe_allow_html=True)
                 with st.container(border=True):
-                    st.subheader("Reset Password")
                     password = st.text_input('New Password', type='password', help='Password must be at least 8 characters long, with at least one uppercase letter, one lowercase letter, one number, and one special character')
                     confirm_password = st.text_input('Confirm New Password', type='password', help='Re-enter your password')
                     def is_strong_password(password):
@@ -106,7 +105,15 @@ def forgot_password():
                         else:
                             sac.alert(label='An error occurred. Please try again.', size='sm', variant='quote-light', icon=True, color='error')
         elif st.session_state.fp_page == 4:
+            st.markdown("""
+                        <style>
+                        #root > div:nth-child(1) > div.withScreencast > div > div > div > section.stMain.st-emotion-cache-bm2z3a.ea3mdgi8 > div.stMainBlockContainer.block-container.st-emotion-cache-1jicfl2.ea3mdgi5 > div > div > div > div.stHorizontalBlock.st-emotion-cache-ocqkz7.e1f1d6gn5 > div.stColumn.st-emotion-cache-1r648ux.e1f1d6gn3 > div > div > div > div.st-emotion-cache-4uzi61.e1f1d6gn0 > div > div {
+                            padding-bottom: 25px !important;
+                        }
+                        </style>
+                        """, unsafe_allow_html=True)
             with cols[1]:
-                with st.container():
+                st.markdown("<h1 style='color: #f5c472; text-align:center;'>Password Reset</h1>", unsafe_allow_html=True)
+                with st.container(border=True, key='success_cont'):
                     st.toast('Password successfully changed!', icon="✅")
                     sac.result(label='Password successfully changed!', description='You may now login using your new password.', status='success')
