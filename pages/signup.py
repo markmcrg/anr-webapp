@@ -8,6 +8,7 @@ import streamlit_shadcn_ui as ui
 # import os
 # sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from helpers import register_user, check_email, check_username, send_otp_email
+from streamlit_extras.stylable_container import stylable_container
 
 def signup():
     if 'page' not in st.session_state:
@@ -38,7 +39,8 @@ def signup():
     def prev_page():
         st.session_state.page -= 1
         st.rerun()
-        
+    
+    
     cols = st.columns([0.25, 1, 0.25])
     with cols[1]:
         st.markdown("<h1 style='text-align: center; color: #f5c472; font-size: 45px; padding-bottom:25px;'>Sign Up</h1>", unsafe_allow_html=True)
@@ -100,7 +102,7 @@ def signup():
                     
                     register = ui.button(text="Register", key="register", className="bg-red-900 text-white")
                     show_state = register and all_fields_filled and password_match and valid_email and not existing_username and not existing_email and is_strong_password(password)
-                    st.session_state.dpa_agree = ui.alert_dialog(show=show_state, title="Data Privacy Act of 2012", description="In accordance with Republic Act No. 10173, otherwise known as the Data Privacy Act of 2012, in answering this form and disclosing your personal information, you consent PUP SC COSOA to access, collect, and process any personal information you encoded. The information gathered will be handled with reasonable and appropriate security measures to maintain the confidentiality of your personal data. By clicking 'I Agree', you acknowledge that you have read and understood the Data Privacy Act of 2012 and consent to the processing of your personal information.", confirm_label="I agree", cancel_label="Cancel", key="dpa_dialog")
+                    st.session_state.dpa_agree = ui.alert_dialog(show=show_state, title="Data Privacy Act of 2012", description="In accordance with Republic Act No. 10173, otherwise known as the Data Privacy Act of 2012, in answering this form and disclosing your personal and organizational information, you consent PUP SC COSOA to access, collect, and process any information you encoded. The information gathered will be handled with reasonable and appropriate security measures to maintain the confidentiality of your personal data. By clicking 'I Agree', you acknowledge that you have read and understood the Data Privacy Act of 2012 and consent to the processing of your personal information.", confirm_label="I agree", cancel_label="Cancel", key="dpa_dialog")
 
 
                     if register:

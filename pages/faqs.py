@@ -7,7 +7,7 @@ def faqs():
     with st.container():
         cols = st.columns([0.25,1], gap='medium')
         with cols[0]:
-            with st.container(border=True):
+            with st.container(border=True, key="faq_type_cont"):
                 faq_type = sac.buttons([
                 sac.ButtonsItem(label='Accreditation'),
                 sac.ButtonsItem(label='Revalidation'),

@@ -32,18 +32,18 @@ def accreditation_application():
         st.session_state.current_step -= 1
         st.rerun()
     
+    page_cols = st.columns([0.15, 1, 0.15], vertical_alignment='center')
     
-    page_cols = st.columns([0.5, 0.1, 1, 0.1], vertical_alignment='center')
-    with page_cols[0]:
-        with st.container(border=True):
+    with page_cols[1]:
+        with st.container(border=True, key='step_cont'):
             st.session_state.current_step = sac.steps(
                 items=[
-                    sac.StepsItem(title='Application Information', disabled=st.session_state.step_1_disabled),
-                    sac.StepsItem(title='Organization Info', disabled=st.session_state.step_2_disabled),
-                    sac.StepsItem(title='Upload Documents', disabled=st.session_state.step_3_disabled),
-                    sac.StepsItem(title='Confirm Application', disabled=st.session_state.step_4_disabled),
-                    sac.StepsItem(title='Application Submitted!', disabled=st.session_state.step_5_disabled, icon='check-circle-fill'),
-                ], return_index=True, placement='horizontal', direction='vertical', index=st.session_state.current_step
+                    sac.StepsItem(title='Application', disabled=st.session_state.step_1_disabled),
+                    sac.StepsItem(title='Organization', disabled=st.session_state.step_2_disabled),
+                    sac.StepsItem(title='Upload', disabled=st.session_state.step_3_disabled),
+                    sac.StepsItem(title='Confirm', disabled=st.session_state.step_4_disabled),
+                    sac.StepsItem(title='Submitted!', disabled=st.session_state.step_5_disabled, icon='check-circle-fill'),
+                ], return_index=True, placement='vertical', direction='horizontal', variant='navigation', index=st.session_state.current_step
             )
     
     if st.session_state.current_step == 0:
@@ -52,13 +52,13 @@ def accreditation_application():
         # if accepting submissions is False, show a screen that says "We are currently not accepting applications at the moment. Please check back later."
         if settings[1]['status'] == "TRUE":
             # if accepting resubmissions is False, show a screen that says "We are currently not accepting new submissions at the moment. Please check back later."
-            with page_cols[2]:
-                with st.container(border=True):
+            with page_cols[1]:
+                with st.container(border=True, key='accre_cont'):
                     st.session_state.current_step = 0
                     st.session_state.step_1_disabled = False
-                    st.write("")
-                    st.markdown("<h4 style='text-align: center;'>1. Select your application type, and the order of your application.</h4><br><br>", unsafe_allow_html=True)
-                    st.write("")
+                    # st.write("")
+                    # st.markdown("<h4 style='text-align: center;'>1. Select your application type, and the order of your application.</h4><br><br>", unsafe_allow_html=True)
+                    # st.write("")
                     cols = st.columns([0.2, 1,1, 0.2], gap='small', vertical_alignment='center')
 
                     # Check if user has submitted an application before
@@ -98,9 +98,8 @@ def accreditation_application():
     if st.session_state.current_step == 1:
         st.session_state.current_step = 1
         st.session_state.step_2_disabled = False
-        with page_cols[2]:
+        with page_cols[1]:
             with st.container(border=True):
-                st.header("2. Organization Info")
                 abbreviation = get_abbreviation(st.session_state['username'])
                 st.session_state.org_abbrv = f'{st.session_state["name"]} ({abbreviation})'
                 st.text_input("**Complete Name of Student Organization (Abbreviation/Initialism)**", placeholder="PowerPuff Girls Ensemble (PPGE)", 
@@ -140,9 +139,8 @@ def accreditation_application():
     if st.session_state.current_step == 2:
         st.session_state.current_step = 2
         st.session_state.step_3_disabled = False
-        with page_cols[2]:
+        with page_cols[1]:
             with st.container(border=True):
-                st.header("3. Upload Document Compilation")
                 st.session_state.org_doc = st.file_uploader("Upload your document compilation here:", type=['pdf'], help='Please upload your document compilation in PDF format.', label_visibility='visible')
                 next_btn = st.button("Next", key="next3", disabled= not st.session_state.org_doc)
         
@@ -155,9 +153,8 @@ def accreditation_application():
     if st.session_state.current_step == 3:
         st.session_state.current_step = 3
         st.session_state.step_4_disabled = False
-        with page_cols[2]:
+        with page_cols[1]:
             with st.container(border=True):
-                st.header("4. Confirm Application")
                 st.write(f"**Organization:** {st.session_state.org_abbrv}")
                 st.write(f"**Jurisdiction:** {st.session_state.jurisdiction}")
                 st.write(f"**Application Type:** {st.session_state.app_type}")
@@ -202,7 +199,7 @@ def accreditation_application():
         st.session_state.current_step = 4
         for i in range(1, 6):
             st.session_state[f'step_{i}_disabled'] = True
-        with page_cols[2]:
+        with page_cols[1]:
             sac.result(label='Application Submitted!', description='Please check the status of your submission by clicking on "Accreditation Status."', status='success')
             
         # delete org doc from st state

@@ -6,6 +6,7 @@ import streamlit_shadcn_ui as ui
 from streamlit_tailwind import st_tw
 import hydralit_components as hc
 import time
+from streamlit_extras.stylable_container import stylable_container
 
 # Entrypoint / page router for the app
 st.set_page_config(page_title="PUP SC COSOA AnR Portal", page_icon="page_logo.png", layout="wide")
@@ -301,4 +302,29 @@ st.markdown(
 # st.write(test2.state)
 # st.write(test3.state)
 
-
+st.markdown("""
+            <style>
+            .st-emotion-cache-4uzi61.e1f1d6gn0 {
+                box-shadow: 0 2px 10px #2e2c2c !important; 
+            }
+            .st-emotion-cache-4uzi61.e1f1d6gn0:has(.st-key-faq_type_cont) {
+                width: 160px;
+            }
+            .st-key-sub_view iframe {
+                margin-top: 10px;
+                width: 170px !important;
+                border-radius: 10px !important;
+                box-shadow: 0 0 20px #2e2c2c;
+            }
+            .st-key-accre_cont .st-emotion-cache-4uzi61.e1f1d6gn0 {
+                box-shadow: none !important; /* Remove box shadow */
+            } 
+            .st-emotion-cache-1rsyhoq.e1nzilvr5:has(#accreditation-application) {
+                margin-bottom: -60px;
+            } 
+            #accreditation-application {
+                font-size: 45px;
+            }
+            </style>
+            """
+            ,unsafe_allow_html=True)
