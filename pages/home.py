@@ -51,11 +51,11 @@ def home():
     with cols[1]:
         st.markdown("<h1 style='text-align: left; color: white;'>What is <span style='color: #f5c472; font-size:70px; font-weight: 700;'>COSOA</span>?</h1>", unsafe_allow_html=True)
         st.markdown("<span style='color: white;'>\
-                        The <b>Polytechnic University of the Philippines Student Council Commission on Student Organizations and Accreditation (PUP SC COSOA)</b> serves as the <b>sole-accrediting body</b> and an <b>independent student body</b> set to develop an effective working relationship between the Central Student Council, the Office of Student Services (OSS), and <b>all student organizations at the Polytechnic University of the Philippines, Sta. Mesa, Manila</b>.\
+                        The Polytechnic University of the Philippines Student Council Commission on Student Organizations and Accreditation (PUP SC COSOA) serves as the sole-accrediting body and an independent student body set to develop an effective working relationship between the Central Student Council, the Office of Student Services (OSS), and all student organizations at the Polytechnic University of the Philippines, Sta. Mesa, Manila.\
                     </span>", 
                     unsafe_allow_html=True)
         st.markdown("<span style='color: white;'>\
-                        At the core of the PUP SC COSOA's mission is a commitment to foster a <b>streamlined and accessible accreditation and revalidation process</b>, and to reduce the administrative burden for student organizations in attaining and maintaining their <b>legal status</b>. We aim to simplify the way organizations <b>achieve their recognition</b>, and enable them to focus better on their <b>initiatives and contributions</b> to the university community.\
+                        At the core of the PUP SC COSOA's mission is a commitment to foster a streamlined and accessible accreditation and revalidation process, and to reduce the administrative burden for student organizations in attaining and maintaining their legal status. We aim to simplify the way organizations achieve their recognition, and enable them to focus better on their initiatives and contributions to the university community.\
                     </span>", 
                     unsafe_allow_html=True)
         st.image("https://i.imgur.com/y2rCqbk.jpeg", caption='PUP SC COSOA General Assembly 02 at the PUP COC Audio-Visual Room.', use_column_width=True)
