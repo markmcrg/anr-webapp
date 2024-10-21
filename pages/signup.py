@@ -9,40 +9,38 @@ import streamlit_shadcn_ui as ui
 # sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from helpers import register_user, check_email, check_username, send_otp_email
 from streamlit_extras.stylable_container import stylable_container
+import time
 
 def signup():
-    if 'page' not in st.session_state:
-        st.session_state.page = 1    
-    if 'entered_otp' not in st.session_state:
-        st.session_state.entered_otp = None
-    if 'otp_sent' not in st.session_state:
-        st.session_state.otp_sent = False
-    if 'generated_otp' not in st.session_state:
-        st.session_state.generated_otp = None
-    if 'org_name' not in st.session_state:
-        st.session_state.org_name = None
-    if 'username' not in st.session_state:
-        st.session_state.username = None
-    if 'abbreviation' not in st.session_state:
-        st.session_state.abbreviation = None
-    if 'email' not in st.session_state:
-        st.session_state.email = None
-    if 'password' not in st.session_state:
-        st.session_state.password = None
-    if 'dpa_agree' not in st.session_state:
-        st.session_state.dpa_agree = False 
-
-    def next_page():
-        st.session_state.page += 1
-        st.rerun()
-
-    def prev_page():
-        st.session_state.page -= 1
-        st.rerun()
-    
-    
     cols = st.columns([0.25, 1, 0.25])
     with cols[1]:
+        if 'page' not in st.session_state:
+            st.session_state.page = 1    
+        if 'entered_otp' not in st.session_state:
+            st.session_state.entered_otp = None
+        if 'generated_otp' not in st.session_state:
+            st.session_state.generated_otp = None
+        if 'org_name' not in st.session_state:
+            st.session_state.org_name = None
+        if 'username' not in st.session_state:
+            st.session_state.username = None
+        if 'abbreviation' not in st.session_state:
+            st.session_state.abbreviation = None
+        if 'email' not in st.session_state:
+            st.session_state.email = None
+        if 'password' not in st.session_state:
+            st.session_state.password = None
+        if 'dpa_agree' not in st.session_state:
+            st.session_state.dpa_agree = False 
+
+        def next_page():
+            st.session_state.page += 1
+            st.rerun()
+
+        def prev_page():
+            st.session_state.page -= 1
+            st.rerun()
+            
         st.markdown("<h1 style='text-align: center; color: #f5c472; font-size: 45px; padding-bottom:25px;'>Sign Up</h1>", unsafe_allow_html=True)
         st.markdown("""
                     <style>
@@ -143,11 +141,15 @@ def signup():
             if st.session_state.page == 2:
                 with st.container(border=False):
                     st.write(f'A One-Time Passcode (OTP) has been sent to your email at *{st.session_state.email}*. Please enter the OTP below to verify your account.')
+                    time.sleep(3)
                     
-                    # Generate random OTP if not yet sent
-                    if not st.session_state.otp_sent:
+                    # Generate and send OTP only if it hasn't been sent yet
+                    if 'otp_sent' not in st.session_state or not st.session_state.otp_sent:
+                        # Generate OTP and send email
                         st.session_state.generated_otp = random.randint(100000, 999999)
                         send_otp_email(st.session_state.email, st.session_state.generated_otp, st.session_state.abbreviation)
+                        
+                        # Mark OTP as sent
                         st.session_state.otp_sent = True
                         
                     st.session_state.entered_otp = st.text_input('Enter OTP')
