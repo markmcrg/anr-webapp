@@ -3,27 +3,6 @@ import streamlit as st
 def home():
     st.markdown("""
             <style>
-            .st-emotion-cache-4uzi61.e1f1d6gn0 {
-                box-shadow: 0 2px 10px #2e2c2c !important; 
-            }
-            .st-emotion-cache-4uzi61.e1f1d6gn0:has(.st-key-faq_type_cont) {
-                width: 160px;
-            }
-            .st-key-sub_view iframe {
-                margin-top: 10px;
-                width: 170px !important;
-                border-radius: 10px !important;
-                box-shadow: 0 0 20px #2e2c2c;
-            }
-            .st-key-accre_cont .st-emotion-cache-4uzi61.e1f1d6gn0 {
-                box-shadow: none !important; /* Remove box shadow */
-            } 
-            .st-emotion-cache-1rsyhoq.e1nzilvr5:has(#accreditation-application) {
-                margin-bottom: -60px;
-            } 
-            #accreditation-application {
-                font-size: 45px;
-            }
             .st-emotion-cache-1v0mbdj.e115fcil1 img {
                 box-shadow: 0 2px 10px #2e2c2c;
                 margin-top: 10px;
@@ -79,7 +58,7 @@ def home():
                         At the core of the PUP SC COSOA's mission is a commitment to foster a streamlined and accessible accreditation and revalidation process, and to reduce the administrative burden for student organizations in attaining and maintaining their legal status. We aim to simplify the way organizations achieve their recognition, and enable them to focus better on their initiatives and contributions to the university community.\
                     </span>", 
                     unsafe_allow_html=True)
-        st.image("image0 copy.jpg", caption='PUP SC COSOA General Assembly 02 at the PUP COC Audio-Visual Room.', use_column_width=True)
+        st.image("https://i.imgur.com/y2rCqbk.jpeg", caption='PUP SC COSOA General Assembly 02 at the PUP COC Audio-Visual Room.', use_column_width=True)
         table_html = """
     <!-- Link to Bootstrap CSS and Bootstrap Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
