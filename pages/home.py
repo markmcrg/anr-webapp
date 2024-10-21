@@ -101,7 +101,7 @@ def home():
         <i class="bi bi-facebook icon-spacing"></i> Facebook
     </a>
     <!-- Email button as an anchor tag -->
-    <a href="mailto:example@cosoa@iskolarngbayan.pup.edu.ph" class="btn custom-btn">
+    <a href="mailto:cosoa@iskolarngbayan.pup.edu.ph" class="btn custom-btn">
         <i class="bi bi-envelope-fill icon-spacing"></i> Email
     </a>
     """
