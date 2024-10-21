@@ -56,9 +56,9 @@ def accreditation_application():
                 with st.container(border=True, key='accre_cont'):
                     st.session_state.current_step = 0
                     st.session_state.step_1_disabled = False
-                    # st.write("")
-                    # st.markdown("<h4 style='text-align: center;'>1. Select your application type, and the order of your application.</h4><br><br>", unsafe_allow_html=True)
-                    # st.write("")
+                    st.write("")
+                    st.markdown("<h4 style='text-align: center;'>1. Select your application type, and the order of your application.</h4><br><br>", unsafe_allow_html=True)
+                    st.write("")
                     cols = st.columns([0.2, 1,1, 0.2], gap='small', vertical_alignment='center')
 
                     # Check if user has submitted an application before

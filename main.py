@@ -9,7 +9,7 @@ import time
 from streamlit_extras.stylable_container import stylable_container
 
 # Entrypoint / page router for the app
-st.set_page_config(page_title="PUP SC COSOA AnR Portal", page_icon="page_logo.png", layout="wide")
+st.set_page_config(page_title="AnR Portal", page_icon="page_logo.png", layout="wide")
 st.logo('logo.png', link='https://www.sccosoa.com', icon_image='logo.png', size='large') # Change link to sccosoa.com in production
 
 if 'authentication_status' not in st.session_state:
@@ -131,7 +131,9 @@ with st.sidebar:
             text-shadow: 2px 4px 6px #2e2c2c;
             color: #f5c472 !important;
         }
-
+        #root > div:nth-child(1) > div.withScreencast > div > div > div > section.stMain.st-emotion-cache-bm2z3a.ea3mdgi8 > div.stMainBlockContainer.block-container.st-emotion-cache-1jicfl2.ea3mdgi5 > div > div > div > div.st-emotion-cache-0.e1f1d6gn0 > div > div > div.stHorizontalBlock.st-emotion-cache-ocqkz7.e1f1d6gn5 > div.stColumn.st-emotion-cache-keje6w.e1f1d6gn3 > div > div > div > div.stForm.st-emotion-cache-4uzi61.e10yg2by1 {
+            background-color: white;
+        }
     </style>
 """
     st.markdown(page_bg_img, unsafe_allow_html=True)
@@ -302,29 +304,3 @@ st.markdown(
 # st.write(test2.state)
 # st.write(test3.state)
 
-st.markdown("""
-            <style>
-            .st-emotion-cache-4uzi61.e1f1d6gn0 {
-                box-shadow: 0 2px 10px #2e2c2c !important; 
-            }
-            .st-emotion-cache-4uzi61.e1f1d6gn0:has(.st-key-faq_type_cont) {
-                width: 160px;
-            }
-            .st-key-sub_view iframe {
-                margin-top: 10px;
-                width: 170px !important;
-                border-radius: 10px !important;
-                box-shadow: 0 0 20px #2e2c2c;
-            }
-            .st-key-accre_cont .st-emotion-cache-4uzi61.e1f1d6gn0 {
-                box-shadow: none !important; /* Remove box shadow */
-            } 
-            .st-emotion-cache-1rsyhoq.e1nzilvr5:has(#accreditation-application) {
-                margin-bottom: -60px;
-            } 
-            #accreditation-application {
-                font-size: 45px;
-            }
-            </style>
-            """
-            ,unsafe_allow_html=True)

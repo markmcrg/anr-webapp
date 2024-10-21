@@ -1,6 +1,129 @@
 import streamlit as st
 
 def home():
-    st.write('homepage')
-    # add calendar
+    st.markdown("""
+            <style>
+            .st-emotion-cache-4uzi61.e1f1d6gn0 {
+                box-shadow: 0 2px 10px #2e2c2c !important; 
+            }
+            .st-emotion-cache-4uzi61.e1f1d6gn0:has(.st-key-faq_type_cont) {
+                width: 160px;
+            }
+            .st-key-sub_view iframe {
+                margin-top: 10px;
+                width: 170px !important;
+                border-radius: 10px !important;
+                box-shadow: 0 0 20px #2e2c2c;
+            }
+            .st-key-accre_cont .st-emotion-cache-4uzi61.e1f1d6gn0 {
+                box-shadow: none !important; /* Remove box shadow */
+            } 
+            .st-emotion-cache-1rsyhoq.e1nzilvr5:has(#accreditation-application) {
+                margin-bottom: -60px;
+            } 
+            #accreditation-application {
+                font-size: 45px;
+            }
+            .st-emotion-cache-1v0mbdj.e115fcil1 img {
+                box-shadow: 0 2px 10px #2e2c2c;
+                margin-top: 10px;
+            }
+            #this-is-cosoa {
+                color: #ffffff !important;
+                font-size: 70px !important;
+                font-family: "Source Sans Pro", sans-serif;
+                font-weight: 700;
+                padding: 1.25rem 0px 1rem;
+                margin-top: 5px;
+                line-height: 1.2;
+                margin-bottom: -30px;
+            }
+            span {
+                font-size: 18px;
+                text-shadow: 2px 2px 6px #2e2c2c;
+                line-height: 1.6;
+                text-size-adjust: 100%;
+                font-family: "Source Sans Pro", sans-serif;
+                font-weight: 400;
+                word-break: break-word;
+                box-sizing: border-box;
+                color: white;
+            }
+            p {
+                text-align: justify;
+            }
+            [data-testid="stImageCaption"] {
+                color: #e8e4c9;
+                }
+            #root > div:nth-child(1) > div.withScreencast > div > div > div > section.stMain.st-emotion-cache-bm2z3a.ea3mdgi8 > div.stMainBlockContainer.block-container.st-emotion-cache-1jicfl2.ea3mdgi5 > div > div > div {
+                margin-top: -90px;
+            }
+            #root > div:nth-child(1) > div.withScreencast > div > div > div > section.stMain.st-emotion-cache-bm2z3a.ea3mdgi8 > div.stMainBlockContainer.block-container.st-emotion-cache-1jicfl2.ea3mdgi5 > div > div > div > div.stHorizontalBlock.st-emotion-cache-ocqkz7.e1f1d6gn5 > div.stColumn.st-emotion-cache-1h4axjh.e1f1d6gn3 > div > div > div > div:nth-child(5) > div > div {
+                margin-left: -90px;
+            }
+            </style>
+
+
+            """
+            ,unsafe_allow_html=True)
+
+
+    cols = st.columns([0.01, 1, 0.01])
+    with cols[1]:
+        st.markdown("<h1 style='text-align: left; color: white;'>THIS IS <span style='color: #f5c472; font-size:70px; font-weight: 700;'>COSOA</span>.</h1>", unsafe_allow_html=True)
+        st.markdown("<span style='color: white;'>\
+                        The Polytechnic University of the Philippines Student Council Commission on Student Organizations and Accreditation (PUP SC COSOA) serves as the sole-accrediting body and an independent student body set to develop an effective working relationship between the Central Student Council, the Office of Student Services (OSS), and all student organizations at the Polytechnic University of the Philippines, Sta. Mesa, Manila.\
+                    </span>", 
+                    unsafe_allow_html=True)
+        st.markdown("<span style='color: white;'>\
+                        At the core of the PUP SC COSOA's mission is a commitment to foster a streamlined and accessible accreditation and revalidation process, and to reduce the administrative burden for student organizations in attaining and maintaining their legal status. We aim to simplify the way organizations achieve their recognition, and enable them to focus better on their initiatives and contributions to the university community.\
+                    </span>", 
+                    unsafe_allow_html=True)
+        st.image("image0 copy.jpg", caption='PUP SC COSOA General Assembly 02 at the PUP COC Audio-Visual Room.', use_column_width=True)
+        table_html = """
+    <!-- Link to Bootstrap CSS and Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" rel="stylesheet">
+
+    <style>
+    .custom-btn {
+        background-color: #800000;
+        color: #f5c472 !important;
+        border: none;
+        font-weight: bold; /* Make text bold */
+        font-size: 1.15rem; /* Increase font size */
+        padding: 9px 25px; /* Increase padding for larger buttons */
+        border-radius: 30px; /* Optional: add border radius */
+        text-decoration: none; /* Remove underline from links */
+        display: inline-block; /* Ensure the anchor behaves like a button */
+        margin-right: 10px; /* Space between buttons */
+        box-shadow: 1px 1px 7px #2e2c2c;
+    }
+    .custom-btn:hover {
+        background-color: #970000; /* Darker shade on hover */
+        text-decoration: none; /* Remove underline from links */
+    }
+    .custom-btn:link {
+        color: #f5c472 !important;
+    }
+    .custom-btn:active {
+        background-color: #970000 !important;
+        color: #f5c472 !important;
+    }
+    .icon-spacing {
+        margin-right: 5px; /* Space between icon and text */
+    }
+    </style>
+
+
+
+    <a href="https://www.facebook.com/pup.sccosoa" class="btn custom-btn" style="margin-left:15px;">
+        <i class="bi bi-facebook icon-spacing"></i> Facebook
+    </a>
+    <!-- Email button as an anchor tag -->
+    <a href="mailto:example@cosoa@iskolarngbayan.pup.edu.ph" class="btn custom-btn">
+        <i class="bi bi-envelope-fill icon-spacing"></i> Email
+    </a>
+    """
+    st.markdown(table_html, unsafe_allow_html=True)
     
