@@ -9,8 +9,8 @@ import time
 from streamlit_extras.stylable_container import stylable_container
 
 # Entrypoint / page router for the app
-st.set_page_config(page_title="AnR Portal", page_icon="page_logo.png", layout="wide")
-st.logo('https://i.imgur.com/Drjhrgx.png', link='https://www.sccosoa.com', icon_image='logo.png', size='large') # Change link to sccosoa.com in production
+st.set_page_config(page_title="AnR Portal", page_icon="https://i.imgur.com/3e3ADzI.png", layout="wide")
+st.logo('https://i.imgur.com/uRbmcbz.png', link='https://www.sccosoa.com', icon_image='https://i.imgur.com/uRbmcbz.png', size='large') # Change link to sccosoa.com in production
 
 if 'authentication_status' not in st.session_state:
     st.session_state['authentication_status'] = None
