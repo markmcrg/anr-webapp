@@ -1,11 +1,12 @@
 import streamlit as st
 import streamlit_antd_components as sac
 import pages as pg
-from helpers import get_role, get_abbreviation, update_last_login
+from helpers import get_role, get_abbreviation, update_last_login, fetch_data
 import streamlit_shadcn_ui as ui
 from streamlit_tailwind import st_tw
 import hydralit_components as hc
 import time
+import pandas as pd
 from streamlit_extras.stylable_container import stylable_container
 
 # Entrypoint / page router for the app
@@ -18,7 +19,6 @@ if 'name' not in st.session_state:
     st.session_state['name'] = None
 
 loader_index = 5
-override_theme = ""
 with st.sidebar:
     if st.session_state["authentication_status"] is None or not st.session_state["authentication_status"] :
         menu_item = sac.menu([
@@ -156,11 +156,12 @@ elif menu_item == 'Login':
     with hc.HyLoader('',hc.Loaders.standard_loaders,index=[loader_index]):
         pg.login()
         if st.session_state["authentication_status"]:
-            menu_item = 'Home'
+            # menu_item = 'Home'
             update_last_login(st.session_state["username"])
-            st.rerun()
+            # st.rerun()
 elif menu_item == 'Logout':
     pg.login(logout=True)
+    st.rerun()
 elif menu_item == 'Accreditation Application':
     # with hc.HyLoader('',hc.Loaders.standard_loaders,index=[loader_index]):
         pg.accreditation_application()
@@ -337,3 +338,29 @@ st.markdown("""
 
             """
             ,unsafe_allow_html=True)
+
+# with st.form("login_form"):
+#     username = st.text_input("**Username**", placeholder="pupsccosoa")
+#     password = st.text_input("**Password**", type="password")
+#     submitted = st.form_submit_button("Login", type="primary")
+    
+#     if submitted:
+#         user_data = fetch_data('https://ap-southeast-1.data.tidbcloud.com/api/v1beta/app/dataapp-SxHAXFax/endpoint/users')['data']
+#         user_data_df = pd.DataFrame(
+#             user_data["rows"], columns=[col["col"] for col in user_data["columns"]]
+#         )
+#         matching_user = user_data_df[(user_data_df['username'] == username) & (user_data_df['password'] == password)]
+        
+#         if not matching_user.empty:
+#             st.success("Login successful.")
+#             org_name = matching_user['org_name'].values[0]
+            
+#             # Set session state variables
+#             st.session_state['authentication_status'] = True
+#             st.session_state['username'] = username
+#             st.session_state['name'] = org_name
+            
+#             st.rerun()
+            
+#         else:
+#             st.error("Username or password is incorrect. Please try again.")
