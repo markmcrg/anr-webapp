@@ -13,10 +13,10 @@ def accreditation_status():
         st.session_state.bucket = authenticate_b2('anr-webapp')
     bucket = st.session_state.bucket
     download_auth_token = bucket.get_download_authorization("", 86400)
-    st.markdown("<h1 style='color: #f5c472; text-align:left;'>My Submissions</h1>", unsafe_allow_html=True)
     # API call to fetch user's submissions based on username
-    data = get_submissions('pupppge')
+    data = get_submissions(st.session_state.username)
     if data:
+        st.markdown("<h1 style='color: #f5c472; text-align:left; padding-bottom:60px;'>My Submissions</h1>", unsafe_allow_html=True)
         # Create table rows dynamically
         rows = ""
         for item in data:
@@ -286,7 +286,11 @@ def accreditation_status():
                     sac.result(label='Tracker Form Unavailable.', description='Please wait until your submission is tagged as "Returned."')
 
     else:
-        sac.result(label='No Submissions Found', description='Click on "Accreditation Application" to submit your first application.', status='empty')
+        cols=st.columns([0.5, 1, 0.5])
+        with cols[1]:
+            st.markdown("<h1 style='color: #f5c472; text-align:left; margin-left: 10px;'>My Submissions</h1>", unsafe_allow_html=True)
+            with st.container(border=True):
+                sac.result(label='No Submissions Found', description='Click on "Accreditation Application" to submit your first application.', status='empty')
     
 
 # Have info to show what each status means (Approved, Pending, etc.)

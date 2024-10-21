@@ -200,7 +200,8 @@ def accreditation_application():
         for i in range(1, 6):
             st.session_state[f'step_{i}_disabled'] = True
         with page_cols[1]:
-            sac.result(label='Application Submitted!', description='Please check the status of your submission by clicking on "Accreditation Status."', status='success')
+            with st.container(border=True):
+                sac.result(label='Application Submitted!', description='Please check the status of your submission by clicking on "Accreditation Status."', status='success')
             
         # delete org doc from st state
         del st.session_state['org_doc']
