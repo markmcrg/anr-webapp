@@ -6,6 +6,7 @@ def home():
             .st-emotion-cache-1v0mbdj.e115fcil1 img {
                 box-shadow: 0 2px 10px #2e2c2c;
                 margin-top: 10px;
+                border-radius: 10px;
             }
             #what-is-cosoa {
                 color: #ffffff !important;
