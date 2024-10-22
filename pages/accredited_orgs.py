@@ -8,14 +8,17 @@ import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from helpers import fetch_data
 
-def accredited_orgs():
-    
-    st.markdown("<h1 style='text-align: center; color: #f5c472; font-size: 45px; padding-bottom:25px;'>List of Accredited Organizations for Term 2324</h1>", unsafe_allow_html=True)
+def accredited_orgs(term):
+    if term == '2324':
+        org_data = fetch_data('https://ap-southeast-1.data.tidbcloud.com/api/v1beta/app/dataapp-SxHAXFax/endpoint/accredited_orgs')
+    else:
+        org_data = fetch_data(f'https://ap-southeast-1.data.tidbcloud.com/api/v1beta/app/dataapp-SxHAXFax/endpoint/accredited_orgs_{term}')
+        
+    st.markdown(f"<h1 style='text-align: center; color: #f5c472; font-size: 45px; padding-bottom:25px;'>List of Accredited Organizations for Term {term}</h1>", unsafe_allow_html=True)
     
     with st.container(border=True):
         org_query = st_keyup("Search for an organization:", debounce=200, key="0")
     with st.container():
-        org_data = fetch_data('https://ap-southeast-1.data.tidbcloud.com/api/v1beta/app/dataapp-SxHAXFax/endpoint/accredited_orgs')
         org_data = org_data['data']
         
         columns = [col['col'] for col in org_data['columns']]
@@ -148,6 +151,3 @@ def accredited_orgs():
                         </style>
                         <a href='#list-of-accredited-organizations-for-term-2324'>Back to top</a>
                         """, unsafe_allow_html=True)
-            
-if __name__ == "__main__":
-    accredited_orgs()

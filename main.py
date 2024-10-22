@@ -25,7 +25,11 @@ with st.sidebar:
             sac.MenuItem('Guest Menu', disabled=True),
             sac.MenuItem(type='divider'),
             sac.MenuItem('Home', icon='bi bi-house-door'),
-            sac.MenuItem('Accredited Organizations', icon='bi bi-building'),
+            sac.MenuItem('Accredited Organizations', icon='bi bi-building', children=[
+                    sac.MenuItem('2023-2024', icon='1-square-fill'),
+                    sac.MenuItem('2022-2023', icon='2-square-fill'),
+                    sac.MenuItem('2021-2022', icon='3-square-fill'),
+                ]),
             sac.MenuItem('Application Requirements', icon='bi bi-clipboard-check'),
             sac.MenuItem('Frequently Asked Questions', icon='bi bi-question-circle'),
             sac.MenuItem('Sign Up', icon='bi bi-person-plus'),
@@ -174,9 +178,18 @@ with st.sidebar:
 
 if menu_item == 'Home':
     pg.home()
-if menu_item == 'Accredited Organizations': 
+# if menu_item == 'Accredited Organizations': 
+#     with hc.HyLoader('',hc.Loaders.standard_loaders,index=[loader_index]):
+#         pg.accredited_orgs()
+elif menu_item == "2023-2024":
     with hc.HyLoader('',hc.Loaders.standard_loaders,index=[loader_index]):
-        pg.accredited_orgs()
+        pg.accredited_orgs(str(2324))
+elif menu_item == "2022-2023":
+    with hc.HyLoader('',hc.Loaders.standard_loaders,index=[loader_index]):
+        pg.accredited_orgs(str(2223))
+elif menu_item == "2021-2022":
+    with hc.HyLoader('',hc.Loaders.standard_loaders,index=[loader_index]):
+        pg.accredited_orgs(str(2122))
 elif menu_item == 'Application Requirements':
     pg.application_requirements()
 elif menu_item == 'Frequently Asked Questions':
