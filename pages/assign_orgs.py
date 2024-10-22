@@ -9,14 +9,16 @@ import os
 from helpers import fetch_data, authenticate_b2, generate_download_auth_token
 
 def assign_orgs():
-    bucket = authenticate_b2('anr-webapp')
-    auth_token = generate_download_auth_token(bucket)
-    with st.container(border=True):
+    # bucket = authenticate_b2('anr-webapp')
+    # auth_token = generate_download_auth_token(bucket)
+    with st.form(key="assign_orgs_form", border=True):
         st.subheader("📄 Organization Submissions")
         submission_data = fetch_data("https://ap-southeast-1.data.tidbcloud.com/api/v1beta/app/dataapp-SxHAXFax/endpoint/get_all_submissions")['data']['rows']
-        cosoa_names = [d['org_name'] for d in fetch_data("https://ap-southeast-1.data.tidbcloud.com/api/v1beta/app/dataapp-SxHAXFax/endpoint/get_cosoa_users")['data']['rows']]
 
         submission_data_df = pd.DataFrame(submission_data, columns=["org_name", "jurisdiction", "app_type", "app_order", "date_submitted", "eval_phase", "b2_file_url"])
+        
+        # submission_data_df['b2_file_url'] = submission_data_df['b2_file_url'] + auth_token
+        
         submission_data_df.columns = ['Organization Name', 'Jurisdiction', 'Application Type', 'Application Order', 'Date Submitted', "Evaluation Phase", "View"]
         submission_data_df['Date Submitted'] = pd.to_datetime(submission_data_df['Date Submitted'])
         cols = st.columns([1,1], vertical_alignment='center')
@@ -46,7 +48,6 @@ def assign_orgs():
             
         # Check if df is empty
         if not submission_data_df.empty:
-            submission_data_df['View'] = submission_data_df['View'].astype(str) + str(auth_token)
             updated_submissions_df = st.data_editor(submission_data_df,
                         column_config={
                             "Organization Name" : st.column_config.TextColumn(
@@ -73,17 +74,11 @@ def assign_orgs():
                                 "Evaluation Phase",
                                 required=True,
                                 options=["IE", "FE", "CA", "Returned", "Approved", "Rejected"],
-                                ),
-                                "Person Assigned" : st.column_config.SelectboxColumn(
-                                "Person Assigned",
-                                required=False,
-                                options=cosoa_names,
-                                width="medium"
                                 )
                         },
                         
                         hide_index=True) 
-            if st.button("Update"):
+            if st.form_submit_button("Update"):
                 try:
                     connection = mysql.connector.connect(
                         host=os.environ['db2_host'],
@@ -99,8 +94,8 @@ def assign_orgs():
                 
                 for index, row in updated_submissions_df.iterrows():
                     evaluation_phase = row["Evaluation Phase"]
-                    org_name = row["Organization Name"]  # Replace with your actual column name
-                    app_order = row["Application Order"]  # Replace with your actual column na
+                    org_name = row["Organization Name"] 
+                    app_order = row["Application Order"]  
 
                     # Construct the SQL UPDATE query
                     sql_query = """

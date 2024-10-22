@@ -55,9 +55,11 @@ def view_submissions():
                 submission_data_df['Organization Submission'].str.contains(submission_query, case=False, regex=False)
             ]
 
-        # st.dataframe(submission_data_df, hide_index=True, column_order=['Organization Submission', 'Jurisdiction', 'Application Type', 'Date Submitted', 'Evaluation Phase', 'View'])
         table_data = ""
         if not submission_data_df.empty:
+            bucket = authenticate_b2('anr-webapp')
+            download_auth_token = bucket.get_download_authorization("", 86400)
+            
             for idx, row in submission_data_df.iterrows():
                 if row['Evaluation Phase'] == "IE":
                     eval_phase = "Initial Evaluation"
@@ -84,9 +86,9 @@ def view_submissions():
                     status_class = "status-returned"
                     status_icon = "bi-x-circle-fill"
                 date_submitted = row['Date Submitted'].strftime("%Y-%m-%d")
-                bucket = authenticate_b2('anr-webapp')
-                download_auth_token = bucket.get_download_authorization("", 86400)
+                
                 b2_file_url = f"{row['View']}?Authorization={download_auth_token}"
+                
                 table_data += f"""
                 <tr>
                     <td class="center-align">{row['Organization Submission']}</td>
