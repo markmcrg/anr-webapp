@@ -19,33 +19,6 @@ def fetch_data(url: str) -> dict:
     response = requests.get(url, auth=HTTPBasicAuth(PUBLIC_KEY, PRIVATE_KEY))
     return response.json()
 
-@st.cache_data(show_spinner=False, ttl=3600)
-def unpack_credentials(user_data: dict) -> dict:
-    user_data_df = pd.DataFrame(
-        user_data["rows"], columns=[col["col"] for col in user_data["columns"]]
-    )
-    emails = user_data_df["email"].tolist()
-    passwords = user_data_df["password"].tolist()
-    org_names = user_data_df["org_name"].tolist()
-    created_at = user_data_df["created_at"].tolist()
-    last_login = user_data_df["last_login"].tolist()
-    usernames = user_data_df["username"].tolist()
-    roles = user_data_df["role"].tolist()
-
-    credentials = {"usernames": {}}
-    for username, email, password, org_name in zip(
-        usernames, emails, passwords, org_names
-    ):
-        credentials["usernames"][username] = {
-            "email": email,
-            "failed_login_attempts": 0,
-            "logged_in": False,
-            "name": org_name,
-            "password": password,
-        }
-
-    return credentials
-
 def page_router(active_index, current_index):
     if active_index != current_index:
         if active_index == 1:
@@ -264,6 +237,25 @@ def update_last_login(username):
         return True
     else:
         return False
+    
+def update_last_updated(filename):
+    PUBLIC_KEY = os.environ['tidb_public_key']
+    PRIVATE_KEY = os.environ['tidb_private_key']
+
+    url = "https://ap-southeast-1.data.tidbcloud.com/api/v1beta/app/dataapp-SxHAXFax/endpoint/update_last_updated"
+    headers = {
+        "content-type": "application/json",
+    }
+
+    data = {"filename": filename}
+    response = requests.put(
+        url, headers=headers, json=data, auth=HTTPBasicAuth(PUBLIC_KEY, PRIVATE_KEY)
+    )
+
+    if response.status_code == 200:
+        return True
+    else:
+        return False
 
 
 def modify_user_data(identifier, to_modify, identifier_value, new_value):
@@ -369,7 +361,6 @@ def list_files(bucket):
         ).strftime("%Y-%m-%d %H:%M:%S")
         st.write(f"**{file_version.file_name}** | {upload_timestamp}")
 
-@st.cache_data(show_spinner=False, ttl=3600)
 def get_download_url(_bucket, filename, auth=True):
     download_auth_token = _bucket.get_download_authorization(
         filename, 86400
@@ -493,7 +484,6 @@ def submit_evaluation_accre(filename, eval_data):
         "req004_remarks": eval_data["AD004"]["remark"],
         "req005_approved": eval_data["AD005"]["approved"],
         "req005_remarks": eval_data["AD005"]["remark"],
-        "req006_approved": eval_data["AD006"]["approved"],
         "filename": filename,
     }
     response = requests.put(

@@ -137,6 +137,21 @@ with st.sidebar:
         .st-emotion-cache-4uzi61.e1f1d6gn0:has(.st-key-faq_type_cont) {
                 width: 160px;
         }
+
+        [data-testid="stTableStyledTable"] th {
+            color: white !important;
+        }
+        [data-testid="stTableStyledTable"] tbody th {
+            white-space: nowrap !important; /* Prevents text from wrapping */
+            width: auto !important;         /* Ensures the width adjusts to the content */
+            padding: 2px 5px !important;    /* Adjusts padding for a tighter fit */
+        }
+        [data-testid="stTableStyledTable"] table {
+            table-layout: auto;
+        }
+        
+
+                        
     </style>
 """
     st.markdown(page_bg_img, unsafe_allow_html=True)
