@@ -371,7 +371,11 @@ def get_download_url(_bucket, filename, auth=True):
         return auth_download_url
     else:
         return download_url
-
+def generate_download_auth_token(_bucket):
+    download_auth_token = _bucket.get_download_authorization(
+        "", 86400)
+    auth_string = f"?Authorization={download_auth_token}"
+    return auth_string
 def record_submission(
     filename, org_name, app_type, app_order, jurisdiction, b2_file_url, username
 ):

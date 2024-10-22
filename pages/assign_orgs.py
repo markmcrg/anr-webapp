@@ -1,5 +1,4 @@
 import streamlit as st
-from helpers import fetch_data
 import pandas as pd
 import mysql.connector
 from mysql.connector import Error
@@ -7,7 +6,11 @@ import time
 from st_keyup import st_keyup
 import streamlit_antd_components as sac
 import os
+from helpers import fetch_data, authenticate_b2, generate_download_auth_token
+
 def assign_orgs():
+    bucket = authenticate_b2('anr-webapp')
+    auth_token = generate_download_auth_token(bucket)
     with st.container(border=True):
         st.subheader("📄 Organization Submissions")
         submission_data = fetch_data("https://ap-southeast-1.data.tidbcloud.com/api/v1beta/app/dataapp-SxHAXFax/endpoint/get_all_submissions")['data']['rows']
@@ -43,6 +46,7 @@ def assign_orgs():
             
         # Check if df is empty
         if not submission_data_df.empty:
+            submission_data_df['View'] = submission_data_df['View'].astype(str) + str(auth_token)
             updated_submissions_df = st.data_editor(submission_data_df,
                         column_config={
                             "Organization Name" : st.column_config.TextColumn(
@@ -120,3 +124,6 @@ def assign_orgs():
                 
         else:
             sac.result(label='No Results Found', description="We couldn't locate any matching results.", status='empty')
+
+if __name__ == "__main__":
+    assign_orgs()
