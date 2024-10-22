@@ -11,7 +11,7 @@ from helpers import fetch_data, authenticate_b2, generate_download_auth_token
 def assign_orgs():
     # bucket = authenticate_b2('anr-webapp')
     # auth_token = generate_download_auth_token(bucket)
-    with st.form(key="assign_orgs_form", border=True):
+    with st.container(border=True):
         st.subheader("📄 Organization Submissions")
         submission_data = fetch_data("https://ap-southeast-1.data.tidbcloud.com/api/v1beta/app/dataapp-SxHAXFax/endpoint/get_all_submissions")['data']['rows']
 
@@ -78,7 +78,7 @@ def assign_orgs():
                         },
                         
                         hide_index=True) 
-            if st.form_submit_button("Update"):
+            if st.button("Update"):
                 try:
                     connection = mysql.connector.connect(
                         host=os.environ['db2_host'],
