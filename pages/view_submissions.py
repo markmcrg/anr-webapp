@@ -30,11 +30,12 @@ def view_submissions():
                         'Approved',
                         'Rejected'
                     ],
-                    label='Filter by evaluation phase', index=[0, 1, 2], align='center', key='eval_phase_filter'
+                    label='Filter by evaluation phase', index=[0, 1, 2], align='center',
                 )
-                submission_data_df = submission_data_df[
-                submission_data_df['Evaluation Phase'].isin(eval_phase_filter)
-            ]
+                if eval_phase_filter:
+                    submission_data_df = submission_data_df[
+                    submission_data_df['Evaluation Phase'].isin(eval_phase_filter)
+                ]
             elif role == 'cosoa':
                 eval_phase_filter = sac.checkbox(
                     items=[
@@ -42,11 +43,12 @@ def view_submissions():
                         'FE',
                         'Returned',
                     ],
-                    label='Filter by evaluation phase', index=0, align='center', key='eval_phase_filter'
+                    label='Filter by evaluation phase', index=0, align='center',
                 )
-                submission_data_df = submission_data_df[
-                submission_data_df['Evaluation Phase'].isin(eval_phase_filter)
-            ]
+                if eval_phase_filter:
+                    submission_data_df = submission_data_df[
+                    submission_data_df['Evaluation Phase'].isin(eval_phase_filter)
+                ]
                 
         if submission_query:
             submission_data_df = submission_data_df[
