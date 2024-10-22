@@ -1,4 +1,3 @@
-from pyparsing import col
 import streamlit as st
 from helpers import fetch_data
 import streamlit_authenticator as stauth
@@ -11,7 +10,7 @@ def login(logout: bool = False):
     if not st.session_state['authentication_status'] and not logout: 
         cols = st.columns([0.5, 1, 0.5])
         with cols[1]:
-            st.markdown("<h1 style='color: #f5c472;'>Login</h1>", unsafe_allow_html=True)
+            st.markdown("<h1 style='color: #f5c472; text-align:center;'>Login</h1>", unsafe_allow_html=True)
             with st.form("login_form"):
                 username = st.text_input("**Username**", placeholder="pupsccosoa")
                 password = st.text_input("**Password**", type="password")

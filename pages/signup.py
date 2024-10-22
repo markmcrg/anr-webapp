@@ -58,7 +58,7 @@ def signup():
                     sac.StepsItem(title='Register', disabled=True),
                     # sac.StepsItem(title='Confirm DPA', disabled=True),
                     sac.StepsItem(title='Verify', disabled=True),
-                    sac.StepsItem(title='Success', disabled=True, icon="check-circle"),
+                    sac.StepsItem(title='Success!', disabled=True, icon="check-circle"),
                 ], return_index=True, placement='vertical', index=st.session_state.page-1, key='signup_steps'
             ) 
             # Registration Form Page
