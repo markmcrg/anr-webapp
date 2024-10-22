@@ -17,7 +17,7 @@ def accredited_orgs(term):
     st.markdown(f"<h1 style='text-align: center; color: #f5c472; font-size: 45px; padding-bottom:25px;'>List of Accredited Organizations for Term {term}</h1>", unsafe_allow_html=True)
     
     with st.container(border=True):
-        org_query = st_keyup("Search for an organization:", debounce=200, key="0")
+        org_query = st_keyup("Search for an organization:", debounce=200, key="0", placeholder="Enter organization name...")
     with st.container():
         org_data = org_data['data']
         
