@@ -44,9 +44,15 @@ with st.sidebar:
                 sac.MenuItem('Accredited Organizations', icon='bi bi-building'),
                 sac.MenuItem('Application Requirements', icon='bi bi-clipboard-check'),
                 sac.MenuItem('Frequently Asked Questions', icon='bi bi-question-circle'),
-                sac.MenuItem('Evaluate Submissions', icon='bi bi-file-earmark-text'),
+
                 sac.MenuItem('Account Settings', icon='bi bi-person-gear'),
                 sac.MenuItem('Logout', icon='bi bi-box-arrow-in-left'),
+                
+                sac.MenuItem("", disabled=True),
+                
+                sac.MenuItem('Admin Tools', disabled=True),
+                sac.MenuItem(type='divider'),
+                sac.MenuItem('Evaluate Submissions', icon='bi bi-file-earmark-text'),
             ], open_all=False, index=2)
         elif role == 'user':
             abbreviation = get_abbreviation(st.session_state["username"])
@@ -57,10 +63,15 @@ with st.sidebar:
                 sac.MenuItem('Accredited Organizations', icon='bi bi-building'),
                 sac.MenuItem('Application Requirements', icon='bi bi-clipboard-check'),
                 sac.MenuItem('Frequently Asked Questions', icon='bi bi-question-circle'),
-                sac.MenuItem('Accreditation Application', icon='bi bi-file-earmark-text'),
-                sac.MenuItem('Accreditation Status', icon='bi bi-graph-up-arrow'),
                 sac.MenuItem('Account Settings', icon='bi bi-person-gear'),
                 sac.MenuItem('Logout', icon='bi bi-box-arrow-in-left'),
+                
+                sac.MenuItem("", disabled=True),
+                
+                sac.MenuItem('Accreditation', disabled=True),
+                sac.MenuItem(type='divider'),
+                sac.MenuItem('Accreditation Application', icon='bi bi-file-earmark-text'),
+                sac.MenuItem('Accreditation Status', icon='bi bi-graph-up-arrow'),
             ], open_all=False, index=2)
         elif role == 'chair':
             menu_item = sac.menu([
@@ -102,6 +113,7 @@ with st.sidebar:
                 sac.MenuItem(type='divider'),
                 sac.MenuItem('Assign Organizations', icon='bi bi-person-check'),
                 sac.MenuItem("User Management", icon='bi bi-person-lines-fill'),
+                sac.MenuItem("Metrics", icon='bi bi-graph-up-arrow'),
                 sac.MenuItem('View Document Status', icon='bi bi-file-earmark-text'),
             ], open_all=False)
     page_bg_img = """
@@ -196,6 +208,9 @@ elif menu_item == "Evaluate Submissions":
     pg.view_submissions() 
 elif menu_item == "View Document Status":
     pg.document_management()
+elif menu_item == "Metrics":
+    pg.metrics()
+
 
 if st.session_state["authentication_status"]:
     menu_item = 'Home'

@@ -12,3 +12,4 @@ from .forgot_password import forgot_password # noqa: F401
 from .assign_orgs import assign_orgs # noqa: F401
 from .view_submissions import view_submissions # noqa: F401
 from .document_management import document_management # noqa: F401
+from .metrics import metrics # noqa: F401

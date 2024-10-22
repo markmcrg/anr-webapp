@@ -557,3 +557,29 @@ def modify_eval_phase(filename, eval_phase="FE"):
         return True
     else:
         return False
+
+def get_submission_count():
+    PUBLIC_KEY = os.environ['tidb_public_key']
+    PRIVATE_KEY = os.environ['tidb_private_key']
+
+    url = "https://ap-southeast-1.data.tidbcloud.com/api/v1beta/app/dataapp-SxHAXFax/endpoint/get_submission_count"
+    response = requests.get(url, auth=HTTPBasicAuth(PUBLIC_KEY, PRIVATE_KEY))
+
+    # Turn the response into a dictionary
+    response_dict = response.json()
+    sub_count = response_dict["data"]["rows"][0]['COUNT']
+
+    return sub_count
+
+def get_user_count(role):
+    PUBLIC_KEY = os.environ['tidb_public_key']
+    PRIVATE_KEY = os.environ['tidb_private_key']
+
+    url = f"https://ap-southeast-1.data.tidbcloud.com/api/v1beta/app/dataapp-SxHAXFax/endpoint/get_user_count?role={role}"
+    response = requests.get(url, auth=HTTPBasicAuth(PUBLIC_KEY, PRIVATE_KEY))
+
+    # Turn the response into a dictionary
+    response_dict = response.json()
+    user_count = response_dict["data"]["rows"][0]['COUNT']
+
+    return user_count
