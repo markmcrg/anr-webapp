@@ -1,10 +1,10 @@
 import streamlit as st
 import streamlit_antd_components as sac
 from datetime import datetime
-# Add the main directory to the system path if necessary
-import sys
-import os
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+# # Add the main directory to the system path if necessary
+# import sys
+# import os
+# sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from helpers import authenticate_b2, get_submissions
 
 
@@ -142,7 +142,7 @@ def accreditation_status():
             </table>
         """
         st.markdown(table_html, unsafe_allow_html=True)
-        
+
         # Check each submission if existing, if not then disable the respective option
         # Add chairperson's remarks to the tracker form at the bottom
         
@@ -213,15 +213,17 @@ def accreditation_status():
                             else:
                                 status_icon = 'times'
                                 status_class = 'status-cross'
+                            remarks = selected_record[f'REQ{idx:03d}_remarks']
+                            remarks = "<br>".join(line.lstrip('-') for line in remarks.split("\n"))
+
                             tracker_form_data += f"""
                             <tr>
                                 <td class="center-align">RD{idx:03d}</td>
                                 <td class="left-align">{doc_name}</td>
                                 <td class="center-align"><i class="fas fa-{status_icon} status-icon {status_class}"></i></td>
-                                <td class="left-align">{selected_record[f'REQ{idx:03d}_remarks']}</td>
+                                <td class="left-align">{remarks}</td>
                             </tr>
                             """  
-
                     st.html(f"""
                                     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
                                     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" rel="stylesheet">
@@ -243,9 +245,10 @@ def accreditation_status():
                                             box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
                                             background-color: #ffffff;
                                             width:100%;
+                                            font-family: Source Sans Pro, sans-serif;
                                         }}
                                         th, td {{
-                                            padding: 12px 15px;
+                                            padding: 7px 10px;
                                             border-bottom: 1px solid #e0e0e0;
                                         }}
                                         th {{
