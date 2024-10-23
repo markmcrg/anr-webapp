@@ -45,7 +45,11 @@ with st.sidebar:
                 sac.MenuItem(f'Welcome, {str(abbreviation)}!', disabled=True),
                 sac.MenuItem(type='divider'),
                 sac.MenuItem('Home', icon='bi bi-house-door'),
-                sac.MenuItem('Accredited Organizations', icon='bi bi-building'),
+                sac.MenuItem('Accredited Organizations', icon='bi bi-building', children=[
+                    sac.MenuItem('2023-2024', icon='1-square-fill'),
+                    sac.MenuItem('2022-2023', icon='2-square-fill'),
+                    sac.MenuItem('2021-2022', icon='3-square-fill'),
+                ]),
                 sac.MenuItem('Application Requirements', icon='bi bi-clipboard-check'),
                 sac.MenuItem('Frequently Asked Questions', icon='bi bi-question-circle'),
 
@@ -64,7 +68,11 @@ with st.sidebar:
                 sac.MenuItem(f'Welcome, {str(abbreviation)}!', disabled=True),
                 sac.MenuItem(type='divider'),
                 sac.MenuItem('Home', icon='bi bi-house-door'),
-                sac.MenuItem('Accredited Organizations', icon='bi bi-building'),
+                sac.MenuItem('Accredited Organizations', icon='bi bi-building', children=[
+                    sac.MenuItem('2023-2024', icon='1-square-fill'),
+                    sac.MenuItem('2022-2023', icon='2-square-fill'),
+                    sac.MenuItem('2021-2022', icon='3-square-fill'),
+                ]),
                 sac.MenuItem('Application Requirements', icon='bi bi-clipboard-check'),
                 sac.MenuItem('Frequently Asked Questions', icon='bi bi-question-circle'),
                 sac.MenuItem('Account Settings', icon='bi bi-person-gear'),
@@ -82,7 +90,11 @@ with st.sidebar:
                 sac.MenuItem('Welcome, Chair!', disabled=True),
                 sac.MenuItem(type='divider'),
                 sac.MenuItem('Home', icon='bi bi-house-door'),
-                sac.MenuItem('Accredited Organizations', icon='bi bi-building'),
+                sac.MenuItem('Accredited Organizations', icon='bi bi-building', children=[
+                    sac.MenuItem('2023-2024', icon='1-square-fill'),
+                    sac.MenuItem('2022-2023', icon='2-square-fill'),
+                    sac.MenuItem('2021-2022', icon='3-square-fill'),
+                ]),
                 sac.MenuItem('Application Requirements', icon='bi bi-clipboard-check'),
                 sac.MenuItem('Frequently Asked Questions', icon='bi bi-question-circle'),
                 sac.MenuItem('Account Settings', icon='bi bi-person-gear'),
@@ -104,7 +116,11 @@ with st.sidebar:
                 sac.MenuItem(f'Welcome, {str(abbreviation)}!', disabled=True),
                 sac.MenuItem(type='divider'),
                 sac.MenuItem('Home', icon='bi bi-house-door'),
-                sac.MenuItem('Accredited Organizations', icon='bi bi-building'),
+                sac.MenuItem('Accredited Organizations', icon='bi bi-building', children=[
+                    sac.MenuItem('2023-2024', icon='1-square-fill'),
+                    sac.MenuItem('2022-2023', icon='2-square-fill'),
+                    sac.MenuItem('2021-2022', icon='3-square-fill'),
+                ]),
                 sac.MenuItem('Application Requirements', icon='bi bi-clipboard-check'),
                 sac.MenuItem('Frequently Asked Questions', icon='bi bi-question-circle'),
                 sac.MenuItem('Evaluate Submissions', icon='bi bi-clipboard-check'),
@@ -379,6 +395,15 @@ st.markdown("""
                 background-color: white;
                 box-shadow: 0 2px 10px #2e2c2c !important; 
             }
+            
+            h3 {
+                font-weight: bold;
+            }
+            
+            h2 {
+                font-weight: bold;
+            }
+
         
             </style>
 

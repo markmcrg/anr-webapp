@@ -168,7 +168,7 @@ def accreditation_status():
                 selected_record = next((entry for entry in data if entry["app_order"] == sub_to_view))
                 
                 # Check if status is returned first, then check application type (accre or reval)
-                if selected_record['eval_phase'] == 'Returned':
+                if selected_record['eval_phase'] in ['Returned', 'Approved', 'Rejected']:
                     tracker_form_data = ""
                     accre_docs = {
                         'AD001': 'Compilation of Compulsory Certificates',
