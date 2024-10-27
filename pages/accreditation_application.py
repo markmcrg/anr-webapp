@@ -159,7 +159,7 @@ def accreditation_application():
                 st.write(f"**Jurisdiction:** {st.session_state.jurisdiction}")
                 st.write(f"**Application Type:** {st.session_state.app_type}")
                 st.write(f"**Application Order:** {st.session_state.app_order}")
-                sac.alert(label='After submission, edits will no longer be possible. Please review your entries carefully.', size='sm', variant='quote-light', color='warning', icon=True)
+                sac.alert(label='After submission, revisions or cancellations will no longer be possible. Please review your entries carefully.', size='sm', variant='quote-light', color='warning', icon=True)
                 submit_btn = st.button("Submit Application", key="submit")
             if submit_btn:
                 msg = st.toast('Submitting Application...', icon='⬆️')
