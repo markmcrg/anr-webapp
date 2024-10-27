@@ -1,5 +1,5 @@
 import streamlit as st
-from helpers import fetch_data
+from helpers import fetch_data, update_last_login
 import streamlit_authenticator as stauth
 import pandas as pd
 import streamlit_antd_components as sac
@@ -31,6 +31,7 @@ def login(logout: bool = False):
                         st.session_state['authentication_status'] = True
                         st.session_state['username'] = username
                         st.session_state['name'] = org_name
+                        update_last_login(st.session_state["username"])
                         
                         st.rerun()
                         

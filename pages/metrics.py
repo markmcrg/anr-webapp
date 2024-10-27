@@ -14,15 +14,15 @@ def metrics():
     
     sub_count = get_submission_count()
     
-    cols = st.columns([0.5, 1, 0.5])
+    cols = st.columns([0.25, 1, 0.25])
     with cols[1]:
         with st.container(border=True):
             st.header("📊 Site Metrics")
             cols = st.columns(3)
             with cols[0]:
-                ui.metric_card(title="Submission Count", content=f"{sub_count}", key="card1")
+                ui.metric_card(title="Submissions", content=f"{sub_count}", key="card1")
             with cols[1]:
-                ui.metric_card(title="Organization Accounts", content=f"{org_count}",  key="card2")
+                ui.metric_card(title="User Accounts", content=f"{org_count}",  key="card2")
             with cols[2]:
                 ui.metric_card(title="COSOA Accounts", content=f"{cosoa_count}", key="card3")
             

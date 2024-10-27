@@ -215,10 +215,6 @@ elif menu_item == 'Sign Up':
 elif menu_item == 'Login':
     with hc.HyLoader('',hc.Loaders.standard_loaders,index=[loader_index]):
         pg.login()
-        if st.session_state["authentication_status"]:
-            # menu_item = 'Home'
-            update_last_login(st.session_state["username"])
-            # st.rerun()
 elif menu_item == 'Logout':
     pg.login(logout=True)
     st.rerun()
