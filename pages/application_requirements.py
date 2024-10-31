@@ -84,6 +84,9 @@ def application_requirements():
                             a:hover {
                                 text-decoration: none;
                             }
+                            li a:hover {
+                                text-decoration: underline;
+                            }
                         </style>
                         <table class="table table-striped">
                             <thead>
@@ -101,8 +104,8 @@ def application_requirements():
                                         <ul>
                                             <li>Certificate of Recognition from Central/Local Student Council</li>
                                             <li>Certificate of Clearance from PUP Student Council Commission on Audit (PUP SC COA)</li>
-                                            <li>OSS Anti-Hazing Orientation Certificate of Registration</li>
-                                            <li>Gender Sensitivity Orientation Certificate of Registration</li>
+                                            <li>OSS Anti-Hazing Orientation Certificate of Registration <a style="color:#1BB7EA;" href="https://pupedu-my.sharepoint.com/:w:/g/personal/cosoa_iskolarngbayan_pup_edu_ph/Eahh-GeoEGxBjJhpSkZrqTsByC-Wi9bpjRx72wo2C3wQ5w?e=dh9v6x">(or substitute, in case of absence)</a></li>
+                                            <li>Gender Sensitivity Orientation Certificate of Registration <a style="color:#1BB7EA;" href="https://pupedu-my.sharepoint.com/:w:/g/personal/cosoa_iskolarngbayan_pup_edu_ph/ERsszLpD62ZDjLNlbuDCPYgB_BE1hRSuifQHEAnO_Dofxw?e=eIsTPd">(or substitute, in case of absence)</a></li>
                                         </ul>
                                     </td>
                                     <td class="text-center"><a class="btn btn-sm btn-maroon" href="https://pupedu-my.sharepoint.com/:w:/g/personal/cosoa_iskolarngbayan_pup_edu_ph/EQ9rND2NFPxEl66JLMDOZmoBGbeCyRoqhCRF9DzaKdY6cQ?e=8eeyIC" role="button">View</a></td>
@@ -197,6 +200,9 @@ def application_requirements():
                             a:hover {
                                 text-decoration: none;
                             }
+                            li a:hover {
+                                text-decoration: underline;
+                            }
                         </style>
                         <table class="table table-striped">
                             <thead>
@@ -214,8 +220,8 @@ def application_requirements():
                                         <ul>
                                             <li>Certificate of Recognition from Central/Local Student Council</li>
                                             <li>Certificate of Clearance from PUP Student Council Commission on Audit (PUP SC COA)</li>
-                                            <li>OSS Anti-Hazing Orientation Certificate of Registration</li>
-                                            <li>Gender Sensitivity Orientation Certificate of Registration</li>
+                                            <li>OSS Anti-Hazing Orientation Certificate of Registration <a style="color:#1BB7EA;" href="https://pupedu-my.sharepoint.com/:w:/g/personal/cosoa_iskolarngbayan_pup_edu_ph/EUxFZXhkPONAsrEtCmdjOV0BsJQ_pouMst6mA543O0AxtQ?e=0bx4WZ">(or substitute, in case of absence)</a></li>
+                                            <li>Gender Sensitivity Orientation Certificate of Registration <a style="color:#1BB7EA;" href="https://pupedu-my.sharepoint.com/:w:/g/personal/cosoa_iskolarngbayan_pup_edu_ph/EdHmjuQwc49CjNN-_Ld3X3UBZjC0QA0MAEWMDJBkCMsQ4g?e=NvHoVc">(or substitute, in case of absence)</a></li>
                                             <li>Scanned Copy of the Latest Certificate of Accreditation/Revalidation</li>
                                         </ul>
                                     </td>
