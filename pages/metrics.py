@@ -25,6 +25,3 @@ def metrics():
                 ui.metric_card(title="User Accounts", content=f"{org_count}",  key="card2")
             with cols[2]:
                 ui.metric_card(title="COSOA Accounts", content=f"{cosoa_count}", key="card3")
-            
-if __name__ == "__main__":
-    metrics()

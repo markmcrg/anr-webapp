@@ -43,5 +43,6 @@ def login(logout: bool = False):
         del st.session_state['username']
         del st.session_state['name']
 
-
+if __name__ == "__main__":
+    login()
 

@@ -177,3 +177,6 @@ def signup():
 # 5. Check if password is strong (at least 8 characters long, with at least one uppercase letter, one lowercase letter, one number, and one special character) - done
 # 6. Check if username is unique - done
 # 7. Check if email is unique - done
+
+if __name__ == "__main__":
+    signup()
