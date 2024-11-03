@@ -123,7 +123,6 @@ with st.sidebar:
                 ]),
                 sac.MenuItem('Application Requirements', icon='bi bi-clipboard-check'),
                 sac.MenuItem('Frequently Asked Questions', icon='bi bi-question-circle'),
-                sac.MenuItem('Evaluate Submissions', icon='bi bi-clipboard-check'),
                 sac.MenuItem('Account Settings', icon='bi bi-person-gear'),
                 sac.MenuItem('Logout', icon='bi bi-box-arrow-in-left'),
                 
@@ -131,6 +130,7 @@ with st.sidebar:
 
                 sac.MenuItem('Admin Tools', disabled=True),
                 sac.MenuItem(type='divider'),
+                sac.MenuItem('Evaluate Submissions', icon='bi bi-clipboard-check'),
                 sac.MenuItem('Assign Organizations', icon='bi bi-person-check'),
                 sac.MenuItem("User Management", icon='bi bi-person-lines-fill'),
                 sac.MenuItem("Metrics", icon='bi bi-graph-up-arrow'),

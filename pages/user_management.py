@@ -9,19 +9,25 @@ def user_management():
         users = fetch_data('https://ap-southeast-1.data.tidbcloud.com/api/v1beta/app/dataapp-SxHAXFax/endpoint/get_user_data')
 
         user_data_columns = [col['col'] for col in users['data']['columns']]
-        col1, col2 = st.columns([1, 1], vertical_alignment='center')
+        col1, col2 = st.columns([7, 3], vertical_alignment='center')
         with col1:
             columns_to_show = sac.checkbox(
                 items=user_data_columns,
-                label='**User Data Columns**', description='Click on the checkbox to toggle which columns to show', index=[1,2,3,4], align='start', size='sm', check_all='Select all', 
+                label='**User Data Columns**', description='Click on the checkbox to toggle which columns to show', index=[1,2,3,4], align='start', size='sm', 
             )
-        with col2:
-            columns_to_show = sac.checkbox(
-                items=['enbanc', 'cosoa', 'user'],
-                label='**User Data Columns**', description='Click on the checkbox to toggle which columns to show', index=[1,2,3,4], align='start', size='sm', check_all='Select all', 
-            )
-
-        if columns_to_show:
+        if 'role' in columns_to_show:
+            with col2:
+                role_filter = sac.checkbox(
+                    items=['enbanc', 'cosoa', 'user'],
+                    label='**Role Columns**', description='Click on the checkbox to toggle which roles to show', index=[0,1,2], align='start', size='sm', 
+                )
+        
+        
+        if columns_to_show and role_filter:
+            user_data = pd.DataFrame(users['data']['rows'], columns=columns_to_show)
+            user_data = user_data[user_data['role'].isin(role_filter)]
+            st.dataframe(user_data, hide_index=True)
+        elif columns_to_show:
             user_data = pd.DataFrame(users['data']['rows'], columns=columns_to_show)
             st.dataframe(user_data, hide_index=True)
 
