@@ -115,6 +115,3 @@ def faqs():
                         st.write("The approved Financial Clearance must be claimed from the OSS, and it is the organization's responsibility to submit it to PUP SC COSOA.")
                     with st.expander("**What if we don't have a new set of officers yet?**"):
                         st.write("The Commission cannot grant the auditing unless the turnover of assets has been done for the AY. 24-25.")
-
-if __name__ == "__main__":
-    faqs()

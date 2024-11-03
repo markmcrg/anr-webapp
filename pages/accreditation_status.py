@@ -305,6 +305,3 @@ def accreditation_status():
 
 # Have info to show what each status means (Approved, Pending, etc.)
 # Tracker form should only be visible once returned for revisions is the eval phase
-
-if __name__ == "__main__":
-    accreditation_status()

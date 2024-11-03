@@ -20,7 +20,7 @@ def view_submissions():
             submission_query = st_keyup('Search for an organization or user:', debounce=300, key="1", placeholder="Organization Name/Abbreviation or Person Assigned")
         with top_cols[1]:
             role = get_role(st.session_state["username"])
-            if role in ['execcomm', 'chair']:
+            if role in ['enbanc', 'chair']:
                 eval_phase_filter = sac.checkbox(
                     items=[
                         'IE',

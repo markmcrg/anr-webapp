@@ -119,6 +119,3 @@ def assign_orgs():
                 
         else:
             sac.result(label='No Results Found', description="We couldn't locate any matching results.", status='empty')
-
-if __name__ == "__main__":
-    assign_orgs()

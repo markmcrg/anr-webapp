@@ -110,7 +110,7 @@ with st.sidebar:
                 sac.MenuItem("Metrics", icon='bi bi-graph-up-arrow'),
                 sac.MenuItem('View Document Status', icon='bi bi-file-earmark-text'),
             ], open_all=False, index=2)
-        elif role == 'execcomm':
+        elif role == 'enbanc':
             abbreviation = get_abbreviation(st.session_state["username"])
             menu_item = sac.menu([
                 sac.MenuItem(f'Welcome, {str(abbreviation)}!', disabled=True),
@@ -255,7 +255,7 @@ footer {visibility: hidden;}
 st.markdown(hide_streamlit_style, unsafe_allow_html=True) 
 # user - for orgs
 # cosoa - for evals
-# execcomm - for org assignment
+# enbanc - for org assignment
 # chair - for admin level access (see all user info and change access levels)
 
 # Inject custom CSS to style the div
