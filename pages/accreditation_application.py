@@ -117,6 +117,7 @@ def accreditation_application():
                     "College of Human Kinetics (CHK)": "CHK",
                     "College of Communication (COC)": "COC",
                     "College of Education (COED)": "COED",
+                    "College of Law (CL)" : "CL",
                     "College of Political Science and Public Administration (CPSPA)": "CPSPA",
                     "College of Science (CS)": "CS",
                     "College of Social Sciences and Development (CSSD)": "CSSD",
