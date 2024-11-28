@@ -46,7 +46,7 @@ def view_submissions():
             submission_data_df["Date Submitted"]
         )
 
-        top_cols = st.columns([0.75, 0.9, 0.55], vertical_alignment="center")
+        top_cols = st.columns([0.75, 0.625, 0.5], vertical_alignment="center")
         with top_cols[0]:
             submission_query = st_keyup(
                 "Search for an organization or user:",
