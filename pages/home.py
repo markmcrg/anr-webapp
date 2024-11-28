@@ -3,21 +3,6 @@ import streamlit as st
 def home():
     st.markdown("""
             <style>
-            .st-emotion-cache-1v0mbdj.e115fcil1 img {
-                box-shadow: 0 2px 10px #2e2c2c;
-                margin-top: 10px;
-                border-radius: 10px;
-            }
-            #what-is-cosoa {
-                color: #ffffff !important;
-                font-size: 70px !important;
-                font-family: "Source Sans Pro", sans-serif;
-                font-weight: 700;
-                padding: 1.25rem 0px 1rem;
-                margin-top: 5px;
-                line-height: 1.2;
-                margin-bottom: -30px;
-            }
             span {
                 font-size: 18px;
                 text-shadow: 2px 2px 6px #2e2c2c;

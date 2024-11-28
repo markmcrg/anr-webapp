@@ -74,7 +74,7 @@ soupsieve==2.5
 st-annotated-text==4.0.1
 st-theme==1.2.3
 st_tailwind==1.0.3
-streamlit==1.39.0
+streamlit==1.14.0
 streamlit-antd-components==0.3.2
 streamlit-authenticator==0.3.2
 streamlit-calendar==1.2.0

@@ -6,37 +6,29 @@ import time
 from st_keyup import st_keyup
 import streamlit_antd_components as sac
 import os
-from helpers import fetch_data, authenticate_b2, generate_download_auth_token
+import pandas as pd
+from helpers import fetch_data
 
 def assign_orgs():
-    # bucket = authenticate_b2('anr-webapp')
-    # auth_token = generate_download_auth_token(bucket)
     with st.container(border=True):
         st.subheader("📄 Organization Submissions")
         submission_data = fetch_data("https://ap-southeast-1.data.tidbcloud.com/api/v1beta/app/dataapp-SxHAXFax/endpoint/get_all_submissions")['data']['rows']
 
-        submission_data_df = pd.DataFrame(submission_data, columns=["org_name", "jurisdiction", "app_type", "app_order", "date_submitted", "eval_phase", "b2_file_url"])
+        submission_data_df = pd.DataFrame(submission_data, columns=["org_name", "jurisdiction", "app_type", "app_order", "date_submitted", "eval_phase"])
         
-        # submission_data_df['b2_file_url'] = submission_data_df['b2_file_url'] + auth_token
-        
-        submission_data_df.columns = ['Organization Name', 'Jurisdiction', 'Application Type', 'Application Order', 'Date Submitted', "Evaluation Phase", "View"]
+        submission_data_df.columns = ['Organization Name', 'Jurisdiction', 'Application Type', 'Application Order', 'Date Submitted', "Evaluation Phase"]
         submission_data_df['Date Submitted'] = pd.to_datetime(submission_data_df['Date Submitted'])
         cols = st.columns([1,1], vertical_alignment='center')
         with cols[0]:
             submission_query = st_keyup('Search for an organization or user:', debounce=300, key="0", placeholder="Organization Name/Abbreviation or Person Assigned")
         with cols[1]:
-            eval_phase_filter = sac.checkbox(
-                items=[
-                    'IE',
-                    'FE',
-                    'CA',
-                    'Returned',
-                    'Approved',
-                    'Rejected'
-                ],
-                label='Filter by evaluation phase', index=[0, 1, 2, 3], align='center'
+            eval_phase_filter = st.pills(
+                "**Select evaluation phases to view:**",
+                ["IE", "FE", "CA", "Returned", "Approved", "Rejected"],
+                key="5",
+                selection_mode="multi",
+                default=["IE", "FE", "CA", "Returned"],
             )
-
         if submission_query:
             submission_data_df = submission_data_df[
                 submission_data_df['Organization Name'].str.contains(submission_query, case=False, regex=False)
@@ -45,6 +37,8 @@ def assign_orgs():
             submission_data_df = submission_data_df[
                 submission_data_df['Evaluation Phase'].isin(eval_phase_filter)
             ]
+        else:
+            submission_data_df = pd.DataFrame()
             
         # Check if df is empty
         if not submission_data_df.empty:
@@ -61,10 +55,6 @@ def assign_orgs():
                                 disabled=True),
                             "Application Order" : st.column_config.TextColumn(
                                 "Application Order", 
-                                disabled=True),
-                            "View" : st.column_config.LinkColumn(
-                                "View",
-                                display_text="View",
                                 disabled=True),
                             "Date Submitted" : st.column_config.DateColumn(
                                 "Date Submitted",

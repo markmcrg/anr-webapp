@@ -6,14 +6,17 @@ import sys
 import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-from helpers import fetch_data, get_submission_count, get_user_count
+from helpers import get_submission_count, get_user_count
 
 def metrics():
     org_count = get_user_count('user')
+    
     cosoa_count = get_user_count('cosoa')
+    enbanc_count = get_user_count('enbanc')
+
     
     sub_count = get_submission_count()
-    
+    total_cosoa = int(cosoa_count) + int(enbanc_count)
     cols = st.columns([0.25, 1, 0.25])
     with cols[1]:
         with st.container(border=True):
@@ -24,4 +27,4 @@ def metrics():
             with cols[1]:
                 ui.metric_card(title="User Accounts", content=f"{org_count}",  key="card2")
             with cols[2]:
-                ui.metric_card(title="COSOA Accounts", content=f"{cosoa_count}", key="card3")
+                ui.metric_card(title="COSOA Accounts", content=f"{total_cosoa}", key="card3")

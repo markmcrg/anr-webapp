@@ -15,12 +15,16 @@ def user_management():
                 items=user_data_columns,
                 label='**User Data Columns**', description='Click on the checkbox to toggle which columns to show', index=[1,2,3,4], align='start', size='sm', 
             )
+        role_filter = None
         if 'role' in columns_to_show:
             with col2:
-                role_filter = sac.checkbox(
-                    items=['enbanc', 'cosoa', 'user'],
-                    label='**Role Columns**', description='Click on the checkbox to toggle which roles to show', index=[0,1,2], align='start', size='sm', 
-                )
+                role_filter = st.pills(
+                "**Select roles to show:**",
+                ['enbanc', 'cosoa', 'user'],
+                key="7",
+                selection_mode="multi",
+                default=["enbanc", "cosoa", "user"],
+            )
         
         
         if columns_to_show and role_filter:

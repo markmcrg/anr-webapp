@@ -587,3 +587,29 @@ def get_user_count(role):
     user_count = response_dict["data"]["rows"][0]['COUNT']
 
     return user_count
+
+def get_org_name_username():
+    PUBLIC_KEY = os.environ['tidb_public_key']
+    PRIVATE_KEY = os.environ['tidb_private_key']
+
+    url = "https://ap-southeast-1.data.tidbcloud.com/api/v1beta/app/dataapp-SxHAXFax/endpoint/get_org_name_username"
+    response = requests.get(url, auth=HTTPBasicAuth(PUBLIC_KEY, PRIVATE_KEY))
+
+    # Turn the response into a dictionary
+    response_dict = response.json()
+    orgName_and_username = response_dict["data"]["rows"]
+
+    return orgName_and_username
+
+def get_org_name_username_with_sub():
+    PUBLIC_KEY = os.environ['tidb_public_key']
+    PRIVATE_KEY = os.environ['tidb_private_key']
+
+    url = "https://ap-southeast-1.data.tidbcloud.com/api/v1beta/app/dataapp-SxHAXFax/endpoint/get_org_name_username_with_sub"
+    response = requests.get(url, auth=HTTPBasicAuth(PUBLIC_KEY, PRIVATE_KEY))
+
+    # Turn the response into a dictionary
+    response_dict = response.json()
+    orgName_and_username = response_dict["data"]["rows"]
+
+    return orgName_and_username

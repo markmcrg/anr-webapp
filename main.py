@@ -109,6 +109,14 @@ with st.sidebar:
                 sac.MenuItem("User Management", icon='bi bi-person-lines-fill'),
                 sac.MenuItem("Metrics", icon='bi bi-graph-up-arrow'),
                 sac.MenuItem('View Document Status', icon='bi bi-file-earmark-text'),
+                
+                sac.MenuItem("", disabled=True),
+                
+                sac.MenuItem('Developer Tools', disabled=True),
+                sac.MenuItem(type='divider'),
+                sac.MenuItem('Simulate Accreditation Status', icon='bi bi-graph-up-arrow'),
+                
+                
             ], open_all=False, index=2)
         elif role == 'enbanc':
             abbreviation = get_abbreviation(st.session_state["username"])
@@ -154,7 +162,7 @@ with st.sidebar:
         .st-emotion-cache-4uzi61 e1f1d6gn0 {
             background-color: red !important;
         }
-        #root > div:nth-child(1) > div.withScreencast > div > div > div > section.stMain.st-emotion-cache-bm2z3a.ea3mdgi8 > div.stMainBlockContainer.block-container.st-emotion-cache-1jicfl2.ea3mdgi5 > div > div > div > div.stHorizontalBlock.st-emotion-cache-ocqkz7.e1f1d6gn5 > div.stColumn.st-emotion-cache-949r0i.e1f1d6gn3 > div > div > div > div > div > div > div > iframe {
+        #root > div:nth-child(1) > div.withScreencast > div > div > section.stMain.st-emotion-cache-bm2z3a.ea3mdgi8 > div.stMainBlockContainer.block-container.st-emotion-cache-1jicfl2.ea3mdgi5 > div > div > div > div.stHorizontalBlock.st-emotion-cache-ocqkz7.e1f1d6gn5 > div.stColumn.st-emotion-cache-949r0i.e1f1d6gn3 > div > div > div > div > div > div > div > iframe {
             border-radius: 25px
         }
         #root > ul {
@@ -186,7 +194,12 @@ with st.sidebar:
             padding-left: 0px !important;
         }
         
-
+        #root > div:nth-child(1) > div.withScreencast > div > div > section.stMain.st-emotion-cache-bm2z3a.ea3mdgi8 > div.stMainBlockContainer.block-container.st-emotion-cache-1jicfl2.ea3mdgi5 > div > div > div > div.stHorizontalBlock.st-emotion-cache-ocqkz7.e1f1d6gn5 > div.stColumn.st-emotion-cache-115gedg.e1f1d6gn3 > div > div > div > div:nth-child(3) > div > div > div {
+            padding-top: 20px;
+        }
+        #root > div:nth-child(1) > div.withScreencast > div > div > section.stMain.st-emotion-cache-bm2z3a.ea3mdgi8 > div.stMainBlockContainer.block-container.st-emotion-cache-1jicfl2.ea3mdgi5 > div > div > div > div.stHorizontalBlock.st-emotion-cache-ocqkz7.e1f1d6gn5 > div.stColumn.st-emotion-cache-115gedg.e1f1d6gn3 > div > div > div > div:nth-child(4) > div > div > div {
+            padding-bottom: 30px;
+        }
                         
     </style>
 """
@@ -238,7 +251,8 @@ elif menu_item == "View Document Status":
     pg.document_management()
 elif menu_item == "Metrics":
     pg.metrics()
-
+elif menu_item == "Simulate Accreditation Status":
+    pg.dev_accre_status()
 
 if st.session_state["authentication_status"]:
     menu_item = 'Home'
@@ -369,6 +383,11 @@ st.markdown(
 
 st.markdown("""
             <style>
+            [data-testid=stImageContainer] img {
+                box-shadow: 0 2px 10px #2e2c2c;
+                margin-top: 10px;
+                border-radius: 10px;
+            }
             .st-emotion-cache-4uzi61.e1f1d6gn0 {
                 box-shadow: 0 2px 10px #2e2c2c !important; 
             }
@@ -387,7 +406,7 @@ st.markdown("""
             #accreditation-application {
                 font-size: 45px;
             }
-            #root > div:nth-child(1) > div.withScreencast > div > div > div > section.stMain.st-emotion-cache-bm2z3a.ea3mdgi8 > div.stMainBlockContainer.block-container.st-emotion-cache-1jicfl2.ea3mdgi5 > div > div > div > div.stHorizontalBlock.st-emotion-cache-ocqkz7.e1f1d6gn5 > div.stColumn.st-emotion-cache-keje6w.e1f1d6gn3 > div > div > div > div.stForm.st-emotion-cache-4uzi61.e10yg2by1 {
+            #root > div:nth-child(1) > div.withScreencast > div > div > section.stMain.st-emotion-cache-bm2z3a.ea3mdgi8 > div.stMainBlockContainer.block-container.st-emotion-cache-1jicfl2.ea3mdgi5 > div > div > div > div.stHorizontalBlock.st-emotion-cache-ocqkz7.e1f1d6gn5 > div.stColumn.st-emotion-cache-keje6w.e1f1d6gn3 > div > div > div > div.stForm.st-emotion-cache-4uzi61.e10yg2by1 {
                 background-color: white;
                 box-shadow: 0 2px 10px #2e2c2c !important; 
             }
@@ -399,7 +418,16 @@ st.markdown("""
             h2 {
                 font-weight: bold;
             }
-
+            #what-is-cosoa {
+                color: #ffffff !important;
+                font-size: 70px !important;
+                font-family: "Source Sans Pro", sans-serif;
+                font-weight: 700;
+                padding: 1.25rem 0px 1rem;
+                margin-top: -85px;
+                line-height: 1.2;
+                margin-bottom: -30px;
+            }
         
             </style>
 

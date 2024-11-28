@@ -44,9 +44,6 @@ def signup():
         st.markdown("<h1 style='text-align: center; color: #f5c472; font-size: 45px; padding-bottom:25px;'>Sign Up</h1>", unsafe_allow_html=True)
         st.markdown("""
                     <style>
-                    #root > div:nth-child(1) > div.withScreencast > div > div > div > section.stMain.st-emotion-cache-bm2z3a.ea3mdgi8 > div.stMainBlockContainer.block-container.st-emotion-cache-1jicfl2.ea3mdgi5 > div > div > div > div.stHorizontalBlock.st-emotion-cache-ocqkz7.e1f1d6gn5 > div.stColumn.st-emotion-cache-115gedg.e1f1d6gn3 > div > div > div > div:nth-child(3) > div > div > div {
-                        padding-top: 20px;
-                    }
                     #sign-up {
                         margin-bottom: -0.75em;
                     }
