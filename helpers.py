@@ -626,7 +626,7 @@ def add_chair_remarks(filename, remarks):
 
 
     data = {
-        "chair_remarks": remarks,
+        "remarks": remarks,
         "filename": filename,
     }
     response = requests.put(

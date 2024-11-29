@@ -290,8 +290,9 @@ def accreditation_status():
                                     {tracker_form_data}
                                             
                                         """)
-                #     # sac.alert(label='Chairperson\'s Remarks: Please check your...', size='sm', variant='quote-light', color='info', icon=True)
-                    
+
+                    if selected_record['chair_remarks']:
+                        sac.alert(label="Chairperson's Remarks:", description=f'{selected_record["chair_remarks"]}', variant='quote-light', color='pink', icon=True)
                 else:
                     sac.result(label='Tracker Form Unavailable.', description='Please wait until your submission is tagged as "Returned."')
 

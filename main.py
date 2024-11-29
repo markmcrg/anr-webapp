@@ -109,13 +109,7 @@ with st.sidebar:
                 sac.MenuItem("User Management", icon='bi bi-person-lines-fill'),
                 sac.MenuItem("Metrics", icon='bi bi-graph-up-arrow'),
                 sac.MenuItem('View Document Status', icon='bi bi-file-earmark-text'),
-                
-                sac.MenuItem("", disabled=True),
-                
-                sac.MenuItem('Developer Tools', disabled=True),
-                sac.MenuItem(type='divider'),
-                sac.MenuItem('Simulate Accreditation Status', icon='bi bi-graph-up-arrow'),
-                
+                sac.MenuItem('Tracker Form Viewer', icon='bi bi-view-list'),
                 
             ], open_all=False, index=2)
         elif role == 'enbanc':
@@ -143,6 +137,7 @@ with st.sidebar:
                 sac.MenuItem("User Management", icon='bi bi-person-lines-fill'),
                 sac.MenuItem("Metrics", icon='bi bi-graph-up-arrow'),
                 sac.MenuItem('View Document Status', icon='bi bi-file-earmark-text'),
+                sac.MenuItem('Tracker Form Viewer', icon='bi bi-view-list'),
             ], open_all=False)
     page_bg_img = """
     <style>
@@ -251,7 +246,7 @@ elif menu_item == "View Document Status":
     pg.document_management()
 elif menu_item == "Metrics":
     pg.metrics()
-elif menu_item == "Simulate Accreditation Status":
+elif menu_item == "Tracker Form Viewer":
     pg.dev_accre_status()
 
 if st.session_state["authentication_status"]:

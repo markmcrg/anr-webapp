@@ -1,10 +1,10 @@
 import streamlit as st
 
-# # Add the main directory to the system path if necessary
-import sys
-import os
+# # # Add the main directory to the system path if necessary
+# import sys
+# import os
 
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+# sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 from helpers import (
     fetch_data,
     submit_evaluation_accre,
@@ -75,8 +75,7 @@ def view_submissions():
             )
         with top_cols[1]:
             # CHANGE THIS BACK AFTER TESTING
-            # role = get_role(st.session_state["username"])
-            role = 'chair'
+            role = get_role(st.session_state["username"])
 
             if role in ["enbanc", "chair"]:
                 eval_phase_filter = st.pills(
@@ -702,6 +701,9 @@ def view_submissions():
                                     if response_code:
                                         modify_eval_phase(sub_to_eval, next_eval_phase)
                                         update_last_updated(sub_to_eval)
+                                        if eval_phase == "CA":
+                                            st.write('hi')
+                                            add_chair_remarks(sub_to_eval, chair_remarks)
 
                                         # If submission is returned, approved, or rejected, send notification email
                                         if next_eval_phase in [
@@ -738,5 +740,5 @@ def view_submissions():
                 status="empty",
             )
 
-if __name__ == "__main__":
-    view_submissions()
+# if __name__ == "__main__":
+#     view_submissions()

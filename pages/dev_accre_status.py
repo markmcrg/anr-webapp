@@ -2,7 +2,7 @@ from matplotlib.pyplot import get
 import streamlit as st
 import streamlit_antd_components as sac
 from datetime import datetime
-# # Add the main directory to the system path if necessary
+# # # Add the main directory to the system path if necessary
 # import sys
 # import os
 # sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
@@ -181,7 +181,7 @@ def dev_accre_status():
                                         sac.SegmentedItem(label='Initial Submission', disabled=not app_orders["Initial Submission"]),
                                         sac.SegmentedItem(label='1st Resubmission', disabled=not app_orders["1st Resubmission"]),
                                         sac.SegmentedItem(label='2nd Resubmission', disabled=not app_orders["2nd Resubmission"]),
-                                    ], direction='vertical', align='center', key='sub_view'
+                                    ], direction='vertical', align='center', key='sub_view', index = 2 if app_orders["2nd Resubmission"] else 1 if app_orders["1st Resubmission"] else 0
                 )
         with cols[1]:
             with st.container(border=True):
@@ -310,8 +310,9 @@ def dev_accre_status():
                                     {tracker_form_data}
                                             
                                         """)
-                #     # sac.alert(label='Chairperson\'s Remarks: Please check your...', size='sm', variant='quote-light', color='info', icon=True)
                     
+                    if selected_record['chair_remarks']:
+                        sac.alert(label="Chairperson's Remarks:", description=f'{selected_record["chair_remarks"]}', variant='quote-light', color='pink', icon=True)
                 else:
                     sac.result(label='Tracker Form Unavailable.', description='Please wait until your submission is tagged as "Returned."')
 
