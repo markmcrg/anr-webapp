@@ -144,15 +144,15 @@ def accreditation_status():
         st.markdown(table_html, unsafe_allow_html=True)
 
         # Check each submission if existing, if not then disable the respective option
-        # Add chairperson's remarks to the tracker form at the bottom
         
         # Checking for entries
         app_orders = {"Initial Submission": False, "1st Resubmission": False,  "2nd Resubmission": False}
-
+        
         # Iterate through the data and check for specific 'app_order' values
         for entry in data:
             if entry["app_order"] in app_orders:
                 app_orders[entry["app_order"]] = True
+                
         cols = st.columns([0.2, 0.8], vertical_alignment='top')
         with cols[0]:
             # with st.container(border=True):
@@ -161,7 +161,7 @@ def accreditation_status():
                                         sac.SegmentedItem(label='Initial Submission', disabled=not app_orders["Initial Submission"]),
                                         sac.SegmentedItem(label='1st Resubmission', disabled=not app_orders["1st Resubmission"]),
                                         sac.SegmentedItem(label='2nd Resubmission', disabled=not app_orders["2nd Resubmission"]),
-                                    ], direction='vertical', align='center', key='sub_view'
+                                    ], direction='vertical', align='center', key='sub_view', index = 2 if app_orders["2nd Resubmission"] else 1 if app_orders["1st Resubmission"] else 0
                 )
         with cols[1]:
             with st.container(border=True):
@@ -303,5 +303,3 @@ def accreditation_status():
                 sac.result(label='No Submissions Found', description='Click on "Accreditation Application" to submit your first application.', status='empty')
     
 
-# Have info to show what each status means (Approved, Pending, etc.)
-# Tracker form should only be visible once returned for revisions is the eval phase

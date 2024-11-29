@@ -1,10 +1,10 @@
 import streamlit as st
 
-# # # Add the main directory to the system path if necessary
-# import sys
-# import os
+# # Add the main directory to the system path if necessary
+import sys
+import os
 
-# sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 from helpers import (
     fetch_data,
     submit_evaluation_accre,
@@ -16,13 +16,32 @@ from helpers import (
     authenticate_b2,
     get_role,
     update_last_updated,
+    add_chair_remarks
 )
 import pandas as pd
 from st_keyup import st_keyup
 import time
 import streamlit_antd_components as sac
 
+if "disable_save_btn" not in st.session_state:
+    st.session_state["disable_save_btn"] = False
+if "disable_selectbox" not in st.session_state:
+    st.session_state["disable_selectbox"] = False
+    
 
+def disable_save_btn_and_selectbox():
+    st.session_state["disable_save_btn"] = True
+    st.session_state["disable_selectbox"] = True
+    
+def discard_changes():
+    st.session_state["disable_save_btn"] = False
+    st.session_state["disable_selectbox"] = False
+    st.session_state["show_eval_summary"] = False
+    
+def evaluate_another_org():
+    st.session_state["disable_save_btn"] = False
+    st.session_state["disable_selectbox"] = False
+    
 def view_submissions():
     with st.container(border=True):
         st.subheader("📋 Evaluate Submissions")
@@ -55,7 +74,9 @@ def view_submissions():
                 placeholder="Organization Name/Abbreviation or Person Assigned",
             )
         with top_cols[1]:
-            role = get_role(st.session_state["username"])
+            # CHANGE THIS BACK AFTER TESTING
+            # role = get_role(st.session_state["username"])
+            role = 'chair'
 
             if role in ["enbanc", "chair"]:
                 eval_phase_filter = st.pills(
@@ -342,6 +363,7 @@ def view_submissions():
                     "**Select submission to evaluate:**",
                     submission_data_df["Organization Submission"],
                     index=None,
+                    disabled=st.session_state["disable_selectbox"],
                 )
                 if sub_to_eval:
                     username = submission_data_df[
@@ -396,7 +418,11 @@ def view_submissions():
                             elif app_type == "Revalidation":
                                 show_expander_returned(reval_docs, data)
 
-                        save_btn = st.form_submit_button("Save")
+                        save_btn = st.form_submit_button("Save", on_click=disable_save_btn_and_selectbox, disabled=st.session_state["disable_save_btn"])
+                    if st.session_state["disable_save_btn"] and st.session_state['disable_selectbox']:
+                        st.button("Discard Changes", on_click=discard_changes)
+
+                            
 
                     if "show_eval_summary" not in st.session_state:
                         st.session_state["show_eval_summary"] = False
@@ -630,12 +656,13 @@ def view_submissions():
                                         ),
                                     ],
                                     label="Status",
-                                    description="Once you click on confirm, your evaluation will be submitted and transferred to the next phase.",
+                                    description="Once you click on confirm, your evaluation and remarks will be returned to the organization.",
                                     index=3,
                                     align="start",
                                     radius="md",
                                     variant="light",
                                 )
+                                chair_remarks = st.text_area('**Chairperson\'s Remarks**', placeholder='Input remarks here...', height=100)
 
                             if new_status == "Final Evaluation":
                                 next_eval_phase = "FE"
@@ -648,9 +675,15 @@ def view_submissions():
                             elif new_status == "Rejected":
                                 next_eval_phase = "Rejected"
 
-                            confirm_btn = st.button(
-                                "Confirm Evaluation", disabled=not new_status
-                            )
+                            
+                            if eval_phase == "CA":
+                                confirm_btn = st.button(
+                                    "Confirm Evaluation", disabled=not new_status and not chair_remarks
+                                )
+                            else:
+                                confirm_btn = st.button(
+                                    "Confirm Evaluation", disabled=not new_status
+                                )
                             if confirm_btn:
                                 msg = st.toast("Submitting Evaluation...", icon="🔃")
 
@@ -695,8 +728,8 @@ def view_submissions():
                                             color="success",
                                             icon=True,
                                         )
-                                        if st.button("Evaluate Another Organization"):
-                                            st.rerun()
+                                        st.button("Evaluate Another Organization", on_click=evaluate_another_org)
+                                            
 
         else:
             sac.result(
@@ -704,3 +737,6 @@ def view_submissions():
                 description="We couldn't locate any matching submissions.",
                 status="empty",
             )
+
+if __name__ == "__main__":
+    view_submissions()

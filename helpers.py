@@ -613,3 +613,24 @@ def get_org_name_username_with_sub():
     orgName_and_username = response_dict["data"]["rows"]
 
     return orgName_and_username
+
+def add_chair_remarks(filename, remarks):
+    PUBLIC_KEY = os.environ['tidb_public_key']
+    PRIVATE_KEY = os.environ['tidb_private_key']
+
+    url = "https://ap-southeast-1.data.tidbcloud.com/api/v1beta/app/dataapp-SxHAXFax/endpoint/add_chair_remarks"
+
+    headers = {
+        "content-type": "application/json",
+    }
+
+
+    data = {
+        "chair_remarks": remarks,
+        "filename": filename,
+    }
+    response = requests.put(
+        url, headers=headers, json=data, auth=HTTPBasicAuth(PUBLIC_KEY, PRIVATE_KEY)
+    )
+
+    return response.status_code
