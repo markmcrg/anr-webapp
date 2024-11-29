@@ -184,12 +184,17 @@ def view_submissions():
                                                 width:100%;
                                             }}
                                             th, td {{
-                                                padding: 4px 10px !important;
-                                                border-bottom: 1px solid #e0e0e0; !important
+                                                padding: 5px 8px !important;
                                             }}
                                             th {{
                                                 background-color: #800000;
                                                 color: white;
+                                            }}
+                                            th {{
+                                                font-size: 16px !important;
+                                            }}
+                                            td {{
+                                                font-size: 15px !important;
                                             }}
                                             tr:last-child td {{
                                                 border-bottom: none;
@@ -229,19 +234,22 @@ def view_submissions():
                                             }}
                                             .btn-outline-maroon {{
                                                 color: maroon !important;
-                                                border-color: maroon !important; 
+                                                border-color: maroon !important;
                                             }}
                                             .btn-outline-maroon:hover {{
                                                 background-color: maroon !important;
-                                                color: white !important;
+                                                color: white !important
+                                            }}
+                                            .date-padding{{
+                                                padding: 6px 30px !important;
                                             }}
                                         </style>
                                         <table>
                                             <tr>
                                                 <th class="center-align">Organization Submission</th>
                                                 <th class="left-align">Jurisdiction</th>
-                                                <th class="center-align">Application Type</th>
-                                                <th class="center-align">Date Submitted</th>
+                                                <th class="center-align">Type</th>
+                                                <th class="center-align date-padding">Date</th>
                                                 <th class="center-align">Evaluation Phase</th>
                                                 <th class="center-align">View</th>
                                             </tr>
