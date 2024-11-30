@@ -23,12 +23,6 @@ from st_keyup import st_keyup
 import time
 import streamlit_antd_components as sac
 
-if "disable_save_btn" not in st.session_state:
-    st.session_state["disable_save_btn"] = False
-if "disable_selectbox" not in st.session_state:
-    st.session_state["disable_selectbox"] = False
-    
-
 def disable_save_btn_and_selectbox():
     st.session_state["disable_save_btn"] = True
     st.session_state["disable_selectbox"] = True
@@ -43,6 +37,12 @@ def evaluate_another_org():
     st.session_state["disable_selectbox"] = False
     
 def view_submissions():
+    if "disable_save_btn" not in st.session_state:
+        st.session_state["disable_save_btn"] = False
+        
+    if "disable_selectbox" not in st.session_state:
+        st.session_state["disable_selectbox"] = False
+        
     with st.container(border=True):
         st.subheader("📋 Evaluate Submissions")
 
