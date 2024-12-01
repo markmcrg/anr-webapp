@@ -35,7 +35,6 @@ ARG tidb_public_key
 ARG KOYEB_GIT_SHA
 RUN echo "The Git SHA is: $KOYEB_GIT_SHA"
 
-
 # Clone the private repository using a GitHub PAT
 ARG GIT_TOKEN
 RUN git clone https://$GIT_TOKEN@github.com/markmcrg/anr-webapp.git . 

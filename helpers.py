@@ -659,7 +659,8 @@ def schedule_email(recipient, name, app_type, app_order, schedule_time):
         ActionAfterCompletion="NONE",
         Description=f"Scheduled email via AnR Web App for recipient: {name}",
         FlexibleTimeWindow={
-            "Mode": "OFF",
+            "Mode": "FLEXIBLE",
+            "MaximumWindowInMinutes" : 15
         },
         GroupName="scheduled_emails_anr_webapp",
         Name=rule_name,
