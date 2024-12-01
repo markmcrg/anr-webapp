@@ -32,8 +32,7 @@ ARG tidb_private_key
 ARG tidb_public_key
 
 # Add a dummy build argument to bust cache
-ARG CACHE_BUST=1
-RUN echo "Cache bust: $CACHE_BUST"
+RUN echo "Cache bust: ${KOYEB_GIT_SHA}"
 
 # Clone the private repository using a GitHub PAT
 ARG GIT_TOKEN
