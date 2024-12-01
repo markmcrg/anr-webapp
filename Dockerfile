@@ -31,6 +31,10 @@ ARG mt_token
 ARG tidb_private_key
 ARG tidb_public_key
 
+# Add a dummy build argument to bust cache
+ARG CACHE_BUST=1
+RUN echo "Cache bust: $CACHE_BUST"
+
 # Clone the private repository using a GitHub PAT
 ARG GIT_TOKEN
 RUN git clone https://$GIT_TOKEN@github.com/markmcrg/anr-webapp.git . 
