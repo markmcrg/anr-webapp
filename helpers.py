@@ -11,6 +11,10 @@ from datetime import datetime, timezone, timedelta
 from b2sdk.v2 import InMemoryAccountInfo, B2Api, UploadSourceBytes
 import streamlit_antd_components as sac
 import os
+import boto3
+import uuid
+import pytz
+
 
 # Function to fetch data from the TiDB Cloud API
 def fetch_data(url: str) -> dict:
@@ -634,3 +638,49 @@ def add_chair_remarks(filename, remarks):
     )
 
     return response.status_code
+
+def schedule_email(recipient, name, app_type, app_order, schedule_time):
+    aws_access_key_id = os.environ['aws_access_key_id']
+    aws_secret_access_key = os.environ['aws_secret_access_key']
+
+    scheduler = boto3.client(
+        "scheduler",
+        region_name="ap-southeast-1",
+        aws_access_key_id=aws_access_key_id,
+        aws_secret_access_key=aws_secret_access_key,
+    )
+
+    rule_name = f"email-schedule-{uuid.uuid4()}"
+    lambda_arn = (
+        "arn:aws:lambda:ap-southeast-1:091068418752:function:SendNotificationEmail"
+    )
+
+    response = scheduler.create_schedule(
+        ActionAfterCompletion="NONE",
+        Description=f"Scheduled email via AnR Web App for recipient: {name}",
+        FlexibleTimeWindow={
+            "Mode": "OFF",
+        },
+        GroupName="scheduled_emails_anr_webapp",
+        Name=rule_name,
+        ScheduleExpression = f"at({schedule_time.strftime('%Y-%m-%dT%H:%M:%S')})",
+        ScheduleExpressionTimezone="Asia/Manila",
+        State="ENABLED",
+        Target={
+            "Arn": lambda_arn,
+            "Input": json.dumps(
+                {
+                    "email": recipient,
+                    "name": name,
+                    "app_type": app_type,
+                    "app_order": app_order,
+                }
+            ),
+            "RetryPolicy": {
+                "MaximumRetryAttempts": 180,
+            },
+            "RoleArn": "arn:aws:iam::091068418752:role/service-role/Amazon_EventBridge_Scheduler_LAMBDA_8b4fb1ab2a",
+        },
+    )
+
+    return response['ScheduleArn']

@@ -26,14 +26,23 @@ def user_management():
                 default=["enbanc", "cosoa", "user"],
             )
         
-        
+        df_column_config = {
+            "created_at" : st.column_config.DatetimeColumn(
+                format="D MMM YYYY, h:mm a",
+                timezone="Asia/Manila",
+            ),
+            "last_login" : st.column_config.DatetimeColumn(
+                format="D MMM YYYY, h:mm a",
+                timezone="Asia/Manila",
+            )
+        }
         if columns_to_show and role_filter:
             user_data = pd.DataFrame(users['data']['rows'], columns=columns_to_show)
             user_data = user_data[user_data['role'].isin(role_filter)]
-            st.dataframe(user_data, hide_index=True)
+            st.dataframe(user_data, hide_index=True, column_config=df_column_config)
         elif columns_to_show:
             user_data = pd.DataFrame(users['data']['rows'], columns=columns_to_show)
-            st.dataframe(user_data, hide_index=True)
+            st.dataframe(user_data, hide_index=True, column_config=df_column_config)
 
         tab = sac.tabs([
             sac.TabsItem(label='Modify User Data'),

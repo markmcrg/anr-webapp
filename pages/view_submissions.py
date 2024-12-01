@@ -16,12 +16,15 @@ from helpers import (
     authenticate_b2,
     get_role,
     update_last_updated,
-    add_chair_remarks
+    add_chair_remarks,
+    schedule_email
 )
 import pandas as pd
 from st_keyup import st_keyup
 import time
 import streamlit_antd_components as sac
+from datetime import datetime, timedelta
+import pytz
 
 def disable_save_btn_and_selectbox():
     st.session_state["disable_save_btn"] = True
@@ -37,12 +40,16 @@ def evaluate_another_org():
     st.session_state["disable_selectbox"] = False
     
 def view_submissions():
+    
     if "disable_save_btn" not in st.session_state:
         st.session_state["disable_save_btn"] = False
         
     if "disable_selectbox" not in st.session_state:
         st.session_state["disable_selectbox"] = False
-        
+    
+    manila_tz = pytz.timezone('Asia/Manila')
+    current_time = datetime.now(manila_tz)
+    
     with st.container(border=True):
         st.subheader("📋 Evaluate Submissions")
 
@@ -98,35 +105,36 @@ def view_submissions():
                 submission_data_df = submission_data_df[
                     submission_data_df["Evaluation Phase"].isin(eval_phase_filter)
                 ]
+                with top_cols[2]:
+                    sort_filter = st.selectbox(
+                        "**Sort by:**",
+                        [
+                            "Date Submitted (Ascending)",
+                            "Date Submitted (Descending)",
+                            "Evaluation Phase (Ascending)",
+                            "Evaluation Phase (Descending)",
+                        ],
+                        key="3",
+                    )
+                    if sort_filter == "Date Submitted (Ascending)":
+                        submission_data_df = submission_data_df.sort_values(
+                            by="Date Submitted", ascending=True
+                        )
+                    elif sort_filter == "Date Submitted (Descending)":
+                        submission_data_df = submission_data_df.sort_values(
+                            by="Date Submitted", ascending=False
+                        )
+                    elif sort_filter == "Evaluation Phase (Ascending)":
+                        submission_data_df = submission_data_df.sort_values(
+                            by="Evaluation Phase", ascending=False
+                        )
+                    elif sort_filter == "Evaluation Phase (Descending)":
+                        submission_data_df = submission_data_df.sort_values(
+                            by="Evaluation Phase", ascending=True
+                        )
             else:
                 submission_data_df = pd.DataFrame()
-            with top_cols[2]:
-                sort_filter = st.selectbox(
-                    "**Sort by:**",
-                    [
-                        "Date Submitted (Ascending)",
-                        "Date Submitted (Descending)",
-                        "Evaluation Phase (Ascending)",
-                        "Evaluation Phase (Descending)",
-                    ],
-                    key="3",
-                )
-                if sort_filter == "Date Submitted (Ascending)":
-                    submission_data_df = submission_data_df.sort_values(
-                        by="Date Submitted", ascending=True
-                    )
-                elif sort_filter == "Date Submitted (Descending)":
-                    submission_data_df = submission_data_df.sort_values(
-                        by="Date Submitted", ascending=False
-                    )
-                elif sort_filter == "Evaluation Phase (Ascending)":
-                    submission_data_df = submission_data_df.sort_values(
-                        by="Evaluation Phase", ascending=False
-                    )
-                elif sort_filter == "Evaluation Phase (Descending)":
-                    submission_data_df = submission_data_df.sort_values(
-                        by="Evaluation Phase", ascending=True
-                    )
+            
             if submission_query:
                 submission_data_df = submission_data_df[
                     submission_data_df["Organization Submission"].str.contains(
@@ -634,7 +642,7 @@ def view_submissions():
                                         ),
                                     ],
                                     label="Status",
-                                    description="Once you click on confirm, your evaluation will be submitted and transferred to the next phase.",
+                                    description="Once you click on confirm, your evaluation will be submitted and transferred to the next phase. Please be aware that submissions returned after 9 PM will not trigger an immediate notification email. Instead, it will be sent the following day at 8 AM.",
                                     index=2,
                                     align="start",
                                     radius="md",
@@ -702,7 +710,6 @@ def view_submissions():
                                         modify_eval_phase(sub_to_eval, next_eval_phase)
                                         update_last_updated(sub_to_eval)
                                         if eval_phase == "CA":
-                                            st.write('hi')
                                             add_chair_remarks(sub_to_eval, chair_remarks)
 
                                         # If submission is returned, approved, or rejected, send notification email
@@ -713,10 +720,25 @@ def view_submissions():
                                         ]:
                                             email = get_email(username)
                                             abbreviation = get_abbreviation(username)
-                                            send_notif_email(
+                                            today_9pm = current_time.replace(hour=21, minute=0, second=0, microsecond=0)
+                                            today_6am = current_time.replace(hour=6, minute=0, second=0, microsecond=0)
+
+                                            if current_time >= today_9pm or current_time < today_6am:
+                                                # Determine the 8 AM target based on current time
+                                                if current_time >= today_9pm:
+                                                    # After 9 PM, schedule for 8 AM next day
+                                                    target_time = (current_time + timedelta(days=1)).replace(hour=8, minute=0, second=0, microsecond=0)
+                                                else:
+                                                    # Before 6 AM, schedule for 8 AM today
+                                                    target_time = current_time.replace(hour=8, minute=0, second=0, microsecond=0)
+                                                schedule_email(email, abbreviation, app_type, app_order, target_time)
+                                            else:
+                                                # Otherwise, send the email immediately
+                                                # send_email_now(text_body)
+                                                send_notif_email(
                                                 email, abbreviation, app_type, app_order
                                             )
-
+                                                
                                         time.sleep(2)
                                         msg.toast(
                                             "Evaluation submitted successfully.",
