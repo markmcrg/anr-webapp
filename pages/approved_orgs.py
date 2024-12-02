@@ -174,11 +174,15 @@ def approved_orgs():
 
                 total_items = len(generated_orgs)
                 for idx, item in enumerate(generated_orgs):
+                    if item["Type"] == "Accreditation":
+                        status = "Accredited"
+                    else:
+                        status = "Revalidated"
                     publish_org(
                         item["SOCN"],
                         item["Organization Name"],
                         item["Jurisdiction"],
-                        item["Type"],
+                        status,
                     )
                     # Update progress bar
                     my_bar.progress((idx + 1) / total_items, text=progress_text)
