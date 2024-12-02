@@ -685,3 +685,47 @@ def schedule_email(recipient, name, app_type, app_order, schedule_time):
     )
 
     return response['ScheduleArn']
+
+def edit_chair_remarks(filename, remarks):
+    PUBLIC_KEY = os.environ['tidb_public_key']
+    PRIVATE_KEY = os.environ['tidb_private_key']
+
+    url = "https://ap-southeast-1.data.tidbcloud.com/api/v1beta/app/dataapp-SxHAXFax/endpoint/edit_chair_remarks"
+
+    headers = {
+        "content-type": "application/json",
+    }
+
+
+    data = {
+        "remarks": remarks,
+        "filename": filename,
+    }
+    response = requests.put(
+        url, headers=headers, json=data, auth=HTTPBasicAuth(PUBLIC_KEY, PRIVATE_KEY)
+    )
+
+    return response.status_code
+
+def publish_org(socn, org_name, jurisdiction, status):
+    PUBLIC_KEY = os.environ['tidb_public_key']
+    PRIVATE_KEY = os.environ['tidb_private_key']
+    
+    url = "https://ap-southeast-1.data.tidbcloud.com/api/v1beta/app/dataapp-SxHAXFax/endpoint/publish_org"
+    
+    headers = {
+        "content-type": "application/json",
+    }
+    
+    data = {
+        "socn": socn,
+        "org_name": org_name,
+        "jurisdiction": jurisdiction,
+        "status": status,
+    }
+    
+    response = requests.post(
+        url, headers=headers, json=data, auth=HTTPBasicAuth(PUBLIC_KEY, PRIVATE_KEY)
+    )
+    
+    return response.status_code

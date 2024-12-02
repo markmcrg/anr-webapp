@@ -140,7 +140,9 @@ def accredited_orgs(term):
                 </table>
             """
             st.markdown(html_code, unsafe_allow_html=True)
-            
+            if term == '2425':
+                st.info("Please be advised that this list is not final and is continuously updated throughout the accreditation and revalidation period.")
+
             # Back to top
             st.markdown("""
                         <style>

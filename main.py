@@ -26,9 +26,10 @@ with st.sidebar:
             sac.MenuItem(type='divider'),
             sac.MenuItem('Home', icon='bi bi-house-door'),
             sac.MenuItem('Accredited Organizations', icon='bi bi-building', children=[
-                    sac.MenuItem('2023-2024', icon='1-square-fill'),
-                    sac.MenuItem('2022-2023', icon='2-square-fill'),
-                    sac.MenuItem('2021-2022', icon='3-square-fill'),
+                    sac.MenuItem('2024-2025', icon='1-square-fill', tag=sac.Tag(label="Latest", color="orange", bordered=True, radius="lg")),
+                    sac.MenuItem('2023-2024', icon='2-square-fill'),
+                    sac.MenuItem('2022-2023', icon='3-square-fill'),
+                    sac.MenuItem('2021-2022', icon='4-square-fill'),
                 ]),
             sac.MenuItem('Application Requirements', icon='bi bi-clipboard-check'),
             sac.MenuItem('Frequently Asked Questions', icon='bi bi-question-circle'),
@@ -46,9 +47,10 @@ with st.sidebar:
                 sac.MenuItem(type='divider'),
                 sac.MenuItem('Home', icon='bi bi-house-door'),
                 sac.MenuItem('Accredited Organizations', icon='bi bi-building', children=[
-                    sac.MenuItem('2023-2024', icon='1-square-fill'),
-                    sac.MenuItem('2022-2023', icon='2-square-fill'),
-                    sac.MenuItem('2021-2022', icon='3-square-fill'),
+                    sac.MenuItem('2024-2025', icon='1-square-fill', tag=sac.Tag(label="Latest", color="orange", bordered=True, radius="lg")),
+                    sac.MenuItem('2023-2024', icon='2-square-fill'),
+                    sac.MenuItem('2022-2023', icon='3-square-fill'),
+                    sac.MenuItem('2021-2022', icon='4-square-fill'),
                 ]),
                 sac.MenuItem('Application Requirements', icon='bi bi-clipboard-check'),
                 sac.MenuItem('Frequently Asked Questions', icon='bi bi-question-circle'),
@@ -69,9 +71,10 @@ with st.sidebar:
                 sac.MenuItem(type='divider'),
                 sac.MenuItem('Home', icon='bi bi-house-door'),
                 sac.MenuItem('Accredited Organizations', icon='bi bi-building', children=[
-                    sac.MenuItem('2023-2024', icon='1-square-fill'),
-                    sac.MenuItem('2022-2023', icon='2-square-fill'),
-                    sac.MenuItem('2021-2022', icon='3-square-fill'),
+                    sac.MenuItem('2024-2025', icon='1-square-fill', tag=sac.Tag(label="Latest", color="orange", bordered=True, radius="lg")),
+                    sac.MenuItem('2023-2024', icon='2-square-fill'),
+                    sac.MenuItem('2022-2023', icon='3-square-fill'),
+                    sac.MenuItem('2021-2022', icon='4-square-fill'),
                 ]),
                 sac.MenuItem('Application Requirements', icon='bi bi-clipboard-check'),
                 sac.MenuItem('Frequently Asked Questions', icon='bi bi-question-circle'),
@@ -91,9 +94,10 @@ with st.sidebar:
                 sac.MenuItem(type='divider'),
                 sac.MenuItem('Home', icon='bi bi-house-door'),
                 sac.MenuItem('Accredited Organizations', icon='bi bi-building', children=[
-                    sac.MenuItem('2023-2024', icon='1-square-fill'),
-                    sac.MenuItem('2022-2023', icon='2-square-fill'),
-                    sac.MenuItem('2021-2022', icon='3-square-fill'),
+                    sac.MenuItem('2024-2025', icon='1-square-fill', tag=sac.Tag(label="Latest", color="orange", bordered=True, radius="lg")),
+                    sac.MenuItem('2023-2024', icon='2-square-fill'),
+                    sac.MenuItem('2022-2023', icon='3-square-fill'),
+                    sac.MenuItem('2021-2022', icon='4-square-fill'),
                 ]),
                 sac.MenuItem('Application Requirements', icon='bi bi-clipboard-check'),
                 sac.MenuItem('Frequently Asked Questions', icon='bi bi-question-circle'),
@@ -110,6 +114,7 @@ with st.sidebar:
                 sac.MenuItem("Metrics", icon='bi bi-graph-up-arrow'),
                 sac.MenuItem('View Document Status', icon='bi bi-file-earmark-text'),
                 sac.MenuItem('Tracker Form Viewer', icon='bi bi-view-list'),
+                sac.MenuItem('Approved Organizations', icon='bi bi-check2-square'),
                 
             ], open_all=False, index=2)
         elif role == 'enbanc':
@@ -119,9 +124,10 @@ with st.sidebar:
                 sac.MenuItem(type='divider'),
                 sac.MenuItem('Home', icon='bi bi-house-door'),
                 sac.MenuItem('Accredited Organizations', icon='bi bi-building', children=[
-                    sac.MenuItem('2023-2024', icon='1-square-fill'),
-                    sac.MenuItem('2022-2023', icon='2-square-fill'),
-                    sac.MenuItem('2021-2022', icon='3-square-fill'),
+                    sac.MenuItem('2024-2025', icon='1-square-fill', tag=sac.Tag(label="Latest", color="orange", bordered=True, radius="lg")),
+                    sac.MenuItem('2023-2024', icon='2-square-fill'),
+                    sac.MenuItem('2022-2023', icon='3-square-fill'),
+                    sac.MenuItem('2021-2022', icon='4-square-fill'),
                 ]),
                 sac.MenuItem('Application Requirements', icon='bi bi-clipboard-check'),
                 sac.MenuItem('Frequently Asked Questions', icon='bi bi-question-circle'),
@@ -205,6 +211,9 @@ if menu_item == 'Home':
 # if menu_item == 'Accredited Organizations': 
 #     with hc.HyLoader('',hc.Loaders.standard_loaders,index=[loader_index]):
 #         pg.accredited_orgs()
+elif menu_item == "2024-2025":
+    with hc.HyLoader('',hc.Loaders.standard_loaders,index=[loader_index]):
+        pg.accredited_orgs(str(2425))
 elif menu_item == "2023-2024":
     with hc.HyLoader('',hc.Loaders.standard_loaders,index=[loader_index]):
         pg.accredited_orgs(str(2324))
@@ -248,6 +257,8 @@ elif menu_item == "Metrics":
     pg.metrics()
 elif menu_item == "Tracker Form Viewer":
     pg.dev_accre_status()
+elif menu_item == "Approved Organizations":
+    pg.approved_orgs()
 
 if st.session_state["authentication_status"]:
     menu_item = 'Home'
@@ -423,6 +434,18 @@ st.markdown("""
                 line-height: 1.2;
                 margin-bottom: -30px;
             }
+            
+            #root > div:nth-child(1) > div.withScreencast > div > div > section.stMain.st-emotion-cache-bm2z3a.ea3mdgi8 > div.stMainBlockContainer.block-container.st-emotion-cache-1jicfl2.ea3mdgi5 > div > div > div > div.st-emotion-cache-0.e1f1d6gn0 > div > div > div:nth-child(2) > div > div {
+                background-color: #FFE5D0 !important;
+                color: black !important;
+                opacity: 0.9;
+                padding: 10px !important;
+                border-radius: 12px;
+                box-shadow: 0 2px 20px #2e2c2c !important; 
+                text-align: center;
+                
+            }
+            
         
             </style>
 
