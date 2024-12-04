@@ -11,6 +11,7 @@ primaryColor="#8b0000"
 maxUploadSize = 100
 runOnSave = true
 headless = true
+enableXsrfProtection = false
 
 [ui]
 hideTopBar = true
