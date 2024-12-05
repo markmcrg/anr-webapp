@@ -30,12 +30,12 @@ with st.sidebar:
                     sac.MenuItem('2023-2024', icon='2-square-fill'),
                     sac.MenuItem('2022-2023', icon='3-square-fill'),
                     sac.MenuItem('2021-2022', icon='4-square-fill'),
-                ]),
+                ], disabled=True),
             sac.MenuItem('Application Requirements', icon='bi bi-clipboard-check'),
             sac.MenuItem('Frequently Asked Questions', icon='bi bi-question-circle'),
-            sac.MenuItem('Sign Up', icon='bi bi-person-plus'),
-            sac.MenuItem('Login', icon='bi bi-box-arrow-in-right'),
-            sac.MenuItem('Password Reset', icon='bi bi-key'),
+            sac.MenuItem('Sign Up', icon='bi bi-person-plus', disabled=True),
+            sac.MenuItem('Login', icon='bi bi-box-arrow-in-right', disabled=True),
+            sac.MenuItem('Password Reset', icon='bi bi-key', disabled=True),
         ], open_all=False, index=2, size ='md',)
     
     if st.session_state["authentication_status"]:
