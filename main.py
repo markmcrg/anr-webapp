@@ -30,14 +30,33 @@ with st.sidebar:
                     sac.MenuItem('2023-2024', icon='2-square-fill'),
                     sac.MenuItem('2022-2023', icon='3-square-fill'),
                     sac.MenuItem('2021-2022', icon='4-square-fill'),
-                ], disabled=True),
+                ]),
             sac.MenuItem('Application Requirements', icon='bi bi-clipboard-check'),
             sac.MenuItem('Frequently Asked Questions', icon='bi bi-question-circle'),
-            sac.MenuItem('Sign Up', icon='bi bi-person-plus', disabled=True),
-            sac.MenuItem('Login', icon='bi bi-box-arrow-in-right', disabled=True),
-            sac.MenuItem('Password Reset', icon='bi bi-key', disabled=True),
+            sac.MenuItem('Sign Up', icon='bi bi-person-plus'),
+            sac.MenuItem('Login', icon='bi bi-box-arrow-in-right'),
+            sac.MenuItem('Password Reset', icon='bi bi-key'),
         ], open_all=False, index=2, size ='md',)
     
+    
+        # ## FOR DISABLED:
+        # menu_item = sac.menu([
+        #     sac.MenuItem('Guest Menu', disabled=True),
+        #     sac.MenuItem(type='divider'),
+        #     sac.MenuItem('Home', icon='bi bi-house-door'),
+        #     sac.MenuItem('Accredited Organizations', icon='bi bi-building', children=[
+        #             sac.MenuItem('2024-2025', icon='1-square-fill', tag=sac.Tag(label="Latest", color="orange", bordered=True, radius="lg")),
+        #             sac.MenuItem('2023-2024', icon='2-square-fill'),
+        #             sac.MenuItem('2022-2023', icon='3-square-fill'),
+        #             sac.MenuItem('2021-2022', icon='4-square-fill'),
+        #         ], disabled=True),
+        #     sac.MenuItem('Application Requirements', icon='bi bi-clipboard-check'),
+        #     sac.MenuItem('Frequently Asked Questions', icon='bi bi-question-circle'),
+        #     sac.MenuItem('Sign Up', icon='bi bi-person-plus', disabled=True),
+        #     sac.MenuItem('Login', icon='bi bi-box-arrow-in-right', disabled=True),
+        #     sac.MenuItem('Password Reset', icon='bi bi-key', disabled=True),
+        # ], open_all=False, index=2, size ='md',)
+        
     if st.session_state["authentication_status"]:
         role = get_role(st.session_state["username"])
         if role == 'cosoa':
