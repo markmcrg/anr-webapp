@@ -84,7 +84,7 @@ def view_submissions():
             # CHANGE THIS BACK AFTER TESTING
             role = get_role(st.session_state["username"])
 
-            if role in ["enbanc", "chair"]:
+            if role in ["enbanc", "chair", "cosoa"]:
                 eval_phase_filter = st.pills(
                     "**Select evaluation phases to view:**",
                     ["IE", "FE", "CA", "Returned", "Approved", "Rejected"],
@@ -93,14 +93,14 @@ def view_submissions():
                     default=["IE", "FE", "CA"],
                 )
 
-            elif role == "cosoa":
-                eval_phase_filter = st.pills(
-                    "**Select evaluation phases to view:**",
-                    ["IE", "FE", "Returned"],
-                    key="5",
-                    selection_mode="multi",
-                    default=["IE"],
-                )
+            # elif role == "cosoa":
+            #     eval_phase_filter = st.pills(
+            #         "**Select evaluation phases to view:**",
+            #         ["IE", "FE", "Returned"],
+            #         key="5",
+            #         selection_mode="multi",
+            #         default=["IE"],
+            #     )
             if eval_phase_filter:
                 submission_data_df = submission_data_df[
                     submission_data_df["Evaluation Phase"].isin(eval_phase_filter)
