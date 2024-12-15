@@ -44,7 +44,7 @@ def home():
                         At the core of the PUP SC COSOA's mission is a commitment to foster a streamlined and accessible accreditation and revalidation process, and to reduce the administrative burden for student organizations in attaining and maintaining their legal status. We aim to simplify the way organizations achieve their recognition, and enable them to focus better on their initiatives and contributions to the university community.\
                     </span>", 
                     unsafe_allow_html=True)
-        st.image("https://i.imgur.com/y2rCqbk.jpeg", caption='PUP SC COSOA General Assembly 02 at the PUP COC Audio-Visual Room.', use_column_width=True)
+        st.image("https://i.imgur.com/y2rCqbk.jpeg", caption='PUP SC COSOA General Assembly 02 at the PUP COC Audio-Visual Room.', use_container_width=True)
         table_html = """
     <!-- Link to Bootstrap CSS and Bootstrap Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">

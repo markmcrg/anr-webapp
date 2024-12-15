@@ -33,7 +33,7 @@ with st.sidebar:
                 ]),
             sac.MenuItem('Application Requirements', icon='bi bi-clipboard-check'),
             sac.MenuItem('Frequently Asked Questions', icon='bi bi-question-circle'),
-            sac.MenuItem('Sign Up', icon='bi bi-person-plus'),
+            sac.MenuItem('Sign Up', icon='bi bi-person-plus', disabled=True, tag=sac.Tag(label="Closed", color="red", bordered=True, radius="lg")),
             sac.MenuItem('Login', icon='bi bi-box-arrow-in-right'),
             sac.MenuItem('Password Reset', icon='bi bi-key'),
         ], open_all=False, index=2, size ='md',)

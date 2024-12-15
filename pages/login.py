@@ -1,5 +1,5 @@
 import streamlit as st
-from helpers import fetch_data, update_last_login
+from helpers import fetch_data, update_last_login, get_role
 import streamlit_authenticator as stauth
 import pandas as pd
 import streamlit_antd_components as sac
@@ -23,17 +23,21 @@ def login(logout: bool = False):
                     )
                     matching_user = user_data_df[(user_data_df['username'] == username) & (user_data_df['password'] == password)]
                     
-                    if not matching_user.empty:
-                        st.success("Login successful.")
-                        org_name = matching_user['org_name'].values[0]
-                        
-                        # Set session state variables
-                        st.session_state['authentication_status'] = True
-                        st.session_state['username'] = username
-                        st.session_state['name'] = org_name
-                        update_last_login(st.session_state["username"])
-                        
-                        st.rerun()
+                    if not matching_user.empty: # If user exists
+                        role = get_role(username)
+                        if role == 'nosub': # No initial submissions
+                            sac.alert(label='As of December 16, 2024, accounts without initial submissions are deactivated. Please note that we are currently not accepting new applications.', size='sm', variant='quote-light', color='warning', icon=True)
+                        else: 
+                            st.success("Login successful.")
+                            org_name = matching_user['org_name'].values[0]
+                            
+                            # Set session state variables
+                            st.session_state['authentication_status'] = True
+                            st.session_state['username'] = username
+                            st.session_state['name'] = org_name
+                            update_last_login(st.session_state["username"])
+                            
+                            st.rerun()
                         
                     else:
                         st.error("Username or password is incorrect. Please try again.")
